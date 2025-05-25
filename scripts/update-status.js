@@ -260,7 +260,7 @@ class ScientificVisionsTracker {
     }
     
     if (paper.status === 'Unknown' && !progressContent) { // Only infer if no progress.md
-        paper.status = this.inferStatusFromActivity(repo, `papers/${subpaperDir}`);
+        paper.status = await this.inferStatusFromActivity(repo, `papers/${subpaperDir}`); // Ensure await
     }
 
     return paper;
@@ -313,7 +313,7 @@ class ScientificVisionsTracker {
     }
     
     if (paper.status === 'Unknown' && !progressContent) { // Only infer if no progress.md
-        paper.status = this.inferStatusFromActivity(repo, 'papers/');
+        paper.status = await this.inferStatusFromActivity(repo, 'papers/'); // Ensure await
     }
 
     const historicalStats = await this.getHistoricalStats(repo);

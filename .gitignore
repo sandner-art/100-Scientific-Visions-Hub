@@ -1,4 +1,4 @@
 # .gitignore
 node_modules/
-data/ # Often good to ignore if generated, unless you want to track its history explicitly
-reports/ # Same as data/
+# data/ # Often good to ignore if generated, unless you want to track its history explicitly
+# reports/ # Same as data/
