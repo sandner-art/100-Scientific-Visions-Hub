@@ -1,7 +1,7 @@
 {
   "total": 3,
   "byStatus": {
-    "[object Promise]": 3
+    "Active": 3
   },
   "byPriority": {
     "Medium": 3
