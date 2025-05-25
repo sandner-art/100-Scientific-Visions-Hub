@@ -95,10 +95,10 @@
         
         .chart-card {
             background: white;
-            padding: 25px;
+            padding: 30px;
             border-radius: 15px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            height: 400px; /* Or your desired fixed height */
+            height: 450px; /* Or your desired fixed height */
             /* You could also use min-height and max-height if you prefer */
             /* min-height: 350px; */
             /* max-height: 450px; */
@@ -503,24 +503,37 @@
                 this.papers.forEach(paper => {
                     const row = document.createElement('tr');
                     
-                    const statusClass = `status-${paper.status.toLowerCase()}`;
+                    const statusClass = `status-${(paper.status || 'unknown').toLowerCase().replace(/\s+/g, '-')}`; // Handle spaces and null status
                     const progressBar = this.generateProgressBar(paper.progress?.phase || []);
                     
                     const links = [];
-                    if (paper.preprintLink && paper.preprintLink !== 'null') {
-                        links.push(`<a href="${paper.preprintLink}" target="_blank">Preprint</a>`);
+                    // Check for actual URLs, not just 'null' string or placeholders
+                    if (paper.preprintLink && paper.preprintLink !== 'null' && !paper.preprintLink.toLowerCase().includes('[link')) {
+                        links.push(`<a href="${paper.preprintLink}" target="_blank" title="Preprint">Preprint</a>`);
                     }
-                    if (paper.publishedLink && paper.publishedLink !== 'null') {
-                        links.push(`<a href="${paper.publishedLink}" target="_blank">Published</a>`);
+                    if (paper.publishedLink && paper.publishedLink !== 'null' && !paper.publishedLink.toLowerCase().includes('[doi')) {
+                        links.push(`<a href="${paper.publishedLink}" target="_blank" title="Published">Published</a>`);
                     }
-                    links.push(`<a href="${paper.url}" target="_blank">Repo</a>`);
+                    links.push(`<a href="${paper.url}" target="_blank" title="Repository/Paper Location">Location</a>`); // Changed from Repo to Location for clarity
                     
                     const lastUpdated = new Date(paper.lastUpdated).toLocaleDateString();
                     
+                    // Use paper.title if available, otherwise paper.paperName
+                    let displayName = paper.title || paper.paperName || 'Untitled Paper';
+                    let locationHint = '';
+                    if (paper.isSubpaper && paper.paperName !== displayName) {
+                        // If it's a subpaper and title is different from dirname, show dirname as hint
+                        locationHint = `<br><small style="color:#777;">(${paper.repoName}/${paper.paperName})</small>`;
+                    } else if (!paper.isSubpaper && paper.repoName !== displayName) {
+                        // If single paper and title is different from reponame, show reponame as hint
+                        locationHint = `<br><small style="color:#777;">(${paper.repoName})</small>`;
+                    }
+
+
                     row.innerHTML = `
-                        <td><strong>${paper.title || paper.paperName}</strong><br><small style="color:#777;">${paper.isSubpaper ? paper.repoName + '/' : ''}${paper.isSubpaper ? paper.paperName : paper.repoName}</small></td>
-                        <td><span class="status-badge ${statusClass}">${paper.status}</span></td>
-                        <td>${paper.priority}</td>
+                        <td><strong>${displayName}</strong>${locationHint}</td>
+                        <td><span class="status-badge ${statusClass}">${paper.status || 'N/A'}</span></td>
+                        <td>${paper.priority || 'N/A'}</td>
                         <td><span class="progress-bar">${progressBar}</span></td>
                         <td class="links">${links.join(' ')}</td>
                         <td>${lastUpdated}</td>
