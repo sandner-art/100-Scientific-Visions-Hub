@@ -1,33 +1,5 @@
 [
   {
-    "repoName": "100-Scientific-Visions-Hub",
-    "paperName": "100-Scientific-Visions-Hub",
-    "fullName": "100-Scientific-Visions-Hub",
-    "description": "*Brief description of this specific paper's research focus and how it contributes to the broader 100 Scientific Visions initiative*",
-    "url": "https://github.com/sandner-art/100-Scientific-Visions-Hub",
-    "repoUrl": "https://github.com/sandner-art/100-Scientific-Visions-Hub",
-    "private": false,
-    "topics": [],
-    "lastUpdated": "2025-05-25T06:11:00Z",
-    "title": null,
-    "status": "Active",
-    "priority": "Medium",
-    "progress": {
-      "phase": []
-    },
-    "commits": 14,
-    "preprintLink": null,
-    "publishedLink": null,
-    "isSubpaper": false,
-    "projectId": "U",
-    "researchArea": "e",
-    "historical": {
-      "age": 0,
-      "totalCommits3Months": 14,
-      "createdAt": "2025-05-25T02:56:51Z"
-    }
-  },
-  {
     "repoName": "SCIENCE-AF25-Absolute-Theories",
     "paperName": "The",
     "fullName": "SCIENCE-AF25-Absolute-Theories/ANI",
@@ -36,7 +8,7 @@
     "repoUrl": "https://github.com/sandner-art/SCIENCE-AF25-Absolute-Theories",
     "private": false,
     "topics": [],
-    "lastUpdated": "2025-05-25T05:00:17Z",
+    "lastUpdated": "2025-05-25T06:33:28Z",
     "title": "The",
     "status": "Review",
     "priority": "Low",
@@ -69,7 +41,7 @@
     "repoUrl": "https://github.com/sandner-art/SCIENCE-AF25-Absolute-Theories",
     "private": false,
     "topics": [],
-    "lastUpdated": "2025-05-25T05:00:17Z",
+    "lastUpdated": "2025-05-25T06:33:28Z",
     "title": "Cosmic",
     "status": "Review",
     "priority": "Low",
@@ -83,7 +55,8 @@
         "Methodology design",
         "Paper writing",
         "Internal review",
-        "Revisions"
+        "Revisions",
+        "Publication"
       ],
       "preprintLink": "https://doi.org/10.31219/osf.io/4pkhy_v1",
       "publishedLink": null
@@ -104,7 +77,7 @@
     "repoUrl": "https://github.com/sandner-art/SCIENCE-AF25-Absolute-Theories",
     "private": false,
     "topics": [],
-    "lastUpdated": "2025-05-25T05:00:17Z",
+    "lastUpdated": "2025-05-25T06:33:28Z",
     "title": "On",
     "status": "Review",
     "priority": "Low",
