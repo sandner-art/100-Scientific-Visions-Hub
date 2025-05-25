@@ -1,11 +1,11 @@
 {
   "total": 3,
   "byStatus": {
-    "[Review]": 2,
-    "[Complete]": 1
+    "Review": 2,
+    "Complete": 1
   },
   "byPriority": {
-    "[Low]": 3
+    "Low": 3
   },
   "recentActivity": [],
   "weeklyCommits": 0
