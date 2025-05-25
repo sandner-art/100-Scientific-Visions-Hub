@@ -9,9 +9,13 @@ on:
     branches: [ main ] # Or your default branch
     paths:
       - 'scripts/update-status.js'
-      - '.github/workflows/update-status.yml'
-      - 'index.html' # If dashboard changes
-      # Add other relevant paths if needed
+      - '.github/workflows/**'       # More robust: any change in workflows dir
+      - 'index.html'
+      - 'package.json'               # Add this
+      - 'package-lock.json'          # Add this
+      # You might also want to trigger if templates change, e.g.:
+      # - '100SV.md'
+      # - 'progress.md'
 
 permissions:
   contents: write # To commit changes to the repo (README, data files)
