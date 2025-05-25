@@ -1,11 +1,12 @@
 {
-  "total": 3,
+  "total": 4,
   "byStatus": {
+    "Active": 1,
     "Review": 2,
     "Complete": 1
   },
   "byPriority": {
-    "Low": 2,
+    "Low": 3,
     "Medium": 1
   },
   "recentActivity": [],

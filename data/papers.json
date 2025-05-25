@@ -1,5 +1,39 @@
 [
   {
+    "repoName": "SC-Biomimetics",
+    "paperName": "A Biomimetic Model for Schlieren Vision",
+    "fullName": "sandner-art/SC-Biomimetics/SCH",
+    "description": "*Brief description of this specific paper's research focus and how it contributes to the broader 100 Scientific Visions initiative*",
+    "url": "https://github.com/sandner-art/SC-Biomimetics/tree/main/papers/SCH",
+    "repoUrl": "https://github.com/sandner-art/SC-Biomimetics",
+    "private": false,
+    "topics": [],
+    "lastUpdated": "2025-05-25T20:24:01Z",
+    "title": "A Biomimetic Model for Schlieren Vision",
+    "status": "Active",
+    "priority": "Low",
+    "progress": {
+      "title": "A Biomimetic Model for Schlieren Vision",
+      "status": "Active",
+      "priority": "Low",
+      "phase": [
+        "Literature review",
+        "Hypothesis development",
+        "Methodology design",
+        "Data analysis",
+        "Paper writing",
+        "Internal review"
+      ],
+      "preprintLink": null,
+      "publishedLink": null
+    },
+    "preprintLink": null,
+    "publishedLink": null,
+    "isSubpaper": true,
+    "projectId": null,
+    "researchArea": null
+  },
+  {
     "repoName": "SCIENCE-AF25-Absolute-Theories",
     "paperName": "The Axiomatic Nature of Is-ness",
     "fullName": "sandner-art/SCIENCE-AF25-Absolute-Theories/ANI",
