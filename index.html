@@ -448,20 +448,57 @@
             
             createPriorityChart() {
                 const ctx = document.getElementById('priorityChart').getContext('2d');
-                const priorityData = this.stats.byPriority || {};
+                const priorityDataInput = this.stats.byPriority || {}; // e.g., { "Low": 2, "Medium": 1 }
+
+                // Define a consistent order and map colors
+                const definedPriorities = ["High", "Medium", "Low"];
+                const priorityColors = {
+                    "High": '#dc3545',   // Red
+                    "Medium": '#ffc107', // Yellow
+                    "Low": '#28a745',    // Green
+                    "Unknown": '#cccccc' // Grey for any other
+                };
+
+                const chartLabels = [];
+                const chartDataValues = [];
+                const chartBackgroundColors = [];
+
+                definedPriorities.forEach(prio => {
+                    if (priorityDataInput.hasOwnProperty(prio)) {
+                        chartLabels.push(prio);
+                        chartDataValues.push(priorityDataInput[prio]);
+                        chartBackgroundColors.push(priorityColors[prio]);
+                    }
+                });
+                
+                // Add any other priorities found in data but not in definedPriorities (e.g. if "Unknown" appears)
+                Object.keys(priorityDataInput).forEach(prioKey => {
+                    if (!definedPriorities.includes(prioKey)) {
+                        chartLabels.push(prioKey);
+                        chartDataValues.push(priorityDataInput[prioKey]);
+                        chartBackgroundColors.push(priorityColors["Unknown"]);
+                    }
+                });
+
+
+                if (chartLabels.length === 0) {
+                    // Handle empty data case, maybe show a message or an empty chart
+                    console.log("Priority chart: No data to display.");
+                    // You might want to clear the canvas or display a placeholder
+                    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+                    ctx.textAlign = 'center';
+                    ctx.fillText('No priority data available.', ctx.canvas.width / 2, ctx.canvas.height / 2);
+                    return;
+                }
                 
                 new Chart(ctx, {
                     type: 'bar',
                     data: {
-                        labels: Object.keys(priorityData),
+                        labels: chartLabels, // Dynamically ordered labels
                         datasets: [{
                             label: 'Papers',
-                            data: Object.values(priorityData),
-                            backgroundColor: [
-                                '#dc3545', // High - red
-                                '#ffc107', // Medium - yellow
-                                '#28a745'  // Low - green
-                            ],
+                            data: chartDataValues, // Corresponding data
+                            backgroundColor: chartBackgroundColors, // Dynamically assigned colors
                             borderWidth: 0
                         }]
                     },
@@ -469,17 +506,10 @@
                         responsive: true,
                         maintainAspectRatio: false,
                         plugins: {
-                            legend: {
-                                display: false
-                            }
+                            legend: { display: false }
                         },
                         scales: {
-                            y: {
-                                beginAtZero: true,
-                                ticks: {
-                                    stepSize: 1
-                                }
-                            }
+                            y: { beginAtZero: true, ticks: { stepSize: 1 } }
                         }
                     }
                 });
