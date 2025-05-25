@@ -4,7 +4,7 @@
 A comprehensive research initiative encompassing 100+ scientific papers across multiple research programs and topics.
 
 ## Current Status Dashboard
-*Last updated: 2025-05-25 19:08 UTC*
+*Last updated: 2025-05-25 19:11 UTC*
 
 ### Quick Stats
 - 📊 **Total Papers Tracked**: 3
@@ -25,7 +25,8 @@ A comprehensive research initiative encompassing 100+ scientific papers across m
 - **Review**: 2 papers
 
 ### Priority Distribution
-- 🟢 **Low Priority**: 3 papers
+- 🟡 **Medium Priority**: 1 papers
+- 🟢 **Low Priority**: 2 papers
 
 ## Quick Actions & Links
 - [📊 Interactive Dashboard](https://sandner-art.github.io/100-Scientific-Visions-Hub/)

@@ -5,7 +5,8 @@
     "Complete": 1
   },
   "byPriority": {
-    "Low": 3
+    "Low": 2,
+    "Medium": 1
   },
   "recentActivity": [],
   "weeklyCommits": 0
