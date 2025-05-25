@@ -4,10 +4,10 @@ const fs = require('fs').promises;
 class ScientificVisionsTracker {
   constructor() {
     this.octokit = new Octokit({
-      auth: process.env.GITHUB_TOKEN // This will be GITHUB_TOKEN or your PAT via secrets
+      auth: process.env.GITHUB_TOKEN
     });
     this.owner = process.env.GITHUB_OWNER;
-    this.repoFullName = process.env.GITHUB_REPOSITORY; // e.g., "owner/hub-repo-name"
+    this.repoFullName = process.env.GITHUB_REPOSITORY;
     this.papers = [];
     this.stats = {
       total: 0,
@@ -19,54 +19,75 @@ class ScientificVisionsTracker {
   }
 
   async parseFileContent(owner, repoName, filePath) {
+    console.log(`DEBUG: Attempting to read: ${owner}/${repoName}/${filePath}`);
     try {
       const { data: file } = await this.octokit.rest.repos.getContent({
         owner, repo: repoName, path: filePath, request: { retries: 0 }
       });
       if (file.content) {
+        console.log(`DEBUG: Content found for ${filePath} in ${owner}/${repoName}`);
         return Buffer.from(file.content, 'base64').toString();
       }
-    } catch (error) { /* Intentionally suppress for file not found */ }
+      console.log(`DEBUG: File ${filePath} in ${owner}/${repoName} has no content field.`);
+    } catch (error) { 
+        console.log(`DEBUG: File not found or error reading ${owner}/${repoName}/${filePath}: ${error.message}`);
+    }
     return null;
   }
 
   parseProgress(content) {
+    console.log(`DEBUG: Parsing progress.md content snippet:\n---\n${content.substring(0, 400)}\n---`);
     const progress = {
       title: null, status: null, priority: null, phase: [], preprintLink: null, publishedLink: null
     };
 
-    // Regex to capture the full line after the label, handling optional brackets around the value
-    const extractValue = (labelRegex) => {
+    const extractValue = (labelRegex, fieldName) => {
         const match = content.match(labelRegex);
-        if (match) return (match[1] || match[2] || "").trim(); // Group 1 for [Value], Group 2 for Value
+        if (match) {
+            const value = (match[1] || match[2] || "").trim();
+            // console.log(`DEBUG: Matched ${fieldName}: '${value}'`);
+            return value;
+        }
+        // console.log(`DEBUG: No match for ${fieldName}.`);
         return null;
     };
 
-    progress.title = extractValue(/^\*\*Paper Title\*\*:\s*(?:\[(.*?)\]|(.*?))(?:\r?\n|$)/im);
-    progress.status = extractValue(/^\*\*Status\*\*:\s*(?:\[(.*?)\]|(.*?))(?:\r?\n|$)/im);
-    progress.priority = extractValue(/^\*\*Priority\*\*:\s*(?:\[(.*?)\]|(.*?))(?:\r?\n|$)/im);
+    progress.title = extractValue(/^\*\*Paper Title\*\*:\s*(?:\[(.*?)\]|(.*?))(?:\r?\n|$)/im, "Paper Title");
+    progress.status = extractValue(/^\*\*Status\*\*:\s*(?:\[(.*?)\]|(.*?))(?:\r?\n|$)/im, "Status");
+    progress.priority = extractValue(/^\*\*Priority\*\*:\s*(?:\[(.*?)\]|(.*?))(?:\r?\n|$)/im, "Priority");
     
     const preprintRegex = /^\*\*Preprint\*\*:\s*(?:\[[^\]]+\]\(([^)]+)\)|([^\s]+))\s*$/im;
-    const preprintMatch = content.match(preprintRegex);
-    if (preprintMatch) {
-        const url = (preprintMatch[1] || preprintMatch[2] || '').trim();
-        if (url && !url.toLowerCase().startsWith('[link')) progress.preprintLink = url;
-    }
+    const preprintMatchResult = content.match(preprintRegex);
+    if (preprintMatchResult) {
+        const url = (preprintMatchResult[1] || preprintMatchResult[2] || '').trim();
+        if (url && !url.toLowerCase().startsWith('[link')) {
+            progress.preprintLink = url;
+            // console.log(`DEBUG: Matched Preprint Link: '${progress.preprintLink}'`);
+        }
+    } else { /* console.log("DEBUG: No preprint link match"); */ }
+
 
     const publishedRegex = /^\*\*Published\*\*:\s*(?:\[[^\]]+\]\(([^)]+)\)|([^\s]+))\s*$/im;
-    const publishedMatch = content.match(publishedRegex);
-    if (publishedMatch) {
-        const url = (publishedMatch[1] || publishedMatch[2] || '').trim();
-        if (url && !url.toLowerCase().startsWith('[doi')) progress.publishedLink = url;
-    }
+    const publishedMatchResult = content.match(publishedRegex);
+    if (publishedMatchResult) {
+        const url = (publishedMatchResult[1] || publishedMatchResult[2] || '').trim();
+        if (url && !url.toLowerCase().startsWith('[doi')) {
+            progress.publishedLink = url;
+            // console.log(`DEBUG: Matched Published Link: '${progress.publishedLink}'`);
+        }
+    } else { /* console.log("DEBUG: No published link match"); */ }
 
     const phaseMatches = content.match(/- \[x\]\s*([^\r\n]+)/gim);
-    if (phaseMatches) progress.phase = phaseMatches.map(match => match.replace(/- \[x\]\s*/i, '').trim());
+    if (phaseMatches) {
+        progress.phase = phaseMatches.map(match => match.replace(/- \[x\]\s*/i, '').trim());
+        // console.log(`DEBUG: Matched Phases: ${JSON.stringify(progress.phase)}`);
+    } else { /* console.log("DEBUG: No phases matched"); */ }
     
     return progress;
   }
   
   parse100SV(content) {
+    // console.log(`DEBUG: Parsing 100SV.md content snippet:\n---\n${content.substring(0, 300)}\n---`);
     const svData = { projectId: null, researchArea: null, researchFocus: null };
     const extractValue = (labelRegex) => {
         const match = content.match(labelRegex);
@@ -75,51 +96,71 @@ class ScientificVisionsTracker {
     };
     svData.projectId = extractValue(/^\*\*Project ID\*\*:\s*\[?([^\]\r\n]+?)\]?/im);
     svData.researchArea = extractValue(/^\*\*Research Area\*\*:\s*\[?([^\]\r\n]+?)\]?/im);
+
     const focusMatch = content.match(/^## Research Focus\s*\n+([\s\S]*?)(?=\n##|\n---|\n\*{3,}|$)/im);
     if (focusMatch && focusMatch[1]) svData.researchFocus = focusMatch[1].trim(); 
+    // console.log(`DEBUG: Parsed 100SV Data: ${JSON.stringify(svData)}`);
     return svData;
   }
 
   async getHistoricalStats(repo) {
+    console.log(`DEBUG [${repo.name}]: Getting historical stats...`);
     try {
       const createdAt = new Date(repo.created_at);
       const now = new Date();
       const ageInDays = Math.floor((now - createdAt) / (1000 * 60 * 60 * 24));
       let totalCommits3Months = 0;
-      if (!repo.private) {
+      // Decide if you want to fetch for private repos - requires PAT with repo scope
+      // const fetchForPrivate = true; // Set to true to attempt fetch for private repos
+      // if (!repo.private || fetchForPrivate) {
+      if (!repo.private) { // Current default: only for public repos
         try {
           const threeMonthsAgo = new Date(); threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
           for await (const { data: commitPage } of this.octokit.paginate.iterator(
             this.octokit.rest.repos.listCommits, 
             { owner: repo.owner.login, repo: repo.name, since: threeMonthsAgo.toISOString(), per_page: 100 }
           )) { totalCommits3Months += commitPage.length; }
-        } catch (e) { /* Suppress individual API error for this stat */ }
+          console.log(`DEBUG [${repo.name}]: 3-month commits: ${totalCommits3Months}`);
+        } catch (e) { 
+            console.error(`ERROR fetching 3-month commits for ${repo.name}: ${e.message} (Status: ${e.status})`);
+        }
+      } else {
+        console.log(`DEBUG [${repo.name}]: Skipping 3-month commit history for private repo.`);
       }
       return { age: ageInDays, totalCommits3Months, createdAt: repo.created_at };
     } catch (e) { console.error(`Error in getHistoricalStats for ${repo.name}: ${e.message}`); return null; }
   }
 
-  async getWeeklyCommits(repoOwner, repoName) {
+  async getWeeklyCommits(repoOwner, repoName, isPrivate) {
+    console.log(`DEBUG [${repoName}]: Getting weekly commits... Private: ${isPrivate}`);
     let count = 0, lastMessage = null;
     if (!repoOwner || !repoName) return { count, lastMessage };
-    try {
-        const weekAgo = new Date(); weekAgo.setDate(weekAgo.getDate() - 7);
-        for await (const { data: page } of this.octokit.paginate.iterator(
-            this.octokit.rest.repos.listCommits,
-            { owner: repoOwner, repo: repoName, since: weekAgo.toISOString(), per_page: 100 }
-        )) {
-            if (page.length > 0 && !lastMessage && page[0].commit) {
-                lastMessage = page[0].commit.message.split('\n')[0];
+    // const fetchForPrivate = true; // Set to true to attempt fetch for private repos
+    // if (!isPrivate || fetchForPrivate) {
+    if (!isPrivate) { // Current default: only for public
+        try {
+            const weekAgo = new Date(); weekAgo.setDate(weekAgo.getDate() - 7);
+            for await (const { data: page } of this.octokit.paginate.iterator(
+                this.octokit.rest.repos.listCommits,
+                { owner: repoOwner, repo: repoName, since: weekAgo.toISOString(), per_page: 100 }
+            )) {
+                if (page.length > 0 && !lastMessage && page[0].commit) lastMessage = page[0].commit.message.split('\n')[0];
+                count += page.length;
             }
-            count += page.length;
+            console.log(`DEBUG [${repoName}]: Weekly commits: ${count}`);
+        } catch (e) { 
+            console.error(`ERROR fetching weekly commits for ${repoName}: ${e.message} (Status: ${e.status})`);
         }
-    } catch (e) { /* Suppress individual API error for this stat */ }
+    } else {
+        console.log(`DEBUG [${repoName}]: Skipping weekly commit history for private repo.`);
+    }
     return { count, lastMessage };
   }
 
   async analyzeSinglePaper(repo) {
+    console.log(`DEBUG: Analyzing single paper: ${repo.full_name}`);
     const paper = {
-      repoName: repo.name, paperName: repo.name, fullName: repo.name,
+      repoName: repo.name, paperName: repo.name, fullName: repo.full_name, // Use full_name from API
       description: repo.description || 'No repository description.',
       url: repo.html_url, repoUrl: repo.html_url, private: repo.private,
       topics: repo.topics || [], lastUpdated: repo.updated_at, title: null,
@@ -136,34 +177,39 @@ class ScientificVisionsTracker {
         paper.projectId = sv.projectId; paper.researchArea = sv.researchArea;
     }
 
-    let t = null, s = null, pVal = null; // Renamed 'p' to 'pVal' to avoid conflict
-    const progressMd = await this.parseFileContent(repo.owner.login, repo.name, 'papers/progress.md');
+    let t = null, s = null, pVal = null;
+    const progressMdPath = 'papers/progress.md';
+    const progressMd = await this.parseFileContent(repo.owner.login, repo.name, progressMdPath);
+    console.log(`DEBUG [${paper.fullName}]: progress.md content for '${progressMdPath}' ${progressMd ? 'FOUND' : 'NOT FOUND'}`);
     if (progressMd) {
       const prog = this.parseProgress(progressMd);
       paper.progress = prog; 
-      if (prog.title) t = prog.title; if (prog.status) s = prog.status;
+      if (prog.title) t = prog.title; 
+      if (prog.status) s = prog.status;
       if (prog.priority) pVal = prog.priority;
       paper.preprintLink = prog.preprintLink; paper.publishedLink = prog.publishedLink;
+      console.log(`DEBUG [${paper.fullName}]: Parsed from progress.md - Title: ${t}, Status: ${s}, Priority: ${pVal}`);
     }
 
-    if (t) { paper.title = t; paper.paperName = t; }
+    if (t) { paper.title = t; paper.paperName = t; } // paperName becomes the actual title
     paper.status = s || (await this.inferStatusFromActivity(repo, 'papers/'));
     paper.priority = pVal || 'Medium';
-    
+    console.log(`DEBUG [${paper.fullName}]: Final - Title: ${paper.title}, Status: ${paper.status}, Priority: ${paper.priority}`);
+
     paper.historical = await this.getHistoricalStats(repo);
-    if (!repo.private) {
-        const weekly = await this.getWeeklyCommits(repo.owner.login, repo.name);
-        paper.commitsLastWeek = weekly.count;
-        if (weekly.count > 0) {
-            this.stats.recentActivity.push({ repo: paper.fullName, commits: weekly.count, lastCommit: weekly.lastMessage });
-        }
+    // Pass repo.private to getWeeklyCommits
+    const weekly = await this.getWeeklyCommits(repo.owner.login, repo.name, repo.private);
+    paper.commitsLastWeek = weekly.count;
+    if (weekly.count > 0) {
+        this.stats.recentActivity.push({ repo: paper.fullName, commits: weekly.count, lastCommit: weekly.lastMessage });
     }
     return paper;
   }
 
   async analyzeSubpaper(repo, subpaperDir) {
+    console.log(`DEBUG: Analyzing sub-paper: ${repo.full_name}/${subpaperDir}`);
     const paper = {
-      repoName: repo.name, paperName: subpaperDir, fullName: `${repo.name}/${subpaperDir}`,
+      repoName: repo.name, paperName: subpaperDir, fullName: `${repo.full_name}/${subpaperDir}`,
       description: repo.description || 'No repository description.',
       url: `${repo.html_url}/tree/main/papers/${subpaperDir}`, repoUrl: repo.html_url,
       private: repo.private, topics: repo.topics || [], lastUpdated: repo.updated_at,
@@ -188,24 +234,29 @@ class ScientificVisionsTracker {
     }
 
     let t = null, s = null, pVal = null;
-    const progressMd = await this.parseFileContent(repo.owner.login, repo.name, `papers/${subpaperDir}/progress.md`);
+    const progressMdPath = `papers/${subpaperDir}/progress.md`;
+    const progressMd = await this.parseFileContent(repo.owner.login, repo.name, progressMdPath);
+    console.log(`DEBUG [${paper.fullName}]: progress.md content for '${progressMdPath}' ${progressMd ? 'FOUND' : 'NOT FOUND'}`);
     if (progressMd) {
       const prog = this.parseProgress(progressMd);
       paper.progress = prog;
-      if (prog.title) t = prog.title; if (prog.status) s = prog.status;
+      if (prog.title) t = prog.title; 
+      if (prog.status) s = prog.status;
       if (prog.priority) pVal = prog.priority;
       paper.preprintLink = prog.preprintLink; paper.publishedLink = prog.publishedLink;
+      console.log(`DEBUG [${paper.fullName}]: Parsed from progress.md - Title: ${t}, Status: ${s}, Priority: ${pVal}`);
     }
 
     if (t) { paper.title = t; paper.paperName = t; }
     paper.status = s || (await this.inferStatusFromActivity(repo, `papers/${subpaperDir}/`));
     paper.priority = pVal || 'Medium';
+    console.log(`DEBUG [${paper.fullName}]: Final - Title: ${paper.title}, Status: ${paper.status}, Priority: ${paper.priority}`);
     return paper;
   }
 
   async inferStatusFromActivity(repo, specificPath = null) {
     let dateToUse = repo.updated_at; 
-    if (specificPath && !repo.private) {
+    if (specificPath && !repo.private) { // Only check path for public repos for now
         try {
             const { data: c } = await this.octokit.rest.repos.listCommits({ owner: repo.owner.login, repo: repo.name, path: specificPath, per_page: 1 });
             if (c.length > 0 && c[0].commit.committer?.date) dateToUse = c[0].commit.committer.date;
@@ -223,18 +274,23 @@ class ScientificVisionsTracker {
     let itemsCount = 0;
     try {
       for (const target of targets) {
+        console.log(`DEBUG: Scanning target: ${target.type}/${target.name}`);
         const params = target.type === 'org' ? { org: target.name, type: 'all', per_page: 100 } : { username: target.name, type: 'all', per_page: 100 };
         for await (const { data: page } of this.octokit.paginate.iterator(
           target.type === 'org' ? this.octokit.rest.repos.listForOrg : this.octokit.rest.repos.listForUser, params
         )) {
           for (const repo of page) {
+            console.log(`DEBUG: Checking repo: ${repo.full_name}, Private: ${repo.private}`);
             if (this.repoFullName && repo.full_name.toLowerCase() === this.repoFullName.toLowerCase()) {
-                // console.log(`DEBUG: Skipping self (hub repository): ${repo.full_name}`);
+                console.log(`DEBUG: Skipping self (hub repository): ${repo.full_name}`);
                 continue; 
             }
             if (await this.is100SVRepository(repo)) {
+              console.log(`DEBUG: Repo ${repo.full_name} IS identified as 100SV. Analyzing...`);
               const list = await this.analyzePaper(repo);
               if (list?.length > 0) { this.papers.push(...list); itemsCount += list.length; }
+            } else {
+              // console.log(`DEBUG: Repo ${repo.full_name} is NOT 100SV.`);
             }
           }
         }
@@ -245,29 +301,46 @@ class ScientificVisionsTracker {
   }
 
   async is100SVRepository(repo) {
-    try { await this.octokit.rest.repos.getContent({ owner: repo.owner.login, repo: repo.name, path: '100SV.md', request: {retries:0}}); return true; } catch (e) {}
-    return repo.topics?.includes('100-scientific-visions');
+    // console.log(`DEBUG [${repo.full_name}]: Checking if 100SV repo...`);
+    try { 
+      await this.octokit.rest.repos.getContent({ owner: repo.owner.login, repo: repo.name, path: '100SV.md', request: {retries:0}}); 
+      // console.log(`DEBUG [${repo.full_name}]: Found 100SV.md.`);
+      return true; 
+    } catch (e) { /* console.log(`DEBUG [${repo.full_name}]: No 100SV.md.`); */ }
+    if (repo.topics?.includes('100-scientific-visions')) {
+        // console.log(`DEBUG [${repo.full_name}]: Found '100-scientific-visions' topic.`);
+        return true;
+    }
+    return false;
   }
   
   async analyzePaper(repo) {
+    // console.log(`DEBUG [${repo.full_name}]: Starting analyzePaper.`);
     const list = []; const subDirs = await this.findSubpapers(repo); 
     if (subDirs.length > 0) {
+      console.log(`DEBUG [${repo.full_name}]: Found ${subDirs.length} sub-paper directories: ${subDirs.join(', ')}`);
       for (const sd of subDirs) { const d = await this.analyzeSubpaper(repo, sd); if (d) list.push(d); }
-    } else { const d = await this.analyzeSinglePaper(repo); if (d) list.push(d); }
+    } else { 
+      console.log(`DEBUG [${repo.full_name}]: No sub-paper directories, analyzing as single paper.`);
+      const d = await this.analyzeSinglePaper(repo); if (d) list.push(d); 
+    }
     return list;
   }
 
   async findSubpapers(repo) {
     const names = [];
     try {
+      // Check if 'papers' directory itself exists first
       await this.octokit.rest.repos.getContent({ owner: repo.owner.login, repo: repo.name, path: 'papers', request: { retries: 0 }});
       const { data: c } = await this.octokit.rest.repos.getContent({ owner: repo.owner.login, repo: repo.name, path: 'papers' });
       if (Array.isArray(c)) c.forEach(item => { if (item.type === 'dir') names.push(item.name); });
-    } catch (e) {}
+    } catch (e) { /* 'papers' dir missing or error */ }
+    // console.log(`DEBUG [${repo.full_name}]: Found subpaper dirs: ${names.join(', ')}`);
     return names;
   }
 
   generateStats() {
+    console.log("DEBUG: Generating stats...");
     this.stats.total = this.papers.length;
     this.stats.byStatus = {}; this.stats.byPriority = {};
     const weeklyCommitsMap = new Map();
@@ -280,13 +353,13 @@ class ScientificVisionsTracker {
         }
     });
     this.stats.weeklyCommits = Array.from(weeklyCommitsMap.values()).reduce((s, c) => s + c, 0);
-    // recentActivity is already populated and sorted during analyzeSinglePaper runs.
-    // Ensure it's sorted again here just in case, and sliced.
-    this.stats.recentActivity.sort((a, b) => b.commits - a.commits);
+    this.stats.recentActivity.sort((a, b) => b.commits - a.commits); // recentActivity is already populated
     this.stats.recentActivity = this.stats.recentActivity.slice(0, 10);
+    console.log(`DEBUG: Final Stats: Total=${this.stats.total}, WeeklyCommits=${this.stats.weeklyCommits}, Statuses=${JSON.stringify(this.stats.byStatus)}`);
   }
 
   async updateReadme() {
+    console.log("DEBUG: Updating README.md...");
     const ts = new Date().toISOString().slice(0,16).replace('T',' ') + ' UTC';
     const hubUrl = (this.owner && this.repoFullName?.includes('/')) ? `https://${this.owner}.github.io/${this.repoFullName.split('/')[1]}/` : `<!-- Hub Dashboard URL Error -->`;
     let md = `# 100 Scientific Visions by Daniel Sandner
@@ -351,6 +424,7 @@ This dashboard is automatically updated by GitHub Actions. For more information 
   }
 
   async generateDetailedReport() {
+    console.log("DEBUG: Generating detailed report...");
     const now = new Date(); const genDate = now.toISOString().slice(0,10); const genTime = now.toTimeString().slice(0,8);
     let report = `# Detailed Progress Report\n*Generated: ${genDate} ${genTime} UTC*\n\n## All Tracked Paper Items (${this.papers.length} total)\n\n`;
     report += `| Title / Location                 | Status                      | Priority                      | Progress                               | Links                                     | Last Repo Update |\n`;
@@ -363,7 +437,6 @@ This dashboard is automatically updated by GitHub Actions. For more information 
         if (p.isSubpaper) { 
             locationHint = `<br><small>(${p.fullName})</small>`;
         } else if (displayName !== p.repoName && p.repoName !== p.paperName) { 
-            // Avoid showing repoName if it's already paperName (because title wasn't found)
             locationHint = `<br><small>(${p.repoName})</small>`;
         }
         const viewLink = `<a href="${p.url}" target="_blank" title="View Paper Location">View</a>`;
@@ -386,10 +459,11 @@ This dashboard is automatically updated by GitHub Actions. For more information 
         
         const mainNonSubpaperItem = itemsInRepo.find(it => !it.isSubpaper);
         const descriptionToDisplay = mainNonSubpaperItem?.description || repoDataForHeader.description || 'N/A';
-        report += `- **Repo Description**: ${descriptionToDisplay}\n`; // This uses the most specific description found
+        report += `- **Repo Description**: ${descriptionToDisplay}\n`;
         report += `- **Topics**: ${(repoDataForHeader.topics||[]).join(', ') || 'None'}\n`;
         report += `- **Visibility**: ${repoDataForHeader.private ? 'Private' : 'Public'}\n`;
         
+        // Prefer historical data from the main non-subpaper item if it exists
         const historicalDataSource = mainNonSubpaperItem || itemsInRepo.find(it => it.historical);
         if (historicalDataSource?.historical) { 
             const hist = historicalDataSource.historical;
@@ -398,8 +472,9 @@ This dashboard is automatically updated by GitHub Actions. For more information 
                 report += `- **Commits (3 months)**: ${hist.totalCommits3Months}\n`; 
             }
         }
+        // Prefer weekly commits from the main non-subpaper item
         const weeklyCommitDataSource = mainNonSubpaperItem || itemsInRepo.find(it => typeof it.commitsLastWeek === 'number');
-        if (weeklyCommitDataSource && typeof weeklyCommitDataSource.commitsLastWeek === 'number' && !repoDataForHeader.private) {
+        if (weeklyCommitDataSource && typeof weeklyCommitDataSource.commitsLastWeek === 'number' /*&& !repoDataForHeader.private - this condition is now in getWeeklyCommits itself */ ) {
             report += `- **Weekly Commits (this repo)**: ${weeklyCommitDataSource.commitsLastWeek}\n`;
         }
 
@@ -418,7 +493,6 @@ This dashboard is automatically updated by GitHub Actions. For more information 
           itemsInRepo.forEach(p => { 
             report += `  - #### ${this.getStatusEmoji(p.status)} ${p.title||p.paperName||'Untitled Sub-paper'}\n`; 
             if (p.title && p.paperName !== p.title && p.isSubpaper) { report += `    - **Directory Name**: \`${p.paperName}\`\n`; }
-            // For sub-papers, show their specific description if it's different from the one used in the repo header
             if (p.description && p.description !== descriptionToDisplay) {
                  report += `    - **Description (Specific)**: ${p.description}\n`;
             }
@@ -465,11 +539,11 @@ This dashboard is automatically updated by GitHub Actions. For more information 
     console.log('🚀 Starting Scientific Visions Tracker...');
     if(!this.owner){console.error("❌ GITHUB_OWNER environment variable missing. Cannot determine scan targets."); process.exit(1);}
     
-    await this.discoverPapers(); // Populates this.papers and this.stats.recentActivity
-    this.generateStats(); // Aggregates stats from this.papers, including this.stats.weeklyCommits
-    await this.updateReadme(); // Uses this.stats
-    await this.generateDetailedReport(); // Uses this.papers
-    await this.saveData(); // Saves this.papers and this.stats
+    await this.discoverPapers();
+    this.generateStats(); 
+    await this.updateReadme(); 
+    await this.generateDetailedReport(); 
+    await this.saveData(); 
     
     console.log('🎉 Tracker run complete!');
     console.log(`📊 Total papers processed: ${this.stats.total}.`);

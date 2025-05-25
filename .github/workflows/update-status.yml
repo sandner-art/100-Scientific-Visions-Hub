@@ -2,78 +2,82 @@ name: Update Project Status & Deploy Dashboard
 
 on:
   schedule:
-    # Run every day at 6 AM UTC
+    # Run every day at 6 AM UTC (adjust as needed)
     - cron: '0 6 * * *'
   workflow_dispatch: # Allow manual triggering
   push:
-    branches: [ main ] # Or your default branch
+    branches: 
+      - main # Or your default branch (e.g., master)
     paths:
       - 'scripts/update-status.js'
-      - '.github/workflows/**'       # More robust: any change in workflows dir
+      - '.github/workflows/**'
       - 'index.html'
-      - 'package.json'               # Add this
-      - 'package-lock.json'          # Add this
-      # You might also want to trigger if templates change, e.g.:
-      # - '100SV.md'
+      - 'package.json'
+      - 'package-lock.json'
+      # Optional: trigger if template files change, indicating a structural update
+      # - '100SV.md' 
       # - 'progress.md'
 
 permissions:
-  contents: write # To commit changes to the repo (README, data files)
+  contents: write # To commit changes to the repo (README, data files, reports)
   pages: write    # To deploy to GitHub Pages
   id-token: write # To authenticate with GitHub Pages
 
 jobs:
   update-status:
+    name: Update Project Data & Reports
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
       with:
-        # Using a PAT if you need to trigger subsequent workflows or push to protected branches
-        # token: ${{ secrets.PAT_FOR_WORKFLOWS || secrets.GITHUB_TOKEN }}
-        token: ${{ secrets.GITHUB_TOKEN }} # Standard token is usually fine
-        fetch-depth: 0 # Fetches all history for accurate commit analysis if needed by script
+        # If your script needs to push back to the repo and trigger other workflows,
+        # or if you have branch protection rules that GITHUB_TOKEN can't bypass,
+        # you might need a PAT with contents:write permission here as well.
+        # For now, default GITHUB_TOKEN is used for checkout.
+        # token: ${{ secrets.GH_PAT_FOR_CHECKOUT || secrets.GITHUB_TOKEN }} 
+        fetch-depth: 0 # Fetches all history, potentially useful for some git based stats if added later
 
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '20' # LTS version
-        cache: 'npm'
+        node-version: '20' # Use a current LTS version
+        cache: 'npm' # Cache npm dependencies based on package-lock.json
 
     - name: Install dependencies
-      run: |
-        # Create a minimal package.json if not existing, then install
-        if [ ! -f package.json ]; then
-          echo '{ "name": "100sv-tracker", "version": "1.0.0" }' > package.json
-        fi
-        npm install @octokit/rest
+      run: npm ci # Clean install using package-lock.json
 
     - name: Run status update script
       env:
-        # GITHUB_TOKEN is used by Octokit. If you need to access private repos
-        # across organizations, use a PAT with 'repo' scope.
-        # The setup.md correctly guides to use a PAT named GH_TOKEN (or similar)
-        # and update this line. For now, default GITHUB_TOKEN is used.
-        GITHUB_TOKEN: ${{ secrets.GH_PAT_PRIVATE_REPOS }} 
+        # Use GH_PAT_PRIVATE_REPOS if you need to access private repositories.
+        # This PAT must have 'repo' scope.
+        # If only public repos, secrets.GITHUB_TOKEN might be sufficient, but PAT has higher rate limits.
+        GITHUB_TOKEN: ${{ secrets.GH_PAT_PRIVATE_REPOS || secrets.GITHUB_TOKEN }}
         GITHUB_OWNER: ${{ github.repository_owner }}
-        GITHUB_REPOSITORY: ${{ github.repository }} # Pass owner/repo string
+        GITHUB_REPOSITORY: ${{ github.repository }} # Passes "owner/repo-name" to the script
       run: node scripts/update-status.js
 
     - name: Commit and push changes
       run: |
         git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action Bot"
-        git add README.md reports/ data/ # Add specific generated files
+        git config --local user.name "GitHub Action Bot [update-status]"
+        # Add all generated/modified files that need to be committed
+        git add README.md reports/ data/ 
         if git diff --staged --quiet; then
           echo "No changes to commit."
         else
           git commit -m "🤖 Auto-update project status dashboard - $(date -u +'%Y-%m-%d %H:%M:%S UTC')"
-          git push
+          # Add retry logic for push in case of transient network issues or minor conflicts
+          for i in 1 2 3; do git push && break || sleep 15; done
         fi
 
   deploy-dashboard:
-    needs: update-status # Run after status update and commit
-    if: github.ref == 'refs/heads/main' # Or your default branch, and only if changes were pushed
+    name: Deploy Dashboard to GitHub Pages
+    needs: update-status # Run only after status-update job is successful
+    # Run only on pushes to the main branch, not on PRs or other branches,
+    # and only if the previous job made changes (though this 'if' can be tricky to get right just based on commit)
+    # A simpler approach is to always try to deploy if on main after update.
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push' 
     runs-on: ubuntu-latest
     
     environment:
@@ -81,15 +85,19 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
-    - name: Checkout
+    - name: Checkout repository (for deployment)
       uses: actions/checkout@v4
-      # This checkout will get the files committed by the 'update-status' job
+      # This checkout ensures it gets the files committed by the 'update-status' job in the same workflow run.
+      # If the previous job pushed and this checkout happens too quickly, there could be a race condition.
+      # However, `needs: update-status` implies a sequence.
+      # For absolute certainty of getting pushed changes, one might use a separate workflow triggered by push.
+      # But for simplicity within one workflow, this is common.
 
     - name: Setup Pages
-      uses: actions/configure-pages@v5 # Updated to v5
+      uses: actions/configure-pages@v5
 
     - name: Upload artifact
-      uses: actions/upload-pages-artifact@v3 # Standard artifact for Pages
+      uses: actions/upload-pages-artifact@v3
       with:
         # Path to the directory to upload. '.' means the root of your repo.
         # This should contain index.html and the data/ directory.
@@ -97,4 +105,4 @@ jobs:
 
     - name: Deploy to GitHub Pages
       id: deployment
-      uses: actions/deploy-pages@v4 # Standard deployment action
+      uses: actions/deploy-pages@v4
