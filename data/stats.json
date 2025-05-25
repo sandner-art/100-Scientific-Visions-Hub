@@ -1,11 +1,19 @@
 {
-  "total": 3,
+  "total": 4,
   "byStatus": {
-    "Active": 3
+    "Active": 1,
+    "Review": 3
   },
   "byPriority": {
-    "Medium": 3
+    "Medium": 1,
+    "Low": 3
   },
-  "recentActivity": [],
-  "weeklyCommits": 0
+  "recentActivity": [
+    {
+      "repo": "100-Scientific-Visions-Hub",
+      "commits": 13,
+      "lastCommit": "Merge branch 'main' of https://github.com/sandner-art/100-Scientific-Visions-Hub"
+    }
+  ],
+  "weeklyCommits": 13
 }
