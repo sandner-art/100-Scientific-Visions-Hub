@@ -54,7 +54,7 @@ jobs:
         # across organizations, use a PAT with 'repo' scope.
         # The setup.md correctly guides to use a PAT named GH_TOKEN (or similar)
         # and update this line. For now, default GITHUB_TOKEN is used.
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+        GITHUB_TOKEN: ${{ secrets.GH_PAT_PRIVATE_REPOS }} 
         GITHUB_OWNER: ${{ github.repository_owner }}
         GITHUB_REPOSITORY: ${{ github.repository }} # Pass owner/repo string
       run: node scripts/update-status.js
