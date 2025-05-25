@@ -4,12 +4,13 @@
 A comprehensive research initiative encompassing 100+ scientific papers across multiple research programs and topics.
 
 ## Current Status Dashboard
-*Last updated: 2025-05-25 17:43 UTC*
+*Last updated: 2025-05-25 18:00 UTC*
 
 ### Quick Stats
 - 📊 **Total Papers Tracked**: 3
 - 🟢 **Active Projects**: 0
 - 🟡 **In Planning**: 0
+- ⚪ **Recent Activity (but not 'Active')**: 0
 - 🔴 **Stale (Needs Attention)**: 0
 - 📈 **This Week's Commits (Public Repos)**: 0
 
@@ -20,11 +21,11 @@ A comprehensive research initiative encompassing 100+ scientific papers across m
 *Categorization based on repository topics or 'Research Area' in 100SV.md files.*
 
 ### By Status
-- **[Complete]**: 1 papers
-- **[Review]**: 2 papers
+- **Complete**: 1 papers
+- **Review**: 2 papers
 
 ### Priority Distribution
-- ⚪ **[Low] Priority**: 3 papers
+- 🟢 **Low Priority**: 3 papers
 
 ## Quick Actions & Links
 - [📊 Interactive Dashboard](https://sandner-art.github.io/100-Scientific-Visions-Hub/)
