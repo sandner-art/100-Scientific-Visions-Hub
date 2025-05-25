@@ -1,0 +1,20 @@
+{
+  "name": "100-scientific-visions-hub",
+  "version": "1.0.0",
+  "description": "Dashboard and tracking for 100 Scientific Visions project.",
+  "main": "scripts/update-status.js",
+  "scripts": {
+    "start": "node scripts/update-status.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "research",
+    "dashboard",
+    "tracking"
+  ],
+  "author": "Daniel Sandner",
+  "license": "MIT",
+  "dependencies": {
+    "@octokit/rest": "^21.1.1" 
+  }
+}

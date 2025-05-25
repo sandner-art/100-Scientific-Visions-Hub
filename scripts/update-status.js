@@ -230,6 +230,7 @@ class ScientificVisionsTracker {
       priority: 'Medium',
       progress: {},
       commits: 0, // Commits are repo-level, not easily attributable to sub-folders via basic API
+      title: null, // Paper title
       preprintLink: null,
       publishedLink: null,
       isSubpaper: true,
@@ -237,13 +238,17 @@ class ScientificVisionsTracker {
       researchArea: null
     };
 
-    const progressContent = await this.parseFileContent(repo.owner.login, repo.name, `papers/${subpaperDir}/progress.md`);
+    const progressContent = await this.parseFileContent(repo.owner.login, repo.name, 'papers/progress.md');
     if (progressContent) {
-      paper.progress = this.parseProgress(progressContent);
-      paper.status = paper.progress.status || 'Unknown';
-      paper.priority = paper.progress.priority || 'Medium';
-      paper.preprintLink = paper.progress.preprintLink; // Already handles null
-      paper.publishedLink = paper.progress.publishedLink; // Already handles null
+    paper.progress = this.parseProgress(progressContent);
+    paper.status = paper.progress.status || 'Unknown';
+    paper.priority = paper.progress.priority || 'Medium';
+    paper.preprintLink = paper.progress.preprintLink;
+    paper.publishedLink = paper.progress.publishedLink;
+    if (paper.progress.title) { // Check if title was parsed
+        paper.title = paper.progress.title;
+        paper.paperName = paper.progress.title; // Make paperName more descriptive
+    }
     }
 
     const svContent = await this.parseFileContent(repo.owner.login, repo.name, `papers/${subpaperDir}/100SV.md`);
@@ -277,6 +282,7 @@ class ScientificVisionsTracker {
       priority: 'Medium',
       progress: {},
       commits: 0, // Weekly commits for this repo
+      title: null, // Add new field
       preprintLink: null,
       publishedLink: null,
       isSubpaper: false,
@@ -284,13 +290,17 @@ class ScientificVisionsTracker {
       researchArea: null
     };
 
-    const progressContent = await this.parseFileContent(repo.owner.login, repo.name, 'papers/progress.md');
+    const progressContent = await this.parseFileContent(repo.owner.login, repo.name, `papers/${subpaperDir}/progress.md`);
     if (progressContent) {
-      paper.progress = this.parseProgress(progressContent);
-      paper.status = paper.progress.status || 'Unknown';
-      paper.priority = paper.progress.priority || 'Medium';
-      paper.preprintLink = paper.progress.preprintLink;
-      paper.publishedLink = paper.progress.publishedLink;
+    paper.progress = this.parseProgress(progressContent);
+    paper.status = paper.progress.status || 'Unknown';
+    paper.priority = paper.progress.priority || 'Medium';
+    paper.preprintLink = paper.progress.preprintLink; 
+    paper.publishedLink = paper.progress.publishedLink;
+    if (paper.progress.title) { // Check if title was parsed
+        paper.title = paper.progress.title;
+        paper.paperName = paper.progress.title; // Make paperName more descriptive
+    }
     }
 
     const svContentRoot = await this.parseFileContent(repo.owner.login, repo.name, '100SV.md');
@@ -352,10 +362,21 @@ class ScientificVisionsTracker {
     return paper;
   }
 
-  parseProgress(content) {
+parseProgress(content) {
     const progress = {
-      status: null, priority: null, phase: [], preprintLink: null, publishedLink: null
+        title: null, // New field for paper title
+        status: null, 
+        priority: null, 
+        phase: [], 
+        preprintLink: null, 
+        publishedLink: null
     };
+
+    // Extract Paper Title
+    const titleMatch = content.match(/^\*\*Paper Title\*\*:\s*\[?([^\]\n]+?)\]?(?:\s|$)/im);
+    if (titleMatch) {
+        progress.title = titleMatch[1].trim();
+    }
 
     const statusMatch = content.match(/\*\*Status\*\*:\s*\[?([^\]\n]+?)\]?(?:\s|$)/im);
     if (statusMatch) progress.status = statusMatch[1].trim();
@@ -379,7 +400,7 @@ class ScientificVisionsTracker {
     if (!progress.priority) progress.priority = 'Medium';
 
     return progress;
-  }
+}
 
   parse100SV(content) {
     const svData = { projectId: null, researchArea: null, researchFocus: null };
@@ -519,85 +540,138 @@ This dashboard is automatically updated by GitHub Actions. For more information 
 
   async generateDetailedReport() {
     console.log('📊 Generating detailed progress report...');
-    await fs.mkdir('reports', { recursive: true });
+    try {
+      await fs.mkdir('reports', { recursive: true });
     
-    let report = `# Detailed Progress Report
-*Generated: ${new Date().toISOString()}*
+      const now = new Date();
+      const generatedDate = now.toISOString().slice(0, 10); // YYYY-MM-DD
+      const generatedTime = now.toTimeString().slice(0, 8); // HH:MM:SS
 
-## All Tracked Paper Items
+      let report = `# Detailed Progress Report\n`;
+      report += `*Generated: ${generatedDate} ${generatedTime} UTC*\n\n`;
+      report += `## All Tracked Paper Items (${this.papers.length} total)\n\n`;
 
-| Paper Location                 | Status                      | Priority                      | Progress                               | Links                                     | Last Repo Update |
-|--------------------------------|-----------------------------|-------------------------------|----------------------------------------|-------------------------------------------|------------------|
-`;
+      report += `| Title / Location                 | Status                      | Priority                      | Progress                               | Links                                     | Last Repo Update |\n`;
+      report += `|:---------------------------------|:----------------------------|:------------------------------|:---------------------------------------|:------------------------------------------|:-----------------|\n`; // Markdown table alignment
 
-    this.papers.forEach(paper => {
-      const statusEmoji = this.getStatusEmoji(paper.status);
-      const priorityEmoji = paper.priority === 'High' ? '🔴' : paper.priority === 'Medium' ? '🟡' : '🟢';
-      const progressBar = this.generateProgressBar(paper.progress.phase || []);
-      
-      const links = [];
-      if (paper.preprintLink && paper.preprintLink !== 'null' && !paper.preprintLink.toLowerCase().includes('[link')) {
-        links.push(`[Preprint](${paper.preprintLink})`);
+      if (this.papers.length === 0) {
+        report += `| *No paper items found or tracked.* | - | - | - | - | - |\n`;
       }
-      if (paper.publishedLink && paper.publishedLink !== 'null' && !paper.publishedLink.toLowerCase().includes('[doi')) {
-        links.push(`[Published](${paper.publishedLink})`);
-      }
-      links.push(`[Location](${paper.url})`); // Link to sub-paper dir or repo root
-      
-      report += `| [${paper.fullName}](${paper.url}) | ${statusEmoji} ${paper.status} | ${priorityEmoji} ${paper.priority} | \`${progressBar}\` | ${links.join(' • ')} | ${new Date(paper.lastUpdated).toLocaleDateString()} |\n`;
-    });
 
-    report += `
-## Detailed Information by Repository
-`;
-    // Group papers by repository for detailed section
-    const papersByRepo = this.papers.reduce((acc, paper) => {
-        (acc[paper.repoName] = acc[paper.repoName] || []).push(paper);
-        return acc;
-    }, {});
+      this.papers.forEach(paper => {
+        const statusEmoji = this.getStatusEmoji(paper.status);
+        const priorityEmoji = paper.priority === 'High' ? '🔴' : paper.priority === 'Medium' ? '🟡' : '🟢';
+        const progressBar = this.generateProgressBar(paper.progress?.phase || []);
+        
+        const links = [];
+        if (paper.preprintLink && paper.preprintLink !== 'null' && !paper.preprintLink.toLowerCase().includes('[link')) {
+          links.push(`[Preprint](${paper.preprintLink})`);
+        }
+        if (paper.publishedLink && paper.publishedLink !== 'null' && !paper.publishedLink.toLowerCase().includes('[doi')) {
+          links.push(`[Published](${paper.publishedLink})`);
+        }
+        links.push(`[View](${paper.url})`); // Link to sub-paper dir or repo root
+        
+        // Determine the best display name
+        let displayName = paper.title || paper.paperName; // Use parsed title first
+        if (!paper.title && paper.isSubpaper) { // If no title and it's a subpaper, paperName is subDir
+             // displayName is already subpaperDir (paper.paperName)
+        } else if (!paper.title && !paper.isSubpaper) { // No title, single paper repo, paperName is repoName
+             // displayName is already repoName (paper.paperName)
+        }
 
-    Object.keys(papersByRepo).sort().forEach(repoName => {
-        const papersInRepo = papersByRepo[repoName];
-        const repoData = papersInRepo[0]; // Use first paper for common repo data
-
-        report += `\n### 📁 Repository: [${repoName}](${repoData.repoUrl})\n`;
-        report += `- **Description**: ${repoData.description || 'N/A'}\n`;
-        report += `- **Topics**: ${repoData.topics.join(', ') || 'None'}\n`;
-        report += `- **Visibility**: ${repoData.private ? 'Private' : 'Public'}\n`;
-        if (repoData.historical) {
-            report += `- **Created**: ${new Date(repoData.historical.createdAt).toLocaleDateString()} (${repoData.historical.age} days ago)\n`;
-            if (!repoData.private) {
-              report += `- **Commits (last 3 months)**: ${repoData.historical.totalCommits3Months}\n`;
+        let locationHint = paper.fullName; // Default to full path
+        // If title is present and different from paperName (which might be a slug/dir name)
+        // Or if the display name is the repo name for a single paper repo
+        if ((paper.title && paper.title !== paper.paperName) || (!paper.isSubpaper && displayName === paper.repoName)) {
+            // For subpapers with a title, fullName is still good for context
+            // For single papers with a title, no need to repeat repoName if title is distinct
+            if (paper.isSubpaper) {
+                locationHint = `<br><small>(${paper.fullName})</small>`;
+            } else {
+                locationHint = ''; // Title is sufficient, fullName is just repoName
             }
-        }
-
-        if (papersInRepo.length === 1 && !papersInRepo[0].isSubpaper) {
-            const paper = papersInRepo[0];
-            report += `- **Paper Status**: ${this.getStatusEmoji(paper.status)} ${paper.status}\n`;
-            report += `- **Priority**: ${paper.priority}\n`;
-            report += `- **Progress**: \`${this.generateProgressBar(paper.progress.phase || [])}\`\n`;
-            if (paper.projectId) report += `- **Project ID**: ${paper.projectId}\n`;
-            if (paper.researchArea) report += `- **Research Area**: ${paper.researchArea}\n`;
-            if (paper.preprintLink) report += `- **Preprint**: [Link](${paper.preprintLink})\n`;
-            if (paper.publishedLink) report += `- **Published**: [Link](${paper.publishedLink})\n`;
-            if (!paper.private) report += `- **Weekly Commits (repo)**: ${paper.commits || 0}\n`;
+        } else if (paper.isSubpaper) {
+             // If no title, paperName (subDir) is the primary name, fullName gives context
+            locationHint = `<br><small>(${paper.repoName}/${paper.paperName})</small>`;
         } else {
-            report += `\n  *Contains ${papersInRepo.length} paper items:*\n`;
-            papersInRepo.forEach(paper => {
-                report += `  - #### ${this.getStatusEmoji(paper.status)} ${paper.paperName}\n`;
-                report += `    - **Status**: ${paper.status} | **Priority**: ${paper.priority}\n`;
-                report += `    - **Progress**: \`${this.generateProgressBar(paper.progress.phase || [])}\`\n`;
-                if (paper.projectId) report += `    - **Project ID**: ${paper.projectId}\n`;
-                if (paper.researchArea) report += `    - **Research Area**: ${paper.researchArea}\n`;
-                if (paper.preprintLink) report += `    - **Preprint**: [Link](${paper.preprintLink})\n`;
-                if (paper.publishedLink) report += `    - **Published**: [Link](${paper.publishedLink})\n`;
-                report += `    - **Link**: [View Paper Directory](${paper.url})\n\n`;
-            });
+            locationHint = ''; // Single paper, paperName is repoName, no extra hint needed
         }
-    });
 
-    await fs.writeFile('reports/detailed-progress.md', report);
-    console.log('✅ Detailed report generated successfully.');
+
+        report += `| **${displayName}**${locationHint} | ${statusEmoji} ${paper.status} | ${priorityEmoji} ${paper.priority} | \`${progressBar}\` | ${links.join(' • ')} | ${new Date(paper.lastUpdated).toLocaleDateString()} |\n`;
+      });
+
+      report += `\n## Detailed Information by Repository\n`;
+
+      const papersByRepo = this.papers.reduce((acc, paper) => {
+          (acc[paper.repoName] = acc[paper.repoName] || []).push(paper);
+          return acc;
+      }, {});
+
+      if (Object.keys(papersByRepo).length === 0 && this.papers.length > 0) {
+          report += `*Error: Papers were found, but could not be grouped by repository for detail section.*\n`;
+      } else if (Object.keys(papersByRepo).length === 0) {
+          report += `*No repositories to detail.*\n`;
+      }
+
+
+      Object.keys(papersByRepo).sort().forEach(repoName => {
+          const papersInRepo = papersByRepo[repoName];
+          const repoData = papersInRepo[0]; // Use first paper for common repo data like repoUrl, description from repo
+
+          report += `\n### 📁 Repository: [${repoName}](${repoData.repoUrl})\n`;
+          report += `- **Repo Description**: ${repoData.description || 'N/A (No repo description or 100SV.md research focus)'}\n`;
+          report += `- **Topics**: ${repoData.topics.join(', ') || 'None'}\n`;
+          report += `- **Visibility**: ${repoData.private ? 'Private' : 'Public'}\n`;
+          if (repoData.historical) {
+              report += `- **Created**: ${new Date(repoData.historical.createdAt).toLocaleDateString()} (${repoData.historical.age} days ago)\n`;
+              if (!repoData.private && typeof repoData.historical.totalCommits3Months === 'number') {
+                report += `- **Commits (last 3 months)**: ${repoData.historical.totalCommits3Months}\n`;
+              }
+          }
+          // Weekly commits are for the whole repo, usually stored on single-paper or first sub-paper instance
+          if (!repoData.private && typeof repoData.commits === 'number' && repoData.commits > 0) {
+              report += `- **Weekly Commits (repo)**: ${repoData.commits}\n`;
+          }
+
+
+          if (papersInRepo.length === 1 && !papersInRepo[0].isSubpaper) {
+              // Single paper repository, details are for this paper
+              const paper = papersInRepo[0];
+              report += `- **Paper Title**: ${paper.title || paper.paperName || '*Not specified*'}\n`;
+              report += `- **Status**: ${this.getStatusEmoji(paper.status)} ${paper.status}\n`;
+              report += `- **Priority**: ${paper.priority}\n`;
+              report += `- **Progress**: \`${this.generateProgressBar(paper.progress?.phase || [])}\`\n`;
+              if (paper.projectId) report += `- **Project ID**: ${paper.projectId}\n`;
+              if (paper.researchArea) report += `- **Research Area**: ${paper.researchArea}\n`;
+              if (paper.preprintLink && paper.preprintLink !== 'null') report += `- **Preprint**: [Link](${paper.preprintLink})\n`;
+              if (paper.publishedLink && paper.publishedLink !== 'null') report += `- **Published**: [Link](${paper.publishedLink})\n`;
+          } else {
+              // Multi-paper repository
+              report += `\n  *Contains ${papersInRepo.length} paper items:*\n`;
+              papersInRepo.forEach(paper => {
+                  report += `  - #### ${this.getStatusEmoji(paper.status)} ${paper.title || paper.paperName || '*Untitled Sub-paper*'}\n`;
+                  if (paper.title && paper.paperName !== paper.title) { // If title is different from dir name
+                    report += `    - **Location**: \`papers/${paper.paperName}\`\n`;
+                  }
+                  report += `    - **Status**: ${paper.status} | **Priority**: ${paper.priority}\n`;
+                  report += `    - **Progress**: \`${this.generateProgressBar(paper.progress?.phase || [])}\`\n`;
+                  if (paper.projectId) report += `    - **Project ID**: ${paper.projectId}\n`;
+                  if (paper.researchArea) report += `    - **Research Area**: ${paper.researchArea}\n`;
+                  if (paper.preprintLink && paper.preprintLink !== 'null') report += `    - **Preprint**: [Link](${paper.preprintLink})\n`;
+                  if (paper.publishedLink && paper.publishedLink !== 'null') report += `    - **Published**: [Link](${paper.publishedLink})\n`;
+                  report += `    - **Link**: [View Paper Directory](${paper.url})\n\n`;
+              });
+          }
+          report += `\n---\n`; // Separator between repositories
+      });
+
+      await fs.writeFile('reports/detailed-progress.md', report);
+      console.log('✅ Detailed report generated successfully: reports/detailed-progress.md');
+    } catch (error) {
+      console.error(`❌ Error generating detailed report: ${error.message}`, error.stack);
+    }
   }
 
   generateProgressBar(completedPhases) {
