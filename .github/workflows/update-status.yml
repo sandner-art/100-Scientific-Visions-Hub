@@ -1,4 +1,4 @@
-name: Update Project Status
+name: Update Project Status & Deploy Dashboard
 
 on:
   schedule:
@@ -6,45 +6,91 @@ on:
     - cron: '0 6 * * *'
   workflow_dispatch: # Allow manual triggering
   push:
-    branches: [ main ]
+    branches: [ main ] # Or your default branch
+    paths:
+      - 'scripts/update-status.js'
+      - '.github/workflows/update-status.yml'
+      - 'index.html' # If dashboard changes
+      # Add other relevant paths if needed
+
+permissions:
+  contents: write # To commit changes to the repo (README, data files)
+  pages: write    # To deploy to GitHub Pages
+  id-token: write # To authenticate with GitHub Pages
 
 jobs:
   update-status:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      actions: read
-
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
       with:
-        token: ${{ secrets.GITHUB_TOKEN }}
+        # Using a PAT if you need to trigger subsequent workflows or push to protected branches
+        # token: ${{ secrets.PAT_FOR_WORKFLOWS || secrets.GITHUB_TOKEN }}
+        token: ${{ secrets.GITHUB_TOKEN }} # Standard token is usually fine
+        fetch-depth: 0 # Fetches all history for accurate commit analysis if needed by script
 
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '18'
+        node-version: '20' # LTS version
+        cache: 'npm'
 
     - name: Install dependencies
       run: |
-        npm init -y
-        npm install @octokit/rest js-yaml marked
+        # Create a minimal package.json if not existing, then install
+        if [ ! -f package.json ]; then
+          echo '{ "name": "100sv-tracker", "version": "1.0.0" }' > package.json
+        fi
+        npm install @octokit/rest
 
     - name: Run status update script
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        # GITHUB_TOKEN is used by Octokit. If you need to access private repos
+        # across organizations, use a PAT with 'repo' scope.
+        # The setup.md correctly guides to use a PAT named GH_TOKEN (or similar)
+        # and update this line. For now, default GITHUB_TOKEN is used.
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
         GITHUB_OWNER: ${{ github.repository_owner }}
+        GITHUB_REPOSITORY: ${{ github.repository }} # Pass owner/repo string
       run: node scripts/update-status.js
 
     - name: Commit and push changes
       run: |
         git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
-        git add .
+        git config --local user.name "GitHub Action Bot"
+        git add README.md reports/ data/ # Add specific generated files
         if git diff --staged --quiet; then
-          echo "No changes to commit"
+          echo "No changes to commit."
         else
-          git commit -m "🤖 Auto-update project status - $(date)"
+          git commit -m "🤖 Auto-update project status dashboard - $(date -u +'%Y-%m-%d %H:%M:%S UTC')"
           git push
         fi
+
+  deploy-dashboard:
+    needs: update-status # Run after status update and commit
+    if: github.ref == 'refs/heads/main' # Or your default branch, and only if changes were pushed
+    runs-on: ubuntu-latest
+    
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      # This checkout will get the files committed by the 'update-status' job
+
+    - name: Setup Pages
+      uses: actions/configure-pages@v5 # Updated to v5
+
+    - name: Upload artifact
+      uses: actions/upload-pages-artifact@v3 # Standard artifact for Pages
+      with:
+        # Path to the directory to upload. '.' means the root of your repo.
+        # This should contain index.html and the data/ directory.
+        path: '.' 
+
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v4 # Standard deployment action
