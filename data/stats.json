@@ -1,11 +1,19 @@
 {
-  "total": 3,
+  "total": 4,
   "byStatus": {
-    "Active": 3
+    "Active": 1,
+    "Review": 3
   },
   "byPriority": {
-    "Medium": 3
+    "Medium": 1,
+    "Low": 3
   },
-  "recentActivity": [],
-  "weeklyCommits": 0
+  "recentActivity": [
+    {
+      "repo": "100-Scientific-Visions-Hub",
+      "commits": 14,
+      "lastCommit": "🤖 Auto-update project status dashboard - 2025-05-25 06:10:57 UTC"
+    }
+  ],
+  "weeklyCommits": 14
 }
