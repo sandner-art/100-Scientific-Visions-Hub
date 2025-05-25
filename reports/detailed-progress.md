@@ -1,13 +1,13 @@
 # Detailed Progress Report
-*Generated: 2025-05-25 17:13:14 UTC*
+*Generated: 2025-05-25 17:43:45 UTC*
 
 ## All Tracked Paper Items (3 total)
 
 | Title / Location                 | Status                      | Priority                      | Progress                               | Links                                     | Last Repo Update |
 |:---------------------------------|:----------------------------|:------------------------------|:---------------------------------------|:------------------------------------------|:-----------------|
-| **The Axiomatic Nature of Is-ness**<br><small>(SCIENCE-AF25-Absolute-Theories/ANI)</small> | ❓ [Review] | ⚪ [Low] | `███░░░░░░░ 33%` | <a href="https://doi.org/10.31219/osf.io/cg6tm_v1" target="_blank" title="Preprint">Preprint</a> • <a href="https://github.com/sandner-art/SCIENCE-AF25-Absolute-Theories/tree/main/papers/ANI" target="_blank" title="View Paper Location">View</a> | 5/25/2025 |
-| **Cosmic Indifference Principle**<br><small>(SCIENCE-AF25-Absolute-Theories/CIP)</small> | ❓ [Complete] | ⚪ [Low] | `██████░░░░ 58%` | <a href="https://doi.org/10.31219/osf.io/4pkhy_v1" target="_blank" title="Preprint">Preprint</a> • <a href="https://github.com/sandner-art/SCIENCE-AF25-Absolute-Theories/tree/main/papers/CIP" target="_blank" title="View Paper Location">View</a> | 5/25/2025 |
-| **On The Universal Self-Consistency**<br><small>(SCIENCE-AF25-Absolute-Theories/PUS)</small> | ❓ [Review] | ⚪ [Low] | `███░░░░░░░ 25%` | <a href="https://doi.org/10.31219/osf.io/93wtx_v1" target="_blank" title="Preprint">Preprint</a> • <a href="https://github.com/sandner-art/SCIENCE-AF25-Absolute-Theories/tree/main/papers/PUS" target="_blank" title="View Paper Location">View</a> | 5/25/2025 |
+| **The Axiomatic Nature of Is-ness**<br><small>(sandner-art/SCIENCE-AF25-Absolute-Theories/ANI)</small> | ❓ [Review] | ⚪ [Low] | `███░░░░░░░ 33%` | <a href="https://doi.org/10.31219/osf.io/cg6tm_v1" target="_blank" title="Preprint">Preprint</a> • <a href="https://github.com/sandner-art/SCIENCE-AF25-Absolute-Theories/tree/main/papers/ANI" target="_blank" title="View Paper Location">View</a> | 5/25/2025 |
+| **Cosmic Indifference Principle**<br><small>(sandner-art/SCIENCE-AF25-Absolute-Theories/CIP)</small> | ❓ [Complete] | ⚪ [Low] | `██████░░░░ 58%` | <a href="https://doi.org/10.31219/osf.io/4pkhy_v1" target="_blank" title="Preprint">Preprint</a> • <a href="https://github.com/sandner-art/SCIENCE-AF25-Absolute-Theories/tree/main/papers/CIP" target="_blank" title="View Paper Location">View</a> | 5/25/2025 |
+| **On The Universal Self-Consistency**<br><small>(sandner-art/SCIENCE-AF25-Absolute-Theories/PUS)</small> | ❓ [Review] | ⚪ [Low] | `███░░░░░░░ 25%` | <a href="https://doi.org/10.31219/osf.io/93wtx_v1" target="_blank" title="Preprint">Preprint</a> • <a href="https://github.com/sandner-art/SCIENCE-AF25-Absolute-Theories/tree/main/papers/PUS" target="_blank" title="View Paper Location">View</a> | 5/25/2025 |
 
 ## Detailed Information by Repository
 
