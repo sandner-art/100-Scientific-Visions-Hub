@@ -1,7 +1,8 @@
 {
   "total": 3,
   "byStatus": {
-    "[Review]": 3
+    "[Review]": 2,
+    "[Complete]": 1
   },
   "byPriority": {
     "[Low]": 3
