@@ -4,7 +4,7 @@
 A comprehensive research initiative encompassing 100+ scientific papers across multiple research programs and topics.
 
 ## Current Status Dashboard
-*Last updated: 2025-05-25 18:00 UTC*
+*Last updated: 2025-05-25 18:35 UTC*
 
 ### Quick Stats
 - 📊 **Total Papers Tracked**: 3
@@ -12,10 +12,10 @@ A comprehensive research initiative encompassing 100+ scientific papers across m
 - 🟡 **In Planning**: 0
 - ⚪ **Recent Activity (but not 'Active')**: 0
 - 🔴 **Stale (Needs Attention)**: 0
-- 📈 **This Week's Commits (Public Repos)**: 0
+- 📈 **This Week's Commits (Tracked Repos)**: 0 
 
-### Recent Activity (Top 10 Public Repos by Weekly Commits)
-*No recent commit activity detected in tracked public repositories.*
+### Recent Activity (Top 10 Tracked Repos by Weekly Commits)
+*No recent commit activity detected in tracked repositories (or commit fetching disabled for private repos).*
 
 ## Research Areas
 *Categorization based on repository topics or 'Research Area' in 100SV.md files.*
