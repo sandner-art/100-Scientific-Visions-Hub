@@ -19,15 +19,14 @@ class ScientificVisionsTracker {
   }
 
   async parseFileContent(owner, repoName, filePath) {
-    // console.log(`DEBUG: Attempting to read: ${owner}/${repoName}/${filePath}`);
     try {
       const { data: file } = await this.octokit.rest.repos.getContent({
-        owner, repo: repoName, path: filePath, request: { retries: 0 } // Disable retries for faster failure on 404
+        owner, repo: repoName, path: filePath, request: { retries: 0 }
       });
       if (file.content) {
         return Buffer.from(file.content, 'base64').toString();
       }
-    } catch (error) { /* console.log(`DEBUG: File not found or error reading ${filePath}: ${error.message}`); */ }
+    } catch (error) { /* Intentionally suppress for file not found */ }
     return null;
   }
 
@@ -36,13 +35,8 @@ class ScientificVisionsTracker {
       title: null, status: null, priority: null, phase: [], preprintLink: null, publishedLink: null
     };
 
-    // Robust Title Parsing: Capture everything after "**Paper Title**:" up to the end of the line.
-    // Handles optional brackets around the value.
     const titleMatch = content.match(/^\*\*Paper Title\*\*:\s*(?:\[(.*?)\]|(.*?))(?:\r?\n|$)/im);
-    if (titleMatch) {
-        progress.title = (titleMatch[1] || titleMatch[2] || "").trim(); // Group 1 for [Title], Group 2 for Title
-        // console.log(`DEBUG: Matched Title: '${progress.title}'`);
-    }
+    if (titleMatch) progress.title = (titleMatch[1] || titleMatch[2] || "").trim();
 
     const statusMatch = content.match(/^\*\*Status\*\*:\s*(?:\[(.*?)\]|(.*?))(?:\r?\n|$)/im);
     if (statusMatch) progress.status = (statusMatch[1] || statusMatch[2] || "").trim();
@@ -96,7 +90,7 @@ class ScientificVisionsTracker {
             this.octokit.rest.repos.listCommits, 
             { owner: repo.owner.login, repo: repo.name, since: threeMonthsAgo.toISOString(), per_page: 100 }
           )) { totalCommits3Months += commitPage.length; }
-        } catch (e) { /* Suppress */ }
+        } catch (e) { /* Suppress individual API error for this stat */ }
       }
       return { age: ageInDays, totalCommits3Months, createdAt: repo.created_at };
     } catch (e) { console.error(`Error in getHistoricalStats for ${repo.name}: ${e.message}`); return null; }
@@ -114,7 +108,7 @@ class ScientificVisionsTracker {
             if (page.length > 0 && !lastMessage && page[0].commit) lastMessage = page[0].commit.message.split('\n')[0];
             count += page.length;
         }
-    } catch (e) { /* Suppress */ }
+    } catch (e) { /* Suppress individual API error for this stat */ }
     return { count, lastMessage };
   }
 
@@ -133,11 +127,11 @@ class ScientificVisionsTracker {
     const svContent = await this.parseFileContent(repo.owner.login, repo.name, '100SV.md');
     if (svContent) {
         const sv = this.parse100SV(svContent);
-        if (sv.researchFocus) paper.description = sv.researchFocus; // Prioritize 100SV.md focus
+        if (sv.researchFocus) paper.description = sv.researchFocus;
         paper.projectId = sv.projectId; paper.researchArea = sv.researchArea;
     }
 
-    let t = null, s = null, p = null; // title, status, priority from progress.md
+    let t = null, s = null, p = null;
     const progressMd = await this.parseFileContent(repo.owner.login, repo.name, 'papers/progress.md');
     if (progressMd) {
       const prog = this.parseProgress(progressMd);
@@ -147,7 +141,7 @@ class ScientificVisionsTracker {
       paper.preprintLink = prog.preprintLink; paper.publishedLink = prog.publishedLink;
     }
 
-    if (t) { paper.title = t; paper.paperName = t; } // Use title from progress.md as primary name
+    if (t) { paper.title = t; paper.paperName = t; }
     paper.status = s || (await this.inferStatusFromActivity(repo, 'papers/'));
     paper.priority = p || 'Medium';
     
@@ -220,7 +214,7 @@ class ScientificVisionsTracker {
   async discoverPapers() {
     console.log('🔍 Discovering paper repositories...');
     const targets = [{ type: 'user', name: this.owner }];
-    this.papers = []; this.stats.recentActivity = []; // Reset for fresh run
+    this.papers = []; this.stats.recentActivity = []; 
     let itemsCount = 0;
     try {
       for (const target of targets) {
@@ -284,14 +278,65 @@ class ScientificVisionsTracker {
 
   async updateReadme() {
     const ts = new Date().toISOString().slice(0,16).replace('T',' ') + ' UTC';
-    const hubUrl = (this.owner && this.repoFullName?.includes('/')) ? `https://${this.owner}.github.io/${this.repoFullName.split('/')[1]}/` : `<!-- Hub URL Error -->`;
-    let md = `# 100 Scientific Visions by Daniel Sandner\n\n## Project Overview\nA comprehensive research initiative...\n\n## Current Status Dashboard\n*Last updated: ${ts}*\n\n### Quick Stats\n- 📊 **Total Papers**: ${this.stats.total}\n- 🟢 **Active**: ${this.stats.byStatus['Active']||0}\n- 🟡 **Planning**: ${this.stats.byStatus['Planning']||0}\n- 🔴 **Stale**: ${this.stats.byStatus['Stale']||0}\n- 📈 **Weekly Commits**: ${this.stats.weeklyCommits}\n\n### Recent Activity\n`;
-    if(this.stats.recentActivity.length > 0) this.stats.recentActivity.forEach(a => {md += `- **${a.repo}**: ${a.commits}c - "${(a.lastCommit||'N/A').substring(0,70)}${(a.lastCommit||'').length>70?'...':''}"\n`;}); else md += `*No recent commit activity.*\n`;
-    md += `\n## Research Areas\n...\n\n### By Status\n`;
-    const sts = Object.keys(this.stats.byStatus).sort(); if(sts.length>0) sts.forEach(s => {md += `- **${s}**: ${this.stats.byStatus[s]}p\n`;}); else md += `*N/A*\n`;
-    md += `\n### Priority Distribution\n`;
-    const pri = Object.keys(this.stats.byPriority).sort((a,b)=>({'High':0,'Medium':1,'Low':2}[a]??99)-({'High':0,'Medium':1,'Low':2}[b]??99)); if(pri.length>0) pri.forEach(p=>{md+=`- ${this.getPriorityEmoji(p)} **${p}**: ${this.stats.byPriority[p]}p\n`;}); else md+=`*N/A*\n`;
-    md += `\n## Quick Actions\n- [📊 Dashboard](${hubUrl})\n- [📋 Report](./reports/detailed-progress.md)\n...\n\n---\n...`;
+    const hubUrl = (this.owner && this.repoFullName?.includes('/')) ? `https://${this.owner}.github.io/${this.repoFullName.split('/')[1]}/` : `<!-- Hub Dashboard URL Error -->`;
+    let md = `# 100 Scientific Visions by Daniel Sandner
+
+## Project Overview
+A comprehensive research initiative encompassing 100+ scientific papers across multiple research programs and topics.
+
+## Current Status Dashboard
+*Last updated: ${ts}*
+
+### Quick Stats
+- 📊 **Total Papers Tracked**: ${this.stats.total}
+- 🟢 **Active Projects**: ${this.stats.byStatus['Active']||0}
+- 🟡 **In Planning**: ${this.stats.byStatus['Planning']||0}
+- 🔴 **Stale (Needs Attention)**: ${this.stats.byStatus['Stale']||0}
+- 📈 **This Week's Commits (Public Repos)**: ${this.stats.weeklyCommits}
+
+### Recent Activity (Top 10 Public Repos by Weekly Commits)
+`;
+    if(this.stats.recentActivity.length > 0) {
+        this.stats.recentActivity.forEach(a => {
+            const commitMsg = (a.lastCommit||"N/A").substring(0,70);
+            md += `- **${a.repo}**: ${a.commits} commits - "${commitMsg}${(a.lastCommit||"").length > 70 ? '...' : ''}"\n`;
+        });
+    } else {
+        md += `*No recent commit activity detected in tracked public repositories.*\n`;
+    }
+    md += `
+## Research Areas
+*Categorization based on repository topics or 'Research Area' in 100SV.md files.*
+
+### By Status
+`;
+    const sts = Object.keys(this.stats.byStatus).sort(); 
+    if(sts.length>0) {
+        sts.forEach(s => {md += `- **${s}**: ${this.stats.byStatus[s]} papers\n`;});
+    } else {
+        md += `*No status data available.*\n`;
+    }
+    md += `
+### Priority Distribution
+`;
+    const pri = Object.keys(this.stats.byPriority).sort((a,b)=>({'High':0,'Medium':1,'Low':2}[a]??99)-({'High':0,'Medium':1,'Low':2}[b]??99)); 
+    if(pri.length>0) {
+        pri.forEach(p=>{md+=`- ${this.getPriorityEmoji(p)} **${p} Priority**: ${this.stats.byPriority[p]} papers\n`;});
+    } else {
+        md += `*No priority data available.*\n`;
+    }
+    md += `
+## Quick Actions & Links
+- [📊 Interactive Dashboard](${hubUrl})
+- [📋 View Detailed Progress Report](./reports/detailed-progress.md)
+- [🔄 Update Status Manually](../../actions) (Run "Update Project Status" workflow)
+
+## About This System
+This dashboard is automatically updated by GitHub Actions. For more information on setup, repository identification, and customization, see [SETUP.md](./setup.md).
+
+---
+
+*This dashboard is part of the 100 Scientific Visions initiative by Daniel Sandner.*`;
     await fs.writeFile('README.md', md);
   }
 
@@ -300,17 +345,22 @@ class ScientificVisionsTracker {
     let report = `# Detailed Progress Report\n*Generated: ${genDate} ${genTime} UTC*\n\n## All Tracked Paper Items (${this.papers.length} total)\n\n`;
     report += `| Title / Location                 | Status                      | Priority                      | Progress                               | Links                                     | Last Repo Update |\n`;
     report += `|:---------------------------------|:----------------------------|:------------------------------|:---------------------------------------|:------------------------------------------|:-----------------|\n`;
-    if (this.papers.length === 0) { report += `| *No papers found.* | - | - | - | - | - |\n`; }
+    if (this.papers.length === 0) { report += `| *No paper items found or tracked.* | - | - | - | - | - |\n`; }
     else {
       this.papers.forEach(p => {
         const displayName = p.title || p.paperName || 'Untitled';
-        let locHint = p.isSubpaper ? `<br><small>(${p.fullName})</small>` : (displayName !== p.repoName ? `<br><small>(${p.repoName})</small>` : '');
+        let locationHint = '';
+        if (p.isSubpaper) { 
+            locationHint = `<br><small>(${p.fullName})</small>`;
+        } else if (displayName !== p.repoName) { 
+            locationHint = `<br><small>(${p.repoName})</small>`;
+        }
         const viewLink = `<a href="${p.url}" target="_blank" title="View Paper Location">View</a>`;
-        const links = [viewLink];
-        if (p.preprintLink) links.unshift(`<a href="${p.preprintLink}" target="_blank" title="Preprint">Preprint</a>`);
-        if (p.publishedLink) links.unshift(`<a href="${p.publishedLink}" target="_blank" title="Published">Published</a>`);
+        const links = [viewLink]; // Start with View link
+        if (p.preprintLink) links.unshift(`<a href="${p.preprintLink}" target="_blank" title="Preprint">Preprint</a>`); // Add to beginning
+        if (p.publishedLink) links.unshift(`<a href="${p.publishedLink}" target="_blank" title="Published">Published</a>`); // Add to beginning
         
-        report += `| **${displayName}**${locHint} | ${this.getStatusEmoji(p.status)} ${p.status||'N/A'} | ${this.getPriorityEmoji(p.priority)} ${p.priority||'N/A'} | \`${this.generateProgressBar(p.progress?.phase)}\` | ${links.join(' • ')} | ${new Date(p.lastUpdated).toLocaleDateString()} |\n`;
+        report += `| **${displayName}**${locationHint} | ${this.getStatusEmoji(p.status)} ${p.status||'N/A'} | ${this.getPriorityEmoji(p.priority)} ${p.priority||'N/A'} | \`${this.generateProgressBar(p.progress?.phase)}\` | ${links.join(' • ')} | ${new Date(p.lastUpdated).toLocaleDateString()} |\n`;
       });
     }
     report += `\n## Detailed Information by Repository\n`;
@@ -318,26 +368,36 @@ class ScientificVisionsTracker {
     if (Object.keys(papersByRepo).length === 0) { report += `*No repositories to detail.*\n`; }
     else {
       Object.keys(papersByRepo).sort().forEach(repoName => {
-        const items = papersByRepo[repoName]; const rData = items[0];
-        report += `\n### 📁 Repository: [${repoName}](${rData.repoUrl})\n`;
-        const mainItem = items.find(it => !it.isSubpaper); // Get the main non-subpaper item for repo-level desc/stats
-        report += `- **Repo Description**: ${mainItem?.description || rData.description || 'N/A'}\n`;
-        report += `- **Topics**: ${(rData.topics||[]).join(', ') || 'None'}\n`;
-        report += `- **Visibility**: ${rData.private ? 'Private' : 'Public'}\n`;
+        const itemsInRepo = papersByRepo[repoName]; 
+        const repoDataForHeader = itemsInRepo[0]; 
+
+        report += `\n### 📁 Repository: [${repoName}](${repoDataForHeader.repoUrl})\n`;
         
-        const histData = mainItem?.historical || items.find(it => it.historical)?.historical;
-        if (histData) { 
-            report += `- **Created**: ${new Date(histData.createdAt).toLocaleDateString()} (${histData.age} days ago)\n`; 
-            if (!rData.private && typeof histData.totalCommits3Months === 'number') report += `- **Commits (3m)**: ${histData.totalCommits3Months}\n`; 
+        const mainNonSubpaperItem = itemsInRepo.find(it => !it.isSubpaper);
+        // Use the description from the main paper item if it exists and has one, otherwise the repo's GitHub description
+        const descriptionToDisplay = mainNonSubpaperItem?.description || repoDataForHeader.description || 'N/A';
+        report += `- **Repo Description**: ${descriptionToDisplay}\n`;
+        report += `- **Topics**: ${(repoDataForHeader.topics||[]).join(', ') || 'None'}\n`;
+        report += `- **Visibility**: ${repoDataForHeader.private ? 'Private' : 'Public'}\n`;
+        
+        const historicalDataSource = mainNonSubpaperItem || itemsInRepo.find(it => it.historical); // Find any item with historical
+        if (historicalDataSource?.historical) { 
+            const hist = historicalDataSource.historical;
+            report += `- **Created**: ${new Date(hist.createdAt).toLocaleDateString()} (${hist.age} days ago)\n`; 
+            if (!repoDataForHeader.private && typeof hist.totalCommits3Months === 'number') { 
+                report += `- **Commits (3m)**: ${hist.totalCommits3Months}\n`; 
+            }
         }
-        const weeklyCommitsData = mainItem || items.find(it => typeof it.commitsLastWeek === 'number');
-        if (weeklyCommitsData && typeof weeklyCommitsData.commitsLastWeek === 'number' && !rData.private) {
-            report += `- **Weekly Commits (repo)**: ${weeklyCommitsData.commitsLastWeek}\n`;
+        // Find an item (preferably non-subpaper) that has weekly commit data for this repo
+        const weeklyCommitDataSource = mainNonSubpaperItem || itemsInRepo.find(it => typeof it.commitsLastWeek === 'number');
+        if (weeklyCommitDataSource && typeof weeklyCommitDataSource.commitsLastWeek === 'number' && !repoDataForHeader.private) {
+            report += `- **Weekly Commits (repo)**: ${weeklyCommitDataSource.commitsLastWeek}\n`;
         }
 
-        if (items.length === 1 && !items[0].isSubpaper) {
-          const p = items[0]; 
+        if (itemsInRepo.length === 1 && !itemsInRepo[0].isSubpaper) {
+          const p = itemsInRepo[0]; 
           report += `- **Paper Title**: ${p.title||p.paperName||'N/A'}\n`;
+          // Description for single paper is already covered by "Repo Description" above if svData.researchFocus was used
           report += `- **Status**: ${this.getStatusEmoji(p.status)} ${p.status||'N/A'}\n`;
           report += `- **Priority**: ${this.getPriorityEmoji(p.priority)} ${p.priority||'N/A'}\n`;
           report += `- **Progress**: \`${this.generateProgressBar(p.progress?.phase)}\`\n`;
@@ -346,15 +406,15 @@ class ScientificVisionsTracker {
           if (p.preprintLink) report += `- **Preprint**: [Link](${p.preprintLink})\n`; 
           if (p.publishedLink) report += `- **Published**: [Link](${p.publishedLink})\n`;
         } else { 
-          report += `\n  *Contains ${items.length} paper items:*\n`;
-          items.forEach(p => { 
+          report += `\n  *Contains ${itemsInRepo.length} paper items:*\n`;
+          itemsInRepo.forEach(p => { 
             report += `  - #### ${this.getStatusEmoji(p.status)} ${p.title||p.paperName||'Untitled Sub-paper'}\n`; 
-            if (p.title && p.paperName !== p.title && p.isSubpaper) report += `    - **Directory**: \`${p.paperName}\`\n`; 
-            // Show sub-paper specific description if different from main repo description used for header
-            if (p.description && p.description !== (mainItem?.description || rData.description)) {
-                 report += `    - **Description**: ${p.description}\n`;
-            } else if (!p.description && p.description !== (mainItem?.description || rData.description)) {
-                 report += `    - **Description**: *(Inherits repository description or has no specific focus)*\n`;
+            if (p.title && p.paperName !== p.title && p.isSubpaper) { report += `    - **Directory Name**: \`${p.paperName}\`\n`; }
+            // Show sub-paper specific description if it's different from what was shown as "Repo Description"
+            if (p.description && p.description !== descriptionToDisplay) {
+                 report += `    - **Description (Specific)**: ${p.description}\n`;
+            } else if (!p.description && descriptionToDisplay === repoDataForHeader.description) { // If no specific desc and repo desc was generic
+                 report += `    - **Description**: *(Uses repository's generic description)*\n`;
             }
             report += `    - **Status**: ${p.status||'N/A'} | **Priority**: ${p.priority||'N/A'}\n`; 
             report += `    - **Progress**: \`${this.generateProgressBar(p.progress?.phase)}\`\n`;
@@ -372,27 +432,50 @@ class ScientificVisionsTracker {
   }
 
   generateProgressBar(phases=[]) {
-    const total=12; const c=phases.length; if(total===0) return `░░░░░░░░░░ 0%`;
-    const p=Math.round((c/total)*100); const f=Math.min(10,Math.round((c/total)*10));
-    return `${'█'.repeat(f)}${'░'.repeat(10-f)} ${p}%`;
+    const totalPhases = 12; const completed = Array.isArray(phases) ? phases.length : 0;
+    if (totalPhases === 0) return `░░░░░░░░░░ 0% (No phases defined)`;
+    const percentage = Math.round((completed / totalPhases) * 100); 
+    const filledBlocks = Math.min(10, Math.round((completed / totalPhases) * 10));
+    const emptyBlocks = 10 - filledBlocks;
+    return `${'█'.repeat(filledBlocks)}${'░'.repeat(emptyBlocks)} ${percentage}%`;
   }
-  getStatusEmoji(s){return ({Active:'🟢',Planning:'🟡',Review:'🔵',Complete:'✅',Stale:'🔴',Inactive:'⚪',Recent:'🟠',Analysis:'🟣',Writing:'✍️','On-Hold':'⏸️',Unknown:'❓'})[s]||'❓';}
-  getPriorityEmoji(p){return ({High:'🔴',Medium:'🟡',Low:'🟢'})[p]||'⚪';}
+  getStatusEmoji(status) {
+    const emojis = {'Active':'🟢','Planning':'🟡','Review':'🔵','Complete':'✅','Stale':'🔴','Inactive':'⚪','Recent':'🟠','Analysis':'🟣','Writing':'✍️','On-Hold':'⏸️','Unknown':'❓'};
+    return emojis[status] || '❓';
+  }
+  getPriorityEmoji(priority) {
+    const emojis = {'High':'🔴','Medium':'🟡','Low':'🟢'};
+    return emojis[priority] || '⚪'; // Default for unknown priority
+  }
 
   async saveData() {
     await fs.mkdir('data', {recursive:true});
-    const sorted=[...this.papers].sort((a,b)=>(a.fullName||'').localeCompare(b.fullName||''));
-    await fs.writeFile('data/papers.json', JSON.stringify(sorted,null,2));
+    const sortedPapers = [...this.papers].sort((a,b)=>(a.fullName||'').localeCompare(b.fullName||''));
+    await fs.writeFile('data/papers.json', JSON.stringify(sortedPapers,null,2));
     await fs.writeFile('data/stats.json', JSON.stringify(this.stats,null,2));
   }
 
   async run() {
-    console.log('🚀 Starting Tracker...');
-    if(!this.owner){console.error("❌ GITHUB_OWNER missing."); process.exit(1);}
-    await this.discoverPapers(); this.generateStats(); 
-    await this.updateReadme(); await this.generateDetailedReport(); 
+    console.log('🚀 Starting Scientific Visions Tracker...');
+    if(!this.owner){console.error("❌ GITHUB_OWNER environment variable missing. Cannot determine scan targets."); process.exit(1);}
+    
+    await this.discoverPapers();
+    this.generateStats(); 
+    await this.updateReadme(); 
+    await this.generateDetailedReport(); 
     await this.saveData(); 
-    console.log('🎉 Done! Processed:', this.stats.total, 'Weekly Commits:', this.stats.weeklyCommits);
+    
+    console.log('🎉 Tracker run complete!');
+    console.log(`📊 Total papers processed: ${this.stats.total}.`);
+    console.log(`📈 Total weekly commits for tracked public repos: ${this.stats.weeklyCommits}.`);
   }
 }
-(async()=>{await new ScientificVisionsTracker().run();})().catch(e=>{console.error("❌ Global Error:",e);process.exit(1);});
+(async()=>{
+  const tracker = new ScientificVisionsTracker();
+  try {
+    await tracker.run();
+  } catch(e) {
+    console.error("❌ Global Error in tracker execution:", e);
+    process.exit(1);
+  }
+})();
