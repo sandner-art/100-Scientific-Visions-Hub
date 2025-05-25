@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>100 Scientific Visions - Dashboard</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+            font-weight: 300;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 40px;
+            font-size: 1.2em;
+        }
+        
+        .alert {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+        
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #3498db;
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .charts-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .chart-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .papers-table {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 500;
+        }
+        
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+        
+        .status-active { background: #d4edda; color: #155724; }
+        .status-planning { background: #fff3cd; color: #856404; }
+        .status-review { background: #d1ecf1; color: #0c5460; }
+        .status-complete { background: #d1e7dd; color: #0f5132; }
+        .status-stale { background: #f8d7da; color: #721c24; }
+        .status-recent { background: #e2e3e5; color: #41464b; }
+        .status-inactive { background: #f8f9fa; color: #6c757d; }
+        
+        .progress-bar {
+            font-family: monospace;
+            background: #f0f0f0;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.9em;
+        }
+        
+        .links a {
+            color: #3498db;
+            text-decoration: none;
+            margin-right: 10px;
+            font-size: 0.9em;
+        }
+        
+        .links a:hover {
+            text-decoration: underline;
+        }
+        
+        .update-time {
+            text-align: center;
+            color: #999;
+            font-size: 0.9em;
+            margin-top: 20px;
+        }
+        
+        .setup-instructions {
+            background: #e3f2fd;
+            border: 1px solid #2196f3;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .setup-instructions h3 {
+            color: #1976d2;
+            margin-top: 0;
+        }
+        
+        .setup-instructions code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        
+        @media (max-width: 768px) {
+            .charts-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔬 100 Scientific Visions</h1>
+        <p class="subtitle">by Daniel Sandner - Research Progress Dashboard</p>
+        
+        <div id="setupInstructions" class="setup-instructions" style="display: none;">
+            <h3>📋 Setup Instructions</h3>
+            <p>This dashboard loads data from the automated tracking system. To get started:</p>
+            <ol>
+                <li>Ensure your GitHub Actions workflow has run successfully</li>
+                <li>Enable GitHub Pages for this repository (Settings → Pages → Source: GitHub Actions)</li>
+                <li>The data files should be generated at <code>data/papers.json</code> and <code>data/stats.json</code></li>
+                <li>If you see this message, run the "Update Project Status" workflow manually</li>
+            </ol>
+        </div>
+        
+        <div id="loadingAlert" class="alert">
+            🔄 Loading research data from tracking system...
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="totalPapers">--</div>
+                <div class="stat-label">Total Papers</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="activePapers">--</div>
+                <div class="stat-label">Active Projects</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="weeklyCommits">--</div>
+                <div class="stat-label">Weekly Commits</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="publishedPapers">--</div>
+                <div class="stat-label">Published</div>
+            </div>
+        </div>
+        
+        <div class="charts-container">
+            <div class="chart-card">
+                <h3>Status Distribution</h3>
+                <canvas id="statusChart"></canvas>
+            </div>
+            <div class="chart-card">
+                <h3>Priority Distribution</h3>
+                <canvas id="priorityChart"></canvas>
+            </div>
+        </div>
+        
+        <div class="papers-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Paper</th>
+                        <th>Status</th>
+                        <th>Priority</th>
+                        <th>Progress</th>
+                        <th>Links</th>
+                        <th>Last Updated</th>
+                    </tr>
+                </thead>
+                <tbody id="papersTableBody">
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 40px; color: #999;">
+                            Loading papers data...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="update-time">
+            Last updated: <span id="lastUpdate">--</span>
+        </div>
+    </div>
+
+    <script>
+        class Dashboard {
+            constructor() {
+                this.papers = [];
+                this.stats = {};
+                this.init();
+            }
+            
+            async init() {
+                try {
+                    await this.loadData();
+                    this.hideLoadingIndicators();
+                    this.updateStats();
+                    this.createCharts();
+                    this.updateTable();
+                    this.updateTimestamp();
+                } catch (error) {
+                    console.error('Failed to load data:', error);
+                    this.showSetupInstructions();
+                }
+            }
+            
+            async loadData() {
+                // Try to load data from the generated JSON files
+                const [papersResponse, statsResponse] = await Promise.all([
+                    fetch('./data/papers.json').catch(() => null),
+                    fetch('./data/stats.json').catch(() => null)
+                ]);
+                
+                if (papersResponse && papersResponse.ok) {
+                    this.papers = await papersResponse.json();
+                }
+                
+                if (statsResponse && statsResponse.ok) {
+                    this.stats = await statsResponse.json();
+                }
+                
+                // If no data found, create sample data for demo
+                if (this.papers.length === 0) {
+                    this.createSampleData();
+                }
+            }
+            
+            createSampleData() {
+                this.papers = [
+                    {
+                        fullName: "quantum-algorithms-2025",
+                        status: "Active",
+                        priority: "High",
+                        progress: { phase: ["Literature review", "Hypothesis development", "Methodology design"] },
+                        url: "#",
+                        preprintLink: null,
+                        publishedLink: null,
+                        lastUpdated: new Date().toISOString(),
+                        commits: 15
+                    },
+                    {
+                        fullName: "climate-ml-models",
+                        status: "Planning",
+                        priority: "Medium",
+                        progress: { phase: ["Literature review"] },
+                        url: "#",
+                        preprintLink: null,
+                        publishedLink: null,
+                        lastUpdated: new Date(Date.now() - 86400000).toISOString(),
+                        commits: 3
+                    },
+                    {
+                        fullName: "biotech-synthesis",
+                        status: "Complete",
+                        priority: "High",
+                        progress: { phase: ["Literature review", "Hypothesis development", "Methodology design", "Data collection/Experiments", "Data analysis", "Results interpretation", "Paper writing", "Internal review", "Submission preparation", "Peer review process", "Revisions", "Publication"] },
+                        url: "#",
+                        preprintLink: "https://arxiv.org/example",
+                        publishedLink: "https://doi.org/example",
+                        lastUpdated: new Date(Date.now() - 172800000).toISOString(),
+                        commits: 0
+                    }
+                ];
+                
+                this.stats = {
+                    total: 3,
+                    byStatus: { "Active": 1, "Planning": 1, "Complete": 1 },
+                    byPriority: { "High": 2, "Medium": 1 },
+                    weeklyCommits: 18,
+                    recentActivity: [
+                        { repo: "quantum-algorithms-2025", commits: 15, lastCommit: "Update methodology section" },
+                        { repo: "climate-ml-models", commits: 3, lastCommit: "Initial literature review" }
+                    ]
+                };
+            }
+            
+            hideLoadingIndicators() {
+                const loadingAlert = document.getElementById('loadingAlert');
+                if (loadingAlert) {
+                    loadingAlert.style.display = 'none';
+                }
+            }
+            
+            showSetupInstructions() {
+                const setupInstructions = document.getElementById('setupInstructions');
+                const loadingAlert = document.getElementById('loadingAlert');
+                
+                if (setupInstructions) {
+                    setupInstructions.style.display = 'block';
+                }
+                if (loadingAlert) {
+                    loadingAlert.innerHTML = '⚠️ No data found. Please run the tracking workflow first.';
+                    loadingAlert.className = 'alert';
+                    loadingAlert.style.background = '#f8d7da';
+                    loadingAlert.style.borderColor = '#f5c6cb';
+                    loadingAlert.style.color = '#721c24';
+                }
+            }
+            
+            updateStats() {
+                document.getElementById('totalPapers').textContent = this.stats.total || 0;
+                document.getElementById('activePapers').textContent = this.stats.byStatus?.Active || 0;
+                document.getElementById('weeklyCommits').textContent = this.stats.weeklyCommits || 0;
+                document.getElementById('publishedPapers').textContent = this.stats.byStatus?.Complete || 0;
+            }
+            
+            createCharts() {
+                this.createStatusChart();
+                this.createPriorityChart();
+            }
+            
+            createStatusChart() {
+                const ctx = document.getElementById('statusChart').getContext('2d');
+                const statusData = this.stats.byStatus || {};
+                
+                new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: Object.keys(statusData),
+                        datasets: [{
+                            data: Object.values(statusData),
+                            backgroundColor: [
+                                '#28a745', // Active - green
+                                '#ffc107', // Planning - yellow  
+                                '#17a2b8', // Review - blue
+                                '#6c757d', // Complete - gray
+                                '#dc3545', // Stale - red
+                                '#6f42c1'  // Other - purple
+                            ],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom'
+                            }
+                        }
+                    }
+                });
+            }
+            
+            createPriorityChart() {
+                const ctx = document.getElementById('priorityChart').getContext('2d');
+                const priorityData = this.stats.byPriority || {};
+                
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: Object.keys(priorityData),
+                        datasets: [{
+                            label: 'Papers',
+                            data: Object.values(priorityData),
+                            backgroundColor: [
+                                '#dc3545', // High - red
+                                '#ffc107', // Medium - yellow
+                                '#28a745'  // Low - green
+                            ],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    stepSize: 1
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            updateTable() {
+                const tbody = document.getElementById('papersTableBody');
+                tbody.innerHTML = '';
+                
+                if (this.papers.length === 0) {
+                    tbody.innerHTML = `
+                        <tr>
+                            <td colspan="6" style="text-align: center; padding: 40px; color: #999;">
+                                No papers found. Run the workflow to discover your research repositories.
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+                
+                this.papers.forEach(paper => {
+                    const row = document.createElement('tr');
+                    
+                    const statusClass = `status-${paper.status.toLowerCase()}`;
+                    const progressBar = this.generateProgressBar(paper.progress?.phase || []);
+                    
+                    const links = [];
+                    if (paper.preprintLink && paper.preprintLink !== 'null') {
+                        links.push(`<a href="${paper.preprintLink}" target="_blank">Preprint</a>`);
+                    }
+                    if (paper.publishedLink && paper.publishedLink !== 'null') {
+                        links.push(`<a href="${paper.publishedLink}" target="_blank">Published</a>`);
+                    }
+                    links.push(`<a href="${paper.url}" target="_blank">Repo</a>`);
+                    
+                    const lastUpdated = new Date(paper.lastUpdated).toLocaleDateString();
+                    
+                    row.innerHTML = `
+                        <td><strong>${paper.fullName}</strong></td>
+                        <td><span class="status-badge ${statusClass}">${paper.status}</span></td>
+                        <td>${paper.priority}</td>
+                        <td><span class="progress-bar">${progressBar}</span></td>
+                        <td class="links">${links.join(' ')}</td>
+                        <td>${lastUpdated}</td>
+                    `;
+                    
+                    tbody.appendChild(row);
+                });
+            }
+            
+            generateProgressBar(completedPhases) {
+                const totalPhases = 12;
+                const completed = completedPhases.length;
+                const percentage = Math.round((completed / totalPhases) * 100);
+                
+                const filledBlocks = Math.round((completed / totalPhases) * 10);
+                const emptyBlocks = 10 - filledBlocks;
+                
+                return `${'█'.repeat(filledBlocks)}${'░'.repeat(emptyBlocks)} ${percentage}%`;
+            }
+            
+            updateTimestamp() {
+                document.getElementById('lastUpdate').textContent = new Date().toLocaleString();
+            }
+        }
+        
+        // Initialize dashboard when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new Dashboard();
+        });
+    </script>
+</body>
+</html>
