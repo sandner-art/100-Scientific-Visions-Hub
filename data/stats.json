@@ -1,0 +1,11 @@
+{
+  "total": 3,
+  "byStatus": {
+    "[object Promise]": 3
+  },
+  "byPriority": {
+    "Medium": 3
+  },
+  "recentActivity": [],
+  "weeklyCommits": 0
+}
