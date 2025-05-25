@@ -17,12 +17,12 @@
         
         .container {
             max-width: 1200px;
-            margin: 0 auto;
-            background: rgba(255, 255, 255, 0.95);
+            margin: 20px auto; 
+            background: rgba(255, 255, 255, 0.97); 
             border-radius: 20px;
             padding: 30px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15); 
+            backdrop-filter: blur(8px); 
         }
         
         h1 {
@@ -52,24 +52,24 @@
         
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
             gap: 20px;
             margin-bottom: 40px;
         }
         
         .stat-card {
-            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            background: #ffffff; 
             padding: 25px;
             border-radius: 15px;
             text-align: center;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08); 
+            border: 1px solid #e9ecef; 
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
         
         .stat-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+            box-shadow: 0 12px 28px rgba(0,0,0,0.12);
         }
         
         .stat-number {
@@ -80,7 +80,7 @@
         }
         
         .stat-label {
-            color: #666;
+            color: #6c757d; 
             font-size: 0.9em;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -88,29 +88,33 @@
         
         .charts-container {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr 1fr; 
             gap: 30px;
             margin-bottom: 40px;
         }
         
         .chart-card {
             background: white;
-            padding: 30px;
+            padding: 25px; 
             border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            height: 450px; /* Or your desired fixed height */
-            /* You could also use min-height and max-height if you prefer */
-            /* min-height: 350px; */
-            /* max-height: 450px; */
-            display: flex; /* Optional: helps center canvas if it's smaller */
-            flex-direction: column; /* Optional */
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            border: 1px solid #e9ecef;
+            height: 380px; 
+            display: flex; 
+            flex-direction: column;
+            justify-content: center; 
+        }
+        .chart-card canvas { 
+            max-width: 100%;
+            max-height: 100%;
         }
         
         .papers-table {
             background: white;
             border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            overflow-x: auto; 
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            border: 1px solid #e9ecef;
         }
         
         table {
@@ -119,65 +123,83 @@
         }
         
         th {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #6a82fb 0%, #fc5c7d 100%); 
             color: white;
             padding: 15px;
             text-align: left;
             font-weight: 500;
+            white-space: nowrap;
         }
         
         td {
             padding: 12px 15px;
             border-bottom: 1px solid #f0f0f0;
+            vertical-align: middle; 
         }
         
+        tr:last-child td { 
+            border-bottom: none;
+        }
+
         tr:hover {
             background: #f8f9fa;
         }
         
         .status-badge {
-            padding: 4px 12px;
+            padding: 5px 10px;
             border-radius: 20px;
-            font-size: 0.8em;
-            font-weight: 500;
+            font-size: 0.75em; 
+            font-weight: 600; 
             text-transform: uppercase;
+            white-space: nowrap;
         }
         
-        .status-active { background: #d4edda; color: #155724; }
-        .status-planning { background: #fff3cd; color: #856404; }
-        .status-review { background: #d1ecf1; color: #0c5460; }
-        .status-complete { background: #d1e7dd; color: #0f5132; }
-        .status-stale { background: #f8d7da; color: #721c24; }
-        .status-recent { background: #e2e3e5; color: #41464b; }
-        .status-inactive { background: #f8f9fa; color: #6c757d; }
+        .status-active { background-color: #28a745; color: white; }
+        .status-planning { background-color: #ffc107; color: #212529; }
+        .status-review { background-color: #17a2b8; color: white; }
+        .status-complete { background-color: #5cb85c; color: white; } 
+        .status-stale { background-color: #dc3545; color: white; }
+        .status-recent { background-color: #6c757d; color: white; }
+        .status-inactive { background-color: #adb5bd; color: #212529; }
+        .status-unknown { background-color: #e9ecef; color: #495057; }
+        .status-n-a { background-color: #e9ecef; color: #495057;}
         
         .progress-bar {
             font-family: monospace;
-            background: #f0f0f0;
-            padding: 2px 8px;
+            background: #e9ecef; 
+            padding: 3px 8px;
             border-radius: 10px;
-            font-size: 0.9em;
+            font-size: 0.85em;
+            color: #495057;
+            white-space: nowrap;
+            display: inline-block; 
         }
         
         .links a {
-            color: #3498db;
+            color: #007bff; 
             text-decoration: none;
-            margin-right: 10px;
+            margin-right: 12px; 
             font-size: 0.9em;
+            padding: 2px 0; 
+            display: inline-block; 
+        }
+         .links a:last-child {
+            margin-right: 0;
         }
         
         .links a:hover {
             text-decoration: underline;
+            color: #0056b3;
         }
         
         .update-time {
             text-align: center;
-            color: #999;
+            color: #adb5bd; 
             font-size: 0.9em;
-            margin-top: 20px;
+            margin-top: 30px; 
         }
         
-        .setup-instructions {
+        .setup-instructions { /* Actual styles for setup instructions */
             background: #e3f2fd;
             border: 1px solid #2196f3;
             border-radius: 10px;
@@ -197,15 +219,22 @@
             font-family: monospace;
         }
         
-        @media (max-width: 768px) {
+        @media (max-width: 992px) { 
             .charts-container {
-                grid-template-columns: 1fr;
+                grid-template-columns: 1fr; 
             }
-            
-            .container {
-                padding: 20px;
-                margin: 10px;
-            }
+             .chart-card { height: 320px; } 
+        }
+        @media (max-width: 768px) {
+            .container { padding: 20px; margin: 10px auto; }
+            h1 { font-size: 2em; } .subtitle { font-size: 1em; }
+            .stats-grid { grid-template-columns: 1fr 1fr; } 
+        }
+        @media (max-width: 576px) { 
+            .stats-grid { grid-template-columns: 1fr; } 
+            .charts-container { gap: 20px; }
+            .chart-card { padding: 20px; height: 300px; }
+            th, td { padding: 10px; }
         }
     </style>
 </head>
@@ -218,15 +247,14 @@
             <h3>📋 Setup Instructions</h3>
             <p>This dashboard loads data from the automated tracking system. To get started:</p>
             <ol>
-                <li>Ensure your GitHub Actions workflow has run successfully</li>
-                <li>Enable GitHub Pages for this repository (Settings → Pages → Source: GitHub Actions)</li>
-                <li>The data files should be generated at <code>data/papers.json</code> and <code>data/stats.json</code></li>
-                <li>If you see this message, run the "Update Project Status" workflow manually</li>
+                <li>Ensure your GitHub Actions workflow has run successfully (check the "Actions" tab of this repository).</li>
+                <li>The data files should be generated at <code>data/papers.json</code> and <code>data/stats.json</code> in your repository.</li>
+                <li>If data is not loading, try a hard refresh (Ctrl+Shift+R or Cmd+Shift+R) or check your browser's developer console for errors.</li>
             </ol>
         </div>
         
         <div id="loadingAlert" class="alert">
-            🔄 Loading research data from tracking system...
+            🔄 Loading research data...
         </div>
         
         <div class="stats-grid">
@@ -236,7 +264,7 @@
             </div>
             <div class="stat-card">
                 <div class="stat-number" id="activePapers">--</div>
-                <div class="stat-label">Active Projects</div>
+                <div class="stat-label">Active Projects</div> {/* Corrected class attribute here */}
             </div>
             <div class="stat-card">
                 <div class="stat-number" id="weeklyCommits">--</div>
@@ -244,7 +272,7 @@
             </div>
             <div class="stat-card">
                 <div class="stat-number" id="publishedPapers">--</div>
-                <div class="stat-label">Published</div>
+                <div class="stat-label">Published/Complete</div>
             </div>
         </div>
         
@@ -272,11 +300,7 @@
                     </tr>
                 </thead>
                 <tbody id="papersTableBody">
-                    <tr>
-                        <td colspan="6" style="text-align: center; padding: 40px; color: #999;">
-                            Loading papers data...
-                        </td>
-                    </tr>
+                    <!-- Rows will be populated by JavaScript -->
                 </tbody>
             </table>
         </div>
@@ -291,226 +315,169 @@
             constructor() {
                 this.papers = [];
                 this.stats = {};
+                this.statusChartInstance = null; 
+                this.priorityChartInstance = null;
                 this.init();
             }
             
             async init() {
                 try {
-                    await this.loadData();
+                    await this.loadData(); 
+                    if (this.papers.length === 0 && Object.keys(this.stats).length === 0) {
+                        console.warn("No data loaded from JSON files, attempting to use sample data if available.");
+                        // Only call createSampleData if you want to populate with placeholders on complete failure
+                        // this.createSampleData(); 
+                    }
                     this.hideLoadingIndicators();
                     this.updateStats();
-                    this.createCharts();
+                    this.createCharts(); 
                     this.updateTable();
                     this.updateTimestamp();
                 } catch (error) {
-                    console.error('Failed to load data:', error);
+                    console.error('Failed to initialize dashboard:', error);
                     this.showSetupInstructions();
+                    const loadingAlert = document.getElementById('loadingAlert');
+                    if(loadingAlert) loadingAlert.innerHTML = `⚠️ Error loading dashboard data. Check console and ensure data files exist. ${error.message}`;
                 }
             }
             
             async loadData() {
-                // Try to load data from the generated JSON files
-                const [papersResponse, statsResponse] = await Promise.all([
-                    fetch('./data/papers.json').catch(() => null),
-                    fetch('./data/stats.json').catch(() => null)
-                ]);
-                
-                if (papersResponse && papersResponse.ok) {
-                    this.papers = await papersResponse.json();
-                }
-                
-                if (statsResponse && statsResponse.ok) {
-                    this.stats = await statsResponse.json();
-                }
-                
-                // If no data found, create sample data for demo
-                if (this.papers.length === 0) {
-                    this.createSampleData();
+                console.log("Attempting to load data files with cache-busting...");
+                const cacheBuster = `?v=${new Date().getTime()}`;
+                try {
+                    const [papersResponse, statsResponse] = await Promise.all([
+                        fetch(`./data/papers.json${cacheBuster}`),
+                        fetch(`./data/stats.json${cacheBuster}`)
+                    ]);
+
+                    if (papersResponse.ok) {
+                        this.papers = await papersResponse.json();
+                        console.log("Successfully loaded papers.json:", this.papers.length, "papers found.");
+                        if (this.papers.length > 0) console.log("First paper object from papers.json:", JSON.stringify(this.papers[0], null, 2));
+                    } else {
+                        console.error(`Failed to load papers.json: ${papersResponse.status} ${papersResponse.statusText}`);
+                        this.papers = []; 
+                    }
+
+                    if (statsResponse.ok) {
+                        this.stats = await statsResponse.json();
+                        console.log("Successfully loaded stats.json:", this.stats);
+                    } else {
+                        console.error(`Failed to load stats.json: ${statsResponse.status} ${statsResponse.statusText}`);
+                        this.stats = {}; 
+                    }
+                } catch (networkError) {
+                    console.error("Network error while loading data:", networkError);
+                    this.papers = []; // Ensure defined even on network error
+                    this.stats = {};  // Ensure defined even on network error
                 }
             }
             
-            createSampleData() {
-                this.papers = [
-                    {
-                        fullName: "quantum-algorithms-2025",
-                        status: "Active",
-                        priority: "High",
-                        progress: { phase: ["Literature review", "Hypothesis development", "Methodology design"] },
-                        url: "#",
-                        preprintLink: null,
-                        publishedLink: null,
-                        lastUpdated: new Date().toISOString(),
-                        commits: 15
-                    },
-                    {
-                        fullName: "climate-ml-models",
-                        status: "Planning",
-                        priority: "Medium",
-                        progress: { phase: ["Literature review"] },
-                        url: "#",
-                        preprintLink: null,
-                        publishedLink: null,
-                        lastUpdated: new Date(Date.now() - 86400000).toISOString(),
-                        commits: 3
-                    },
-                    {
-                        fullName: "biotech-synthesis",
-                        status: "Complete",
-                        priority: "High",
-                        progress: { phase: ["Literature review", "Hypothesis development", "Methodology design", "Data collection/Experiments", "Data analysis", "Results interpretation", "Paper writing", "Internal review", "Submission preparation", "Peer review process", "Revisions", "Publication"] },
-                        url: "#",
-                        preprintLink: "https://arxiv.org/example",
-                        publishedLink: "https://doi.org/example",
-                        lastUpdated: new Date(Date.now() - 172800000).toISOString(),
-                        commits: 0
-                    }
+            createSampleData() { 
+                // This function can be kept if you want fallback sample data for local development
+                // For production, it's often better to show an error or empty state.
+                console.log("Creating sample data for dashboard display (fallback).");
+                 this.papers = [
+                    { fullName: "sample-paper-1", paperName: "Sample Paper Alpha", title: "Exploring Sample Alpha", status: "Active", priority: "High", progress: { phase: ["Literature review"] }, url: "#", repoUrl: "#", preprintLink: null, publishedLink: null, lastUpdated: new Date().toISOString(), isSubpaper: false },
+                    { fullName: "sample-paper-2", paperName: "Sample Paper Beta", title: "The Beta Synthesis", status: "Planning", priority: "Medium", progress: { phase: [] }, url: "#", repoUrl: "#", preprintLink: "https://example.com/beta", publishedLink: null, lastUpdated: new Date(Date.now() - 86400000).toISOString(), isSubpaper: false }
                 ];
-                
-                this.stats = {
-                    total: 3,
-                    byStatus: { "Active": 1, "Planning": 1, "Complete": 1 },
-                    byPriority: { "High": 2, "Medium": 1 },
-                    weeklyCommits: 18,
-                    recentActivity: [
-                        { repo: "quantum-algorithms-2025", commits: 15, lastCommit: "Update methodology section" },
-                        { repo: "climate-ml-models", commits: 3, lastCommit: "Initial literature review" }
-                    ]
-                };
+                this.stats = { total: 2, byStatus: { "Active": 1, "Planning": 1 }, byPriority: { "High": 1, "Medium": 1 }, weeklyCommits: 5, publishedPapers: 0 };
             }
             
             hideLoadingIndicators() {
                 const loadingAlert = document.getElementById('loadingAlert');
-                if (loadingAlert) {
-                    loadingAlert.style.display = 'none';
-                }
+                if (loadingAlert) loadingAlert.style.display = 'none';
             }
             
             showSetupInstructions() {
-                const setupInstructions = document.getElementById('setupInstructions');
+                const setup = document.getElementById('setupInstructions');
+                if (setup) setup.style.display = 'block';
                 const loadingAlert = document.getElementById('loadingAlert');
-                
-                if (setupInstructions) {
-                    setupInstructions.style.display = 'block';
-                }
-                if (loadingAlert) {
-                    loadingAlert.innerHTML = '⚠️ No data found. Please run the tracking workflow first.';
-                    loadingAlert.className = 'alert';
-                    loadingAlert.style.background = '#f8d7da';
-                    loadingAlert.style.borderColor = '#f5c6cb';
-                    loadingAlert.style.color = '#721c24';
+                if (loadingAlert && loadingAlert.style.display !== 'none') { // Only update if still visible
+                     loadingAlert.innerHTML = '⚠️ No data found or error loading. Please run the tracking workflow and check generated files.';
+                     loadingAlert.style.background = '#f8d7da'; // Error styling
+                     loadingAlert.style.borderColor = '#f5c6cb';
+                     loadingAlert.style.color = '#721c24';
                 }
             }
             
             updateStats() {
-                document.getElementById('totalPapers').textContent = this.stats.total || 0;
-                document.getElementById('activePapers').textContent = this.stats.byStatus?.Active || 0;
-                document.getElementById('weeklyCommits').textContent = this.stats.weeklyCommits || 0;
-                document.getElementById('publishedPapers').textContent = this.stats.byStatus?.Complete || 0;
+                document.getElementById('totalPapers').textContent = this.stats?.total || 0;
+                document.getElementById('activePapers').textContent = this.stats?.byStatus?.Active || 0;
+                document.getElementById('weeklyCommits').textContent = this.stats?.weeklyCommits || 0;
+                // Ensure the ID matches the HTML if you changed "publishedPapers" label
+                document.getElementById('publishedPapers').textContent = this.stats?.byStatus?.Complete || 0; 
             }
-            
-            createCharts() {
+
+            createCharts() { 
+                if (this.statusChartInstance) this.statusChartInstance.destroy();
+                if (this.priorityChartInstance) this.priorityChartInstance.destroy();
+                
                 this.createStatusChart();
                 this.createPriorityChart();
             }
             
             createStatusChart() {
                 const ctx = document.getElementById('statusChart').getContext('2d');
-                const statusData = this.stats.byStatus || {};
+                const statusDataInput = this.stats?.byStatus || {};
+                const statusColors = {"Active":'#28a745',"Planning":'#ffc107',"Review":'#17a2b8',"Complete":'#5cb85c',"Stale":'#dc3545',"Recent":'#6c757d',"Inactive":'#adb5bd',"Unknown":'#e9ecef', "N/A": '#e9ecef'};
+                const defaultOtherColor = '#A9A9A9'; // DarkGray for other statuses
+
+                const chartLabels = Object.keys(statusDataInput).filter(key => statusDataInput[key] > 0); // Only show statuses with count > 0
+                const chartDataValues = chartLabels.map(label => statusDataInput[label]);
+                const chartBackgroundColors = chartLabels.map(label => statusColors[label] || defaultOtherColor);
+
+                if (chartLabels.length === 0) {
+                    ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height); ctx.textAlign='center'; ctx.font = '14px sans-serif'; ctx.fillStyle = '#6c757d'; ctx.fillText('No status data available.',ctx.canvas.width/2,ctx.canvas.height/2); 
+                    return;
+                }
                 
-                new Chart(ctx, {
+                this.statusChartInstance = new Chart(ctx, {
                     type: 'doughnut',
-                    data: {
-                        labels: Object.keys(statusData),
-                        datasets: [{
-                            data: Object.values(statusData),
-                            backgroundColor: [
-                                '#28a745', // Active - green
-                                '#ffc107', // Planning - yellow  
-                                '#17a2b8', // Review - blue
-                                '#6c757d', // Complete - gray
-                                '#dc3545', // Stale - red
-                                '#6f42c1'  // Other - purple
-                            ],
-                            borderWidth: 0
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                position: 'bottom'
-                            }
-                        }
-                    }
+                    data: { labels: chartLabels, datasets: [{ data: chartDataValues, backgroundColor: chartBackgroundColors, borderWidth: 2, borderColor: '#fff' }] }, // Added border
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { padding: 20, boxWidth: 12 } } } }
                 });
             }
             
             createPriorityChart() {
                 const ctx = document.getElementById('priorityChart').getContext('2d');
-                const priorityDataInput = this.stats.byPriority || {}; // e.g., { "Low": 2, "Medium": 1 }
+                const priorityDataInput = this.stats?.byPriority || {};
+                const definedPriorities = ["High", "Medium", "Low"]; 
+                const priorityColors = { "High": '#dc3545', "Medium": '#ffc107', "Low": '#28a745', "Unknown": '#cccccc' };
 
-                // Define a consistent order and map colors
-                const definedPriorities = ["High", "Medium", "Low"];
-                const priorityColors = {
-                    "High": '#dc3545',   // Red
-                    "Medium": '#ffc107', // Yellow
-                    "Low": '#28a745',    // Green
-                    "Unknown": '#cccccc' // Grey for any other
-                };
-
-                const chartLabels = [];
-                const chartDataValues = [];
-                const chartBackgroundColors = [];
+                const chartLabels = []; const chartDataValues = []; const chartBackgroundColors = [];
 
                 definedPriorities.forEach(prio => {
-                    if (priorityDataInput.hasOwnProperty(prio)) {
+                    if (priorityDataInput.hasOwnProperty(prio) && priorityDataInput[prio] > 0) {
                         chartLabels.push(prio);
                         chartDataValues.push(priorityDataInput[prio]);
                         chartBackgroundColors.push(priorityColors[prio]);
                     }
                 });
-                
-                // Add any other priorities found in data but not in definedPriorities (e.g. if "Unknown" appears)
+                // Add any other priorities not in the defined list but present in data (e.g., if script produces "Unknown")
                 Object.keys(priorityDataInput).forEach(prioKey => {
-                    if (!definedPriorities.includes(prioKey)) {
+                    if (!definedPriorities.includes(prioKey) && priorityDataInput[prioKey] > 0) {
                         chartLabels.push(prioKey);
                         chartDataValues.push(priorityDataInput[prioKey]);
                         chartBackgroundColors.push(priorityColors["Unknown"]);
                     }
                 });
 
-
                 if (chartLabels.length === 0) {
-                    // Handle empty data case, maybe show a message or an empty chart
-                    console.log("Priority chart: No data to display.");
-                    // You might want to clear the canvas or display a placeholder
-                    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-                    ctx.textAlign = 'center';
-                    ctx.fillText('No priority data available.', ctx.canvas.width / 2, ctx.canvas.height / 2);
+                    ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height); ctx.textAlign='center'; ctx.font = '14px sans-serif'; ctx.fillStyle = '#6c757d'; ctx.fillText('No priority data available.',ctx.canvas.width/2,ctx.canvas.height/2); 
                     return;
                 }
-                
-                new Chart(ctx, {
+
+                this.priorityChartInstance = new Chart(ctx, {
                     type: 'bar',
                     data: {
-                        labels: chartLabels, // Dynamically ordered labels
-                        datasets: [{
-                            label: 'Papers',
-                            data: chartDataValues, // Corresponding data
-                            backgroundColor: chartBackgroundColors, // Dynamically assigned colors
-                            borderWidth: 0
-                        }]
+                        labels: chartLabels,
+                        datasets: [{ label: 'Papers', data: chartDataValues, backgroundColor: chartBackgroundColors, borderWidth: 0 }]
                     },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: { display: false }
-                        },
-                        scales: {
-                            y: { beginAtZero: true, ticks: { stepSize: 1 } }
-                        }
+                    options: { 
+                        responsive: true, maintainAspectRatio: false, 
+                        plugins: { legend: { display: false } },
+                        scales: { y: { beginAtZero: true, ticks: { stepSize: 1, precision: 0 } } } 
                     }
                 });
             }
@@ -519,68 +486,52 @@
                 const tbody = document.getElementById('papersTableBody');
                 tbody.innerHTML = '';
                 
-                if (this.papers.length === 0) {
-                    tbody.innerHTML = `
-                        <tr>
-                            <td colspan="6" style="text-align: center; padding: 40px; color: #999;">
-                                No papers found. Run the workflow to discover your research repositories.
-                            </td>
-                        </tr>
-                    `;
+                if (!this.papers || this.papers.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:40px;color:#999;">No papers data found. Ensure data/papers.json is populated.</td></tr>`;
                     return;
                 }
                 
                 this.papers.forEach(paper => {
                     const row = document.createElement('tr');
+                    const statusCleaned = (paper.status || 'unknown').toLowerCase().replace(/\s+/g, '-').replace(/[\[\]]/g, '');
+                    const statusClass = `status-${statusCleaned}`;
+                    const progressBar = this.generateProgressBar(paper.progress?.phase);
                     
-                    const statusClass = `status-${(paper.status || 'unknown').toLowerCase().replace(/\s+/g, '-')}`; // Handle spaces and null status
-                    const progressBar = this.generateProgressBar(paper.progress?.phase || []);
-                    
-                    const links = [];
-                    // Check for actual URLs, not just 'null' string or placeholders
+                    let linksHtml = `<a href="${paper.repoUrl || paper.url}" target="_blank" title="Repository: ${paper.repoName}">Repo</a>`;
                     if (paper.preprintLink && paper.preprintLink !== 'null' && !paper.preprintLink.toLowerCase().includes('[link')) {
-                        links.push(`<a href="${paper.preprintLink}" target="_blank" title="Preprint">Preprint</a>`);
+                        linksHtml += ` • <a href="${paper.preprintLink}" target="_blank" title="Preprint">Pre-Print</a>`;
                     }
                     if (paper.publishedLink && paper.publishedLink !== 'null' && !paper.publishedLink.toLowerCase().includes('[doi')) {
-                        links.push(`<a href="${paper.publishedLink}" target="_blank" title="Published">Published</a>`);
+                        linksHtml += ` • <a href="${paper.publishedLink}" target="_blank" title="Published">Published</a>`;
                     }
-                    links.push(`<a href="${paper.url}" target="_blank" title="Repository/Paper Location">Location</a>`); // Changed from Repo to Location for clarity
                     
-                    const lastUpdated = new Date(paper.lastUpdated).toLocaleDateString();
-                    
-                    // Use paper.title if available, otherwise paper.paperName
+                    const lastUpdated = paper.lastUpdated ? new Date(paper.lastUpdated).toLocaleDateString() : 'N/A';
                     let displayName = paper.title || paper.paperName || 'Untitled Paper';
                     let locationHint = '';
-                    if (paper.isSubpaper && paper.paperName !== displayName) {
-                        // If it's a subpaper and title is different from dirname, show dirname as hint
-                        locationHint = `<br><small style="color:#777;">(${paper.repoName}/${paper.paperName})</small>`;
-                    } else if (!paper.isSubpaper && paper.repoName !== displayName) {
-                        // If single paper and title is different from reponame, show reponame as hint
+                     if (paper.isSubpaper) {
+                        locationHint = `<br><small style="color:#777;">(${paper.fullName})</small>`;
+                    } else if (displayName !== paper.repoName && paper.repoName !== paper.paperName) { // Avoid hint if title is repoName
                         locationHint = `<br><small style="color:#777;">(${paper.repoName})</small>`;
                     }
-
 
                     row.innerHTML = `
                         <td><strong>${displayName}</strong>${locationHint}</td>
                         <td><span class="status-badge ${statusClass}">${paper.status || 'N/A'}</span></td>
                         <td>${paper.priority || 'N/A'}</td>
                         <td><span class="progress-bar">${progressBar}</span></td>
-                        <td class="links">${links.join(' ')}</td>
+                        <td class="links">${linksHtml}</td>
                         <td>${lastUpdated}</td>
                     `;
-                    
                     tbody.appendChild(row);
                 });
             }
             
-            generateProgressBar(completedPhases) {
+            generateProgressBar(completedPhases = []) {
                 const totalPhases = 12;
-                const completed = completedPhases.length;
-                const percentage = Math.round((completed / totalPhases) * 100);
-                
-                const filledBlocks = Math.round((completed / totalPhases) * 10);
+                const completed = Array.isArray(completedPhases) ? completedPhases.length : 0;
+                const percentage = totalPhases > 0 ? Math.round((completed / totalPhases) * 100) : 0;
+                const filledBlocks = totalPhases > 0 ? Math.min(10, Math.round((completed / totalPhases) * 10)) : 0;
                 const emptyBlocks = 10 - filledBlocks;
-                
                 return `${'█'.repeat(filledBlocks)}${'░'.repeat(emptyBlocks)} ${percentage}%`;
             }
             
@@ -589,10 +540,7 @@
             }
         }
         
-        // Initialize dashboard when page loads
-        document.addEventListener('DOMContentLoaded', () => {
-            new Dashboard();
-        });
+        document.addEventListener('DOMContentLoaded', () => { new Dashboard(); });
     </script>
 </body>
 </html>
