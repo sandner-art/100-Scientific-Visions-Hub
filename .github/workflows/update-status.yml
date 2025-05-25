@@ -52,7 +52,7 @@ jobs:
         # Use GH_PAT_PRIVATE_REPOS if you need to access private repositories.
         # This PAT must have 'repo' scope.
         # If only public repos, secrets.GITHUB_TOKEN might be sufficient, but PAT has higher rate limits.
-        GITHUB_TOKEN: ${{ secrets.GH_PAT_PRIVATE_REPOS || secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GH_PAT_PRIVATE_REPOS }}
         GITHUB_OWNER: ${{ github.repository_owner }}
         GITHUB_REPOSITORY: ${{ github.repository }} # Passes "owner/repo-name" to the script
       run: node scripts/update-status.js
