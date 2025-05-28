@@ -9,6 +9,17 @@
     "Low": 3,
     "Medium": 1
   },
-  "recentActivity": [],
-  "weeklyCommits": 0
+  "recentActivity": [
+    {
+      "repo": "sandner-art/SCIENCE-AF25-Absolute-Theories",
+      "commits": 5,
+      "lastCommit": "Update progress.md"
+    },
+    {
+      "repo": "sandner-art/SC-Biomimetics",
+      "commits": 2,
+      "lastCommit": "setup test repo for 100SV Hub"
+    }
+  ],
+  "weeklyCommits": 7
 }
