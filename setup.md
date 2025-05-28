@@ -10,6 +10,9 @@
    ```
    100-scientific-visions-hub/
    ├── README.md
+   ├── index.html   
+   ├── package-lock.json
+   ├── package.json      
    ├── reports/
    ├── data/
    ├── scripts/
@@ -34,8 +37,6 @@ For each paper repository in the 100 Scientific Visions initiative:
 3. **Add progress.md file** in the papers/ folder using the provided template  
 4. **Alternative identification methods**:
    - Add `100-scientific-visions` as a GitHub topic
-   - Use SC- prefix in repository name (legacy support)
-   - Include "100 Scientific Visions" in repository description
 
 **For repositories you DON'T want tracked**: Simply don't add any of the above identifiers.
 
@@ -97,7 +98,6 @@ The system automatically tracks:
 Repositories are automatically excluded if they don't have:
 - 100SV.md file OR
 - 100-scientific-visions topic tag OR  
-- SC- prefix + papers folder OR
 - Keywords in description + papers folder
 
 For explicit exclusion, remove these identifiers from repositories you don't want tracked.

@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scientific Papers Topic Visualization</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+            color: #ffffff;
+            overflow: hidden;
+        }
+
+        .dashboard-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            display: flex;
+        }
+
+        .main-visualization {
+            flex: 1;
+            position: relative;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 12px;
+            margin: 10px;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .legend-panel {
+            width: 280px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+            overflow-y: auto;
+            backdrop-filter: blur(15px);
+        }
+
+        .legend-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #ffffff;
+            text-align: center;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+            padding-bottom: 10px;
+        }
+
+        .legend-category {
+            margin-bottom: 25px;
+        }
+
+        .legend-category h3 {
+            font-size: 14px;
+            margin-bottom: 12px;
+            color: #e0e0e0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            padding: 5px;
+            border-radius: 6px;
+            transition: background 0.2s;
+            cursor: pointer;
+        }
+
+        .legend-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .legend-text {
+            font-size: 12px;
+            color: #cccccc;
+        }
+
+        .controls {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            display: flex;
+            gap: 10px;
+        }
+
+        .control-btn {
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            color: white;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+        }
+
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .control-btn.active {
+            background: rgba(100, 200, 255, 0.3);
+            border-color: rgba(100, 200, 255, 0.5);
+        }
+
+        .stats-panel {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 15px;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stats-item {
+            color: #cccccc;
+            font-size: 11px;
+            margin-bottom: 5px;
+        }
+
+        .stats-value {
+            color: #64b5f6;
+            font-weight: 600;
+        }
+
+        .node {
+            cursor: pointer;
+            stroke-width: 1.5px;
+            stroke: rgba(255, 255, 255, 0.4);
+        }
+
+        .link {
+            stroke: rgba(255, 255, 255, 0.1);
+            stroke-width: 1px;
+        }
+
+        .node-label {
+            font-size: 10px;
+            fill: white;
+            text-anchor: middle;
+            pointer-events: none;
+            text-shadow: 0 0 3px rgba(0, 0, 0, 0.8);
+        }
+
+        .tooltip {
+            position: absolute;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 6px;
+            color: white;
+            font-size: 12px;
+            pointer-events: none;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="main-visualization">
+            <div class="controls">
+                <button class="control-btn active" id="networkBtn">Network View</button>
+                <button class="control-btn" id="clusterBtn">Cluster View</button>
+                <button class="control-btn" id="resetBtn">Reset Zoom</button>
+            </div>
+            
+            <div class="stats-panel">
+                <div class="stats-item">Total Papers: <span class="stats-value" id="paperCount">0</span></div>
+                <div class="stats-item">Unique Topics: <span class="stats-value" id="topicCount">0</span></div>
+                <div class="stats-item">Keywords: <span class="stats-value" id="keywordCount">0</span></div>
+                <div class="stats-item">Connections: <span class="stats-value" id="connectionCount">0</span></div>
+            </div>
+            
+            <svg id="visualization"></svg>
+        </div>
+        
+        <div class="legend-panel">
+            <div class="legend-title">Topic Categories</div>
+            <div id="legend-content"></div>
+        </div>
+    </div>
+
+    <div class="tooltip" id="tooltip" style="display: none;"></div>
+
+    <script>
+        // Sample data representing scientific papers with topics and keywords
+        const sampleData = {
+            papers: [
+                {id: 1, title: "Machine Learning Applications", topics: ["Artificial Intelligence", "Computer Science"], keywords: ["neural networks", "deep learning", "classification"]},
+                {id: 2, title: "Climate Change Analysis", topics: ["Environmental Science", "Climatology"], keywords: ["global warming", "carbon emissions", "temperature"]},
+                {id: 3, title: "Quantum Computing Advances", topics: ["Physics", "Computer Science"], keywords: ["quantum algorithms", "qubits", "superposition"]},
+                {id: 4, title: "Biomedical Data Mining", topics: ["Biology", "Computer Science"], keywords: ["bioinformatics", "genomics", "data analysis"]},
+                {id: 5, title: "Renewable Energy Systems", topics: ["Engineering", "Environmental Science"], keywords: ["solar panels", "wind energy", "sustainability"]},
+                {id: 6, title: "Artificial Neural Networks", topics: ["Artificial Intelligence", "Mathematics"], keywords: ["backpropagation", "neural networks", "optimization"]},
+                {id: 7, title: "Ocean Acidification", topics: ["Environmental Science", "Marine Biology"], keywords: ["pH levels", "coral reefs", "carbon dioxide"]},
+                {id: 8, title: "Cryptographic Protocols", topics: ["Computer Science", "Mathematics"], keywords: ["encryption", "security", "algorithms"]},
+                {id: 9, title: "Gene Expression Analysis", topics: ["Biology", "Medicine"], keywords: ["RNA sequencing", "genomics", "gene regulation"]},
+                {id: 10, title: "Solar Cell Efficiency", topics: ["Physics", "Engineering"], keywords: ["photovoltaics", "solar panels", "energy conversion"]},
+                // Add more sample papers to demonstrate scalability
+                ...Array.from({length: 90}, (_, i) => ({
+                    id: i + 11,
+                    title: `Research Paper ${i + 11}`,
+                    topics: [
+                        ["Artificial Intelligence", "Computer Science", "Mathematics"][Math.floor(Math.random() * 3)],
+                        ["Biology", "Physics", "Chemistry", "Environmental Science"][Math.floor(Math.random() * 4)]
+                    ],
+                    keywords: [
+                        ["machine learning", "algorithms", "optimization", "data mining"][Math.floor(Math.random() * 4)],
+                        ["analysis", "modeling", "simulation", "prediction"][Math.floor(Math.random() * 4)],
+                        ["systems", "networks", "protocols", "frameworks"][Math.floor(Math.random() * 4)]
+                    ]
+                }))
+            ]
+        };
+
+        // Color schemes for different topic categories
+        const topicColors = {
+            "Artificial Intelligence": "#ff6b6b",
+            "Computer Science": "#4ecdc4",
+            "Physics": "#45b7d1",
+            "Biology": "#96ceb4",
+            "Mathematics": "#ffeaa7",
+            "Environmental Science": "#74b9ff",
+            "Engineering": "#fd79a8",
+            "Medicine": "#6c5ce7",
+            "Chemistry": "#a29bfe",
+            "Climatology": "#00b894",
+            "Marine Biology": "#0984e3"
+        };
+
+        class ScientificPapersVisualization {
+            constructor() {
+                this.width = window.innerWidth - 300;
+                this.height = window.innerHeight - 20;
+                this.svg = d3.select("#visualization")
+                    .attr("width", this.width)
+                    .attr("height", this.height);
+                
+                this.g = this.svg.append("g");
+                this.zoom = d3.zoom()
+                    .scaleExtent([0.1, 4])
+                    .on("zoom", (event) => {
+                        this.g.attr("transform", event.transform);
+                    });
+                
+                this.svg.call(this.zoom);
+                
+                this.tooltip = d3.select("#tooltip");
+                this.processData();
+                this.setupControls();
+                this.createLegend();
+                this.initializeVisualization();
+            }
+
+            processData() {
+                const topicFreq = {};
+                const keywordFreq = {};
+                const connections = {};
+
+                // Process papers to extract topics and keywords
+                sampleData.papers.forEach(paper => {
+                    paper.topics.forEach(topic => {
+                        topicFreq[topic] = (topicFreq[topic] || 0) + 1;
+                    });
+                    
+                    paper.keywords.forEach(keyword => {
+                        keywordFreq[keyword] = (keywordFreq[keyword] || 0) + 1;
+                    });
+
+                    // Create connections between topics and keywords
+                    paper.topics.forEach(topic => {
+                        paper.keywords.forEach(keyword => {
+                            const key = `${topic}-${keyword}`;
+                            connections[key] = (connections[key] || 0) + 1;
+                        });
+                    });
+                });
+
+                // Create nodes
+                this.nodes = [];
+                
+                // Add topic nodes
+                Object.entries(topicFreq).forEach(([topic, freq]) => {
+                    this.nodes.push({
+                        id: topic,
+                        type: 'topic',
+                        frequency: freq,
+                        color: topicColors[topic] || '#ffffff',
+                        size: Math.max(8, Math.min(20, freq * 2))
+                    });
+                });
+
+                // Add keyword nodes
+                Object.entries(keywordFreq).forEach(([keyword, freq]) => {
+                    this.nodes.push({
+                        id: keyword,
+                        type: 'keyword',
+                        frequency: freq,
+                        color: '#ffffff',
+                        size: Math.max(4, Math.min(12, freq * 1.5))
+                    });
+                });
+
+                // Create links
+                this.links = [];
+                Object.entries(connections).forEach(([key, strength]) => {
+                    const [source, target] = key.split('-');
+                    this.links.push({
+                        source: source,
+                        target: target,
+                        strength: strength,
+                        value: strength
+                    });
+                });
+
+                // Update stats
+                this.updateStats();
+            }
+
+            updateStats() {
+                document.getElementById('paperCount').textContent = sampleData.papers.length;
+                document.getElementById('topicCount').textContent = this.nodes.filter(n => n.type === 'topic').length;
+                document.getElementById('keywordCount').textContent = this.nodes.filter(n => n.type === 'keyword').length;
+                document.getElementById('connectionCount').textContent = this.links.length;
+            }
+
+            initializeVisualization() {
+                this.simulation = d3.forceSimulation(this.nodes)
+                    .force("link", d3.forceLink(this.links).id(d => d.id).strength(0.1))
+                    .force("charge", d3.forceManyBody().strength(-100))
+                    .force("center", d3.forceCenter(this.width / 2, this.height / 2))
+                    .force("collision", d3.forceCollide().radius(d => d.size + 2));
+
+                this.drawVisualization();
+            }
+
+            drawVisualization() {
+                // Clear previous visualization
+                this.g.selectAll("*").remove();
+
+                // Add links
+                this.link = this.g.append("g")
+                    .selectAll("line")
+                    .data(this.links)
+                    .enter().append("line")
+                    .attr("class", "link")
+                    .style("stroke-width", d => Math.sqrt(d.value))
+                    .style("opacity", 0.6);
+
+                // Add nodes
+                this.node = this.g.append("g")
+                    .selectAll("circle")
+                    .data(this.nodes)
+                    .enter().append("circle")
+                    .attr("class", "node")
+                    .attr("r", d => d.size)
+                    .style("fill", d => d.color)
+                    .style("opacity", d => d.type === 'topic' ? 0.8 : 0.6)
+                    .call(d3.drag()
+                        .on("start", (event, d) => this.dragstarted(event, d))
+                        .on("drag", (event, d) => this.dragged(event, d))
+                        .on("end", (event, d) => this.dragended(event, d)));
+
+                // Add labels for larger nodes
+                this.label = this.g.append("g")
+                    .selectAll("text")
+                    .data(this.nodes.filter(d => d.size > 8))
+                    .enter().append("text")
+                    .attr("class", "node-label")
+                    .text(d => d.id.length > 15 ? d.id.substring(0, 12) + "..." : d.id)
+                    .attr("dy", 3);
+
+                // Add hover effects
+                this.node
+                    .on("mouseover", (event, d) => this.showTooltip(event, d))
+                    .on("mouseout", () => this.hideTooltip());
+
+                this.simulation.on("tick", () => this.ticked());
+            }
+
+            ticked() {
+                this.link
+                    .attr("x1", d => d.source.x)
+                    .attr("y1", d => d.source.y)
+                    .attr("x2", d => d.target.x)
+                    .attr("y2", d => d.target.y);
+
+                this.node
+                    .attr("cx", d => d.x)
+                    .attr("cy", d => d.y);
+
+                this.label
+                    .attr("x", d => d.x)
+                    .attr("y", d => d.y);
+            }
+
+            dragstarted(event, d) {
+                if (!event.active) this.simulation.alphaTarget(0.3).restart();
+                d.fx = d.x;
+                d.fy = d.y;
+            }
+
+            dragged(event, d) {
+                d.fx = event.x;
+                d.fy = event.y;
+            }
+
+            dragended(event, d) {
+                if (!event.active) this.simulation.alphaTarget(0);
+                d.fx = null;
+                d.fy = null;
+            }
+
+            showTooltip(event, d) {
+                const tooltip = this.tooltip;
+                tooltip.style("display", "block")
+                    .html(`
+                        <strong>${d.id}</strong><br>
+                        Type: ${d.type}<br>
+                        Frequency: ${d.frequency} papers<br>
+                        ${d.type === 'topic' ? 'Main Topic' : 'Keyword'}
+                    `)
+                    .style("left", (event.pageX + 10) + "px")
+                    .style("top", (event.pageY - 10) + "px");
+            }
+
+            hideTooltip() {
+                this.tooltip.style("display", "none");
+            }
+
+            createLegend() {
+                const legendContent = document.getElementById('legend-content');
+                
+                // Topic categories
+                const topicCategory = document.createElement('div');
+                topicCategory.className = 'legend-category';
+                topicCategory.innerHTML = '<h3>Main Topics</h3>';
+                
+                Object.entries(topicColors).forEach(([topic, color]) => {
+                    const item = document.createElement('div');
+                    item.className = 'legend-item';
+                    item.innerHTML = `
+                        <div class="legend-color" style="background-color: ${color}"></div>
+                        <div class="legend-text">${topic}</div>
+                    `;
+                    topicCategory.appendChild(item);
+                });
+                
+                legendContent.appendChild(topicCategory);
+
+                // Keywords category
+                const keywordCategory = document.createElement('div');
+                keywordCategory.className = 'legend-category';
+                keywordCategory.innerHTML = `
+                    <h3>Keywords</h3>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #ffffff"></div>
+                        <div class="legend-text">Research Keywords</div>
+                    </div>
+                `;
+                
+                legendContent.appendChild(keywordCategory);
+            }
+
+            setupControls() {
+                document.getElementById('networkBtn').addEventListener('click', () => {
+                    this.setActiveButton('networkBtn');
+                    this.switchToNetworkView();
+                });
+
+                document.getElementById('clusterBtn').addEventListener('click', () => {
+                    this.setActiveButton('clusterBtn');
+                    this.switchToClusterView();
+                });
+
+                document.getElementById('resetBtn').addEventListener('click', () => {
+                    this.resetZoom();
+                });
+            }
+
+            setActiveButton(activeId) {
+                document.querySelectorAll('.control-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                document.getElementById(activeId).classList.add('active');
+            }
+
+            switchToNetworkView() {
+                this.simulation
+                    .force("charge", d3.forceManyBody().strength(-100))
+                    .force("center", d3.forceCenter(this.width / 2, this.height / 2))
+                    .alpha(0.3).restart();
+            }
+
+            switchToClusterView() {
+                // Group nodes by topic for clustering
+                const topicCenters = {};
+                let angle = 0;
+                const radius = Math.min(this.width, this.height) / 4;
+
+                this.nodes.filter(n => n.type === 'topic').forEach(topic => {
+                    topicCenters[topic.id] = {
+                        x: this.width / 2 + radius * Math.cos(angle),
+                        y: this.height / 2 + radius * Math.sin(angle)
+                    };
+                    angle += (2 * Math.PI) / Object.keys(topicColors).length;
+                });
+
+                this.simulation
+                    .force("charge", d3.forceManyBody().strength(-50))
+                    .force("cluster", d3.forceX().x(d => {
+                        if (d.type === 'topic') {
+                            return topicCenters[d.id]?.x || this.width / 2;
+                        }
+                        // Position keywords near their related topics
+                        const relatedTopics = this.links.filter(l => l.target.id === d.id).map(l => l.source.id);
+                        if (relatedTopics.length > 0) {
+                            const avgX = relatedTopics.reduce((sum, topic) => sum + (topicCenters[topic]?.x || this.width / 2), 0) / relatedTopics.length;
+                            return avgX;
+                        }
+                        return this.width / 2;
+                    }).strength(0.1))
+                    .force("clusterY", d3.forceY().y(d => {
+                        if (d.type === 'topic') {
+                            return topicCenters[d.id]?.y || this.height / 2;
+                        }
+                        const relatedTopics = this.links.filter(l => l.target.id === d.id).map(l => l.source.id);
+                        if (relatedTopics.length > 0) {
+                            const avgY = relatedTopics.reduce((sum, topic) => sum + (topicCenters[topic]?.y || this.height / 2), 0) / relatedTopics.length;
+                            return avgY;
+                        }
+                        return this.height / 2;
+                    }).strength(0.1))
+                    .alpha(0.3).restart();
+            }
+
+            resetZoom() {
+                this.svg.transition().duration(750).call(
+                    this.zoom.transform,
+                    d3.zoomIdentity
+                );
+            }
+        }
+
+        // Initialize the visualization when the page loads
+        window.addEventListener('load', () => {
+            new ScientificPapersVisualization();
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            location.reload(); // Simple solution for demo - in production, implement proper resize handling
+        });
+    </script>
+</body>
+</html>

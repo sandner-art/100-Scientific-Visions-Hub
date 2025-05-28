@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scientific Papers Topic Visualization</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+            color: #ffffff;
+            overflow: hidden;
+        }
+
+        .dashboard-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            display: flex;
+        }
+
+        .main-visualization {
+            flex: 1;
+            position: relative;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 12px;
+            margin: 10px;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .legend-panel {
+            width: 320px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+            overflow-y: auto;
+            backdrop-filter: blur(15px);
+        }
+
+        .legend-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #ffffff;
+            text-align: center;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+            padding-bottom: 10px;
+        }
+
+        .legend-category {
+            margin-bottom: 25px;
+        }
+
+        .legend-category h3 {
+            font-size: 14px;
+            margin-bottom: 12px;
+            color: #e0e0e0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            padding: 8px;
+            border-radius: 6px;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: 1px solid transparent;
+        }
+
+        .legend-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(3px);
+        }
+
+        .legend-item.highlighted {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+        }
+
+        .legend-item.dimmed {
+            opacity: 0.3;
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            flex-shrink: 0;
+        }
+
+        .legend-text {
+            font-size: 12px;
+            color: #cccccc;
+            word-wrap: break-word;
+        }
+
+        .keyword-list {
+            font-size: 11px;
+            color: #aaaaaa;
+            margin-top: 5px;
+            line-height: 1.4;
+        }
+
+        .keyword-item {
+            display: inline;
+            margin-right: 8px;
+            padding: 2px 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .keyword-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .keyword-item.highlighted {
+            background: rgba(100, 200, 255, 0.3);
+        }
+
+        .controls {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .control-btn {
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            color: white;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+        }
+
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .control-btn.active {
+            background: rgba(100, 200, 255, 0.3);
+            border-color: rgba(100, 200, 255, 0.5);
+        }
+
+        .stats-panel {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 15px;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stats-item {
+            color: #cccccc;
+            font-size: 11px;
+            margin-bottom: 5px;
+        }
+
+        .stats-value {
+            color: #64b5f6;
+            font-weight: 600;
+        }
+
+        .clear-filter {
+            position: absolute;
+            top: 70px;
+            left: 20px;
+            z-index: 1000;
+            display: none;
+        }
+
+        .node {
+            cursor: pointer;
+            stroke-width: 2px;
+            stroke: rgba(255, 255, 255, 0.4);
+            transition: all 0.3s;
+        }
+
+        .node.highlighted {
+            stroke: #64b5f6;
+            stroke-width: 3px;
+            filter: drop-shadow(0 0 6px rgba(100, 181, 246, 0.6));
+        }
+
+        .node.dimmed {
+            opacity: 0.2;
+        }
+
+        .link {
+            stroke: rgba(255, 255, 255, 0.1);
+            stroke-width: 1px;
+            transition: all 0.3s;
+        }
+
+        .link.highlighted {
+            stroke: rgba(100, 181, 246, 0.8);
+            stroke-width: 2px;
+        }
+
+        .link.dimmed {
+            opacity: 0.1;
+        }
+
+        .node-label {
+            font-size: 9px;
+            fill: white;
+            text-anchor: middle;
+            pointer-events: none;
+            text-shadow: 0 0 3px rgba(0, 0, 0, 0.8);
+            font-weight: 500;
+        }
+
+        .topic-label {
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .tooltip {
+            position: absolute;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 6px;
+            color: white;
+            font-size: 12px;
+            pointer-events: none;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            max-width: 250px;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="main-visualization">
+            <div class="controls">
+                <button class="control-btn active" id="networkBtn">Network View</button>
+                <button class="control-btn" id="clusterBtn">Cluster View</button>
+                <button class="control-btn" id="topicBtn">Topic View</button>
+                <button class="control-btn" id="resetBtn">Reset Zoom</button>
+            </div>
+            
+            <div class="clear-filter">
+                <button class="control-btn" id="clearFilterBtn">Clear Filter</button>
+            </div>
+            
+            <div class="stats-panel">
+                <div class="stats-item">Total Papers: <span class="stats-value" id="paperCount">0</span></div>
+                <div class="stats-item">Unique Topics: <span class="stats-value" id="topicCount">0</span></div>
+                <div class="stats-item">Keywords: <span class="stats-value" id="keywordCount">0</span></div>
+                <div class="stats-item">Connections: <span class="stats-value" id="connectionCount">0</span></div>
+                <div class="stats-item">Selected: <span class="stats-value" id="selectedCount">None</span></div>
+            </div>
+            
+            <svg id="visualization"></svg>
+        </div>
+        
+        <div class="legend-panel">
+            <div class="legend-title">Interactive Topic Map</div>
+            <div id="legend-content"></div>
+        </div>
+    </div>
+
+    <div class="tooltip" id="tooltip" style="display: none;"></div>
+
+    <script>
+        // Enhanced sample data with more realistic connections
+        const sampleData = {
+            papers: [
+                {id: 1, title: "Deep Neural Networks for Image Recognition", topics: ["Artificial Intelligence", "Computer Science"], keywords: ["neural networks", "deep learning", "image recognition", "computer vision"]},
+                {id: 2, title: "Climate Change Impact on Marine Ecosystems", topics: ["Environmental Science", "Marine Biology"], keywords: ["climate change", "ocean temperature", "marine life", "ecosystem"]},
+                {id: 3, title: "Quantum Algorithm Optimization", topics: ["Physics", "Computer Science"], keywords: ["quantum computing", "algorithms", "optimization", "qubits"]},
+                {id: 4, title: "Genomic Data Analysis Using ML", topics: ["Biology", "Computer Science"], keywords: ["genomics", "machine learning", "data analysis", "bioinformatics"]},
+                {id: 5, title: "Sustainable Energy Storage Systems", topics: ["Engineering", "Environmental Science"], keywords: ["energy storage", "batteries", "sustainability", "renewable energy"]},
+                {id: 6, title: "Reinforcement Learning in Robotics", topics: ["Artificial Intelligence", "Engineering"], keywords: ["reinforcement learning", "robotics", "automation", "neural networks"]},
+                {id: 7, title: "Ocean Acidification Modeling", topics: ["Environmental Science", "Mathematics"], keywords: ["ocean acidification", "mathematical modeling", "climate change", "simulation"]},
+                {id: 8, title: "Cryptographic Security Protocols", topics: ["Computer Science", "Mathematics"], keywords: ["cryptography", "security", "protocols", "algorithms"]},
+                {id: 9, title: "Gene Expression Regulation", topics: ["Biology", "Medicine"], keywords: ["gene expression", "molecular biology", "regulation", "genomics"]},
+                {id: 10, title: "Photovoltaic Cell Efficiency", topics: ["Physics", "Engineering"], keywords: ["solar cells", "energy conversion", "photovoltaics", "materials science"]},
+                // Additional papers for demonstration
+                ...Array.from({length: 90}, (_, i) => ({
+                    id: i + 11,
+                    title: `Research Paper ${i + 11}`,
+                    topics: [
+                        ["Artificial Intelligence", "Computer Science", "Mathematics", "Physics"][Math.floor(Math.random() * 4)],
+                        ["Biology", "Chemistry", "Environmental Science", "Engineering", "Medicine"][Math.floor(Math.random() * 5)]
+                    ].filter(Boolean),
+                    keywords: [
+                        ["machine learning", "deep learning", "neural networks", "algorithms", "optimization"][Math.floor(Math.random() * 5)],
+                        ["data analysis", "modeling", "simulation", "prediction", "classification"][Math.floor(Math.random() * 5)],
+                        ["systems", "networks", "protocols", "frameworks", "platforms"][Math.floor(Math.random() * 5)]
+                    ].filter(Boolean)
+                }))
+            ]
+        };
+
+        // Enhanced color schemes with keyword color derivation
+        const topicColors = {
+            "Artificial Intelligence": "#ff6b6b",
+            "Computer Science": "#4ecdc4",
+            "Physics": "#45b7d1",
+            "Biology": "#96ceb4",
+            "Mathematics": "#ffeaa7",
+            "Environmental Science": "#74b9ff",
+            "Engineering": "#fd79a8",
+            "Medicine": "#6c5ce7",
+            "Chemistry": "#a29bfe",
+            "Marine Biology": "#0984e3"
+        };
+
+        // Function to derive keyword colors from related topics
+        function getKeywordColor(keyword, topicRelations) {
+            const relatedTopics = topicRelations[keyword] || [];
+            if (relatedTopics.length === 0) return '#888888';
+            
+            // Use the color of the most frequently associated topic
+            const primaryTopic = relatedTopics.reduce((a, b) => 
+                relatedTopics.filter(x => x === a).length > relatedTopics.filter(x => x === b).length ? a : b
+            );
+            
+            const baseColor = topicColors[primaryTopic] || '#888888';
+            // Lighten the color for keywords
+            return d3.color(baseColor).brighter(0.5).toString();
+        }
+
+        // Function to wrap text in SVG
+        function wrapText(text, width) {
+            text.each(function() {
+                const text = d3.select(this);
+                const words = text.text().split(/\s+/).reverse();
+                let word;
+                let line = [];
+                let lineNumber = 0;
+                const lineHeight = 1.1;
+                const y = text.attr("y");
+                const dy = parseFloat(text.attr("dy")) || 0;
+                let tspan = text.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", dy + "em");
+                
+                while (word = words.pop()) {
+                    line.push(word);
+                    tspan.text(line.join(" "));
+                    if (tspan.node().getComputedTextLength() > width) {
+                        line.pop();
+                        tspan.text(line.join(" "));
+                        line = [word];
+                        tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word);
+                    }
+                }
+            });
+        }
+
+        class ScientificPapersVisualization {
+            constructor() {
+                this.width = window.innerWidth - 340;
+                this.height = window.innerHeight - 20;
+                this.svg = d3.select("#visualization")
+                    .attr("width", this.width)
+                    .attr("height", this.height);
+                
+                this.g = this.svg.append("g");
+                this.zoom = d3.zoom()
+                    .scaleExtent([0.1, 4])
+                    .on("zoom", (event) => {
+                        this.g.attr("transform", event.transform);
+                    });
+                
+                this.svg.call(this.zoom);
+                
+                this.tooltip = d3.select("#tooltip");
+                this.selectedTopic = null;
+                this.selectedKeyword = null;
+                this.processData();
+                this.setupControls();
+                this.createLegend();
+                this.initializeVisualization();
+            }
+
+            processData() {
+                const topicFreq = {};
+                const keywordFreq = {};
+                const connections = {};
+                const topicKeywordRelations = {};
+
+                // Process papers to extract topics, keywords and their relationships
+                sampleData.papers.forEach(paper => {
+                    paper.topics.forEach(topic => {
+                        topicFreq[topic] = (topicFreq[topic] || 0) + 1;
+                        
+                        // Track which keywords are associated with each topic
+                        paper.keywords.forEach(keyword => {
+                            if (!topicKeywordRelations[keyword]) {
+                                topicKeywordRelations[keyword] = [];
+                            }
+                            topicKeywordRelations[keyword].push(topic);
+                        });
+                    });
+                    
+                    paper.keywords.forEach(keyword => {
+                        keywordFreq[keyword] = (keywordFreq[keyword] || 0) + 1;
+                    });
+
+                    // Create connections between topics and keywords
+                    paper.topics.forEach(topic => {
+                        paper.keywords.forEach(keyword => {
+                            const key = `${topic}-${keyword}`;
+                            connections[key] = (connections[key] || 0) + 1;
+                        });
+                    });
+                });
+
+                this.topicKeywordRelations = topicKeywordRelations;
+
+                // Create nodes
+                this.nodes = [];
+                
+                // Add topic nodes
+                Object.entries(topicFreq).forEach(([topic, freq]) => {
+                    this.nodes.push({
+                        id: topic,
+                        type: 'topic',
+                        frequency: freq,
+                        color: topicColors[topic] || '#ffffff',
+                        size: Math.max(12, Math.min(25, freq * 2))
+                    });
+                });
+
+                // Add keyword nodes with derived colors
+                Object.entries(keywordFreq).forEach(([keyword, freq]) => {
+                    this.nodes.push({
+                        id: keyword,
+                        type: 'keyword',
+                        frequency: freq,
+                        color: getKeywordColor(keyword, topicKeywordRelations),
+                        size: Math.max(6, Math.min(15, freq * 1.5))
+                    });
+                });
+
+                // Create links
+                this.links = [];
+                Object.entries(connections).forEach(([key, strength]) => {
+                    const [source, target] = key.split('-');
+                    this.links.push({
+                        source: source,
+                        target: target,
+                        strength: strength,
+                        value: strength
+                    });
+                });
+
+                this.updateStats();
+            }
+
+            updateStats() {
+                document.getElementById('paperCount').textContent = sampleData.papers.length;
+                document.getElementById('topicCount').textContent = this.nodes.filter(n => n.type === 'topic').length;
+                document.getElementById('keywordCount').textContent = this.nodes.filter(n => n.type === 'keyword').length;
+                document.getElementById('connectionCount').textContent = this.links.length;
+            }
+
+            initializeVisualization() {
+                this.simulation = d3.forceSimulation(this.nodes)
+                    .force("link", d3.forceLink(this.links).id(d => d.id).strength(0.1))
+                    .force("charge", d3.forceManyBody().strength(-150))
+                    .force("center", d3.forceCenter(this.width / 2, this.height / 2))
+                    .force("collision", d3.forceCollide().radius(d => d.size + 3));
+
+                this.drawVisualization();
+            }
+
+            drawVisualization() {
+                // Clear previous visualization
+                this.g.selectAll("*").remove();
+
+                // Add links
+                this.link = this.g.append("g")
+                    .selectAll("line")
+                    .data(this.links)
+                    .enter().append("line")
+                    .attr("class", "link")
+                    .style("stroke-width", d => Math.sqrt(d.value))
+                    .style("opacity", 0.6);
+
+                // Add nodes
+                this.node = this.g.append("g")
+                    .selectAll("circle")
+                    .data(this.nodes)
+                    .enter().append("circle")
+                    .attr("class", "node")
+                    .attr("r", d => d.size)
+                    .style("fill", d => d.color)
+                    .style("opacity", d => d.type === 'topic' ? 0.9 : 0.7)
+                    .call(d3.drag()
+                        .on("start", (event, d) => this.dragstarted(event, d))
+                        .on("drag", (event, d) => this.dragged(event, d))
+                        .on("end", (event, d) => this.dragended(event, d)))
+                    .on("click", (event, d) => this.handleNodeClick(event, d));
+
+                // Add labels
+                this.label = this.g.append("g")
+                    .selectAll("text")
+                    .data(this.nodes.filter(d => d.size > 8))
+                    .enter().append("text")
+                    .attr("class", d => d.type === 'topic' ? "node-label topic-label" : "node-label")
+                    .text(d => d.id)
+                    .attr("dy", 3)
+                    .call(text => wrapText(text, d => d.size * 2));
+
+                // Add hover effects
+                this.node
+                    .on("mouseover", (event, d) => this.showTooltip(event, d))
+                    .on("mouseout", () => this.hideTooltip());
+
+                this.simulation.on("tick", () => this.ticked());
+            }
+
+            handleNodeClick(event, d) {
+                event.stopPropagation();
+                
+                if (d.type === 'topic') {
+                    this.selectTopic(d.id);
+                } else {
+                    this.selectKeyword(d.id);
+                }
+            }
+
+            selectTopic(topicId) {
+                this.selectedTopic = topicId;
+                this.selectedKeyword = null;
+                this.highlightTopicRelations(topicId);
+                this.updateLegendHighlight();
+                this.showClearFilter();
+                this.focusOnTopic(topicId);
+                
+                document.getElementById('selectedCount').textContent = `Topic: ${topicId}`;
+            }
+
+            selectKeyword(keywordId) {
+                this.selectedKeyword = keywordId;
+                this.selectedTopic = null;
+                this.highlightKeywordRelations(keywordId);
+                this.updateLegendHighlight();
+                this.showClearFilter();
+                
+                document.getElementById('selectedCount').textContent = `Keyword: ${keywordId}`;
+            }
+
+            highlightTopicRelations(topicId) {
+                // Get related keywords
+                const relatedKeywords = this.links
+                    .filter(l => l.source.id === topicId || l.target.id === topicId)
+                    .map(l => l.source.id === topicId ? l.target.id : l.source.id);
+
+                // Highlight nodes
+                this.node
+                    .classed("highlighted", d => d.id === topicId || relatedKeywords.includes(d.id))
+                    .classed("dimmed", d => d.id !== topicId && !relatedKeywords.includes(d.id));
+
+                // Highlight links
+                this.link
+                    .classed("highlighted", l => l.source.id === topicId || l.target.id === topicId)
+                    .classed("dimmed", l => l.source.id !== topicId && l.target.id !== topicId);
+            }
+
+            highlightKeywordRelations(keywordId) {
+                // Get related topics
+                const relatedTopics = this.links
+                    .filter(l => l.source.id === keywordId || l.target.id === keywordId)
+                    .map(l => l.source.id === keywordId ? l.target.id : l.source.id);
+
+                // Highlight nodes
+                this.node
+                    .classed("highlighted", d => d.id === keywordId || relatedTopics.includes(d.id))
+                    .classed("dimmed", d => d.id !== keywordId && !relatedTopics.includes(d.id));
+
+                // Highlight links
+                this.link
+                    .classed("highlighted", l => l.source.id === keywordId || l.target.id === keywordId)
+                    .classed("dimmed", l => l.source.id !== keywordId && l.target.id !== keywordId);
+            }
+
+            focusOnTopic(topicId) {
+                const topicNode = this.nodes.find(n => n.id === topicId);
+                if (topicNode && topicNode.x && topicNode.y) {
+                    const scale = 1.5;
+                    const translate = [
+                        this.width / 2 - scale * topicNode.x,
+                        this.height / 2 - scale * topicNode.y
+                    ];
+                    
+                    this.svg.transition().duration(750).call(
+                        this.zoom.transform,
+                        d3.zoomIdentity.translate(translate[0], translate[1]).scale(scale)
+                    );
+                }
+            }
+
+            clearFilter() {
+                this.selectedTopic = null;
+                this.selectedKeyword = null;
+                
+                this.node
+                    .classed("highlighted", false)
+                    .classed("dimmed", false);
+                
+                this.link
+                    .classed("highlighted", false)
+                    .classed("dimmed", false);
+                
+                this.updateLegendHighlight();
+                this.hideClearFilter();
+                
+                document.getElementById('selectedCount').textContent = 'None';
+            }
+
+            showClearFilter() {
+                document.getElementById('clearFilterBtn').parentElement.style.display = 'block';
+            }
+
+            hideClearFilter() {
+                document.getElementById('clearFilterBtn').parentElement.style.display = 'none';
+            }
+
+            updateLegendHighlight() {
+                // Update topic legend items
+                document.querySelectorAll('.legend-item[data-type="topic"]').forEach(item => {
+                    const topicId = item.dataset.id;
+                    item.classList.remove('highlighted', 'dimmed');
+                    
+                    if (this.selectedTopic === topicId) {
+                        item.classList.add('highlighted');
+                    } else if (this.selectedTopic && this.selectedTopic !== topicId) {
+                        item.classList.add('dimmed');
+                    }
+                });
+
+                // Update keyword items
+                document.querySelectorAll('.keyword-item').forEach(item => {
+                    const keywordId = item.dataset.keyword;
+                    item.classList.remove('highlighted');
+                    
+                    if (this.selectedKeyword === keywordId) {
+                        item.classList.add('highlighted');
+                    }
+                });
+            }
+
+            ticked() {
+                this.link
+                    .attr("x1", d => d.source.x)
+                    .attr("y1", d => d.source.y)
+                    .attr("x2", d => d.target.x)
+                    .attr("y2", d => d.target.y);
+
+                this.node
+                    .attr("cx", d => d.x)
+                    .attr("cy", d => d.y);
+
+                this.label
+                    .attr("x", d => d.x)
+                    .attr("y", d => d.y);
+            }
+
+            dragstarted(event, d) {
+                if (!event.active) this.simulation.alphaTarget(0.3).restart();
+                d.fx = d.x;
+                d.fy = d.y;
+            }
+
+            dragged(event, d) {
+                d.fx = event.x;
+                d.fy = event.y;
+            }
+
+            dragended(event, d) {
+                if (!event.active) this.simulation.alphaTarget(0);
+                d.fx = null;
+                d.fy = null;
+            }
+
+            showTooltip(event, d) {
+                const relatedItems = this.links
+                    .filter(l => l.source.id === d.id || l.target.id === d.id)
+                    .map(l => l.source.id === d.id ? l.target.id : l.source.id);
+
+                this.tooltip.style("display", "block")
+                    .html(`
+                        <strong>${d.id}</strong><br>
+                        Type: ${d.type}<br>
+                        Frequency: ${d.frequency} papers<br>
+                        Connected to: ${relatedItems.length} ${d.type === 'topic' ? 'keywords' : 'topics'}<br>
+                        <em>Click to highlight connections</em>
+                    `)
+                    .style("left", (event.pageX + 10) + "px")
+                    .style("top", (event.pageY - 10) + "px");
+            }
+
+            hideTooltip() {
+                this.tooltip.style("display", "none");
+            }
+
+            createLegend() {
+                const legendContent = document.getElementById('legend-content');
+                
+                // Topic categories
+                const topicCategory = document.createElement('div');
+                topicCategory.className = 'legend-category';
+                topicCategory.innerHTML = '<h3>Main Topics</h3>';
+                
+                Object.entries(topicColors).forEach(([topic, color]) => {
+                    // Get keywords for this topic
+                    const topicKeywords = Object.entries(this.topicKeywordRelations)
+                        .filter(([keyword, topics]) => topics.includes(topic))
+                        .map(([keyword]) => keyword)
+                        .slice(0, 8); // Limit to first 8 keywords
+                    
+                    const item = document.createElement('div');
+                    item.className = 'legend-item';
+                    item.dataset.type = 'topic';
+                    item.dataset.id = topic;
+                    item.innerHTML = `
+                        <div class="legend-color" style="background-color: ${color}"></div>
+                        <div class="legend-text">
+                            ${topic}
+                            <div class="keyword-list">
+                                ${topicKeywords.map(keyword => 
+                                    `<span class="keyword-item" data-keyword="${keyword}">${keyword}</span>`
+                                ).join('')}
+                                ${topicKeywords.length === 8 ? '<span style="opacity: 0.6;">...</span>' : ''}
+                            </div>
+                        </div>
+                    `;
+                    
+                    // Add click handler for topic
+                    item.addEventListener('click', (e) => {
+                        if (!e.target.classList.contains('keyword-item')) {
+                            this.selectTopic(topic);
+                        }
+                    });
+                    
+                    topicCategory.appendChild(item);
+                });
+                
+                legendContent.appendChild(topicCategory);
+
+                // Add click handlers for keywords
+                legendContent.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('keyword-item')) {
+                        const keyword = e.target.dataset.keyword;
+                        this.selectKeyword(keyword);
+                    }
+                });
+            }
+
+            setupControls() {
+                document.getElementById('networkBtn').addEventListener('click', () => {
+                    this.setActiveButton('networkBtn');
+                    this.switchToNetworkView();
+                });
+
+                document.getElementById('clusterBtn').addEventListener('click', () => {
+                    this.setActiveButton('clusterBtn');
+                    this.switchToClusterView();
+                });
+
+                document.getElementById('topicBtn').addEventListener('click', () => {
+                    this.setActiveButton('topicBtn');
+                    this.switchToTopicView();
+                });
+
+                document.getElementById('resetBtn').addEventListener('click', () => {
+                    this.resetZoom();
+                });
+
+                document.getElementById('clearFilterBtn').addEventListener('click', () => {
+                    this.clearFilter();
+                });
+
+                // Add click handler to clear selection when clicking on empty space
+                this.svg.on('click', () => {
+                    this.clearFilter();
+                });
+            }
+
+            setActiveButton(activeId) {
+                document.querySelectorAll('.control-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                document.getElementById(activeId).classList.add('active');
+            }
+
+            switchToNetworkView() {
+                this.simulation
+                    .force("charge", d3.forceManyBody().strength(-150))
+                    .force("center", d3.forceCenter(this.width / 2, this.height / 2))
+                    .force("x", null)
+                    .force("y", null)
+                    .alpha(0.3).restart();
+            }
+
+            switchToClusterView() {
+                // Group nodes by topic for clustering
+                const topicCenters = {};
+                let angle = 0;
+                const radius = Math.min(this.width, this.height) / 4;
+                const centerX = this.width / 2;
+                const centerY = this.height / 2;
+
+                // Create centers for each topic
+                Object.keys(topicColors).forEach(topic => {
+                    topicCenters[topic] = {
+                        x: centerX + radius * Math.cos(angle),
+                        y: centerY + radius * Math.sin(angle)
+                    };
+                    angle += (2 * Math.PI) / Object.keys(topicColors).length;
+                });
+
+                this.simulation
+                    .force("charge", d3.forceManyBody().strength(-80))
+                    .force("center", null)
+                    .force("x", d3.forceX().x(d => {
+                        if (d.type === 'topic') {
+                            return topicCenters[d.id]?.x || centerX;
+                        }
+                        // Position keywords near their related topics
+                        const relatedTopics = this.links
+                            .filter(l => l.target.id === d.id)
+                            .map(l => l.source.id);
+                        
+                        if (relatedTopics.length > 0) {
+                            const avgX = relatedTopics.reduce((sum, topic) => 
+                                sum + (topicCenters[topic]?.x || centerX), 0) / relatedTopics.length;
+                            return avgX + (Math.random() - 0.5) * 60; // Add some randomness
+                        }
+                        return centerX;
+                    }).strength(0.2))
+                    .force("y", d3.forceY().y(d => {
+                        if (d.type === 'topic') {
+                            return topicCenters[d.id]?.y || centerY;
+                        }
+                        const relatedTopics = this.links
+                            .filter(l => l.target.id === d.id)
+                            .map(l => l.source.id);
+                        
+                        if (relatedTopics.length > 0) {
+                            const avgY = relatedTopics.reduce((sum, topic) => 
+                                sum + (topicCenters[topic]?.y || centerY), 0) / relatedTopics.length;
+                            return avgY + (Math.random() - 0.5) * 60;
+                        }
+                        return centerY;
+                    }).strength(0.2))
+                    .alpha(0.3).restart();
+            }
+
+            switchToTopicView() {
+                // Arrange topics in a circle with keywords around them
+                const topicNodes = this.nodes.filter(n => n.type === 'topic');
+                const radius = Math.min(this.width, this.height) / 3;
+                const centerX = this.width / 2;
+                const centerY = this.height / 2;
+
+                this.simulation
+                    .force("charge", d3.forceManyBody().strength(-200))
+                    .force("center", null)
+                    .force("x", d3.forceX().x(d => {
+                        if (d.type === 'topic') {
+                            const index = topicNodes.findIndex(t => t.id === d.id);
+                            const angle = (index / topicNodes.length) * 2 * Math.PI;
+                            return centerX + radius * Math.cos(angle);
+                        } else {
+                            // Keywords orbit around their primary topic
+                            const relatedTopics = this.links
+                                .filter(l => l.target.id === d.id)
+                                .map(l => l.source);
+                            
+                            if (relatedTopics.length > 0) {
+                                const primaryTopic = relatedTopics.reduce((a, b) => 
+                                    a.frequency > b.frequency ? a : b);
+                                const topicIndex = topicNodes.findIndex(t => t.id === primaryTopic.id);
+                                const topicAngle = (topicIndex / topicNodes.length) * 2 * Math.PI;
+                                const topicX = centerX + radius * Math.cos(topicAngle);
+                                
+                                // Position keyword around the topic
+                                const keywordRadius = 80;
+                                const keywordAngle = Math.random() * 2 * Math.PI;
+                                return topicX + keywordRadius * Math.cos(keywordAngle);
+                            }
+                            return centerX;
+                        }
+                    }).strength(0.3))
+                    .force("y", d3.forceY().y(d => {
+                        if (d.type === 'topic') {
+                            const index = topicNodes.findIndex(t => t.id === d.id);
+                            const angle = (index / topicNodes.length) * 2 * Math.PI;
+                            return centerY + radius * Math.sin(angle);
+                        } else {
+                            const relatedTopics = this.links
+                                .filter(l => l.target.id === d.id)
+                                .map(l => l.source);
+                            
+                            if (relatedTopics.length > 0) {
+                                const primaryTopic = relatedTopics.reduce((a, b) => 
+                                    a.frequency > b.frequency ? a : b);
+                                const topicIndex = topicNodes.findIndex(t => t.id === primaryTopic.id);
+                                const topicAngle = (topicIndex / topicNodes.length) * 2 * Math.PI;
+                                const topicY = centerY + radius * Math.sin(topicAngle);
+                                
+                                const keywordRadius = 80;
+                                const keywordAngle = Math.random() * 2 * Math.PI;
+                                return topicY + keywordRadius * Math.sin(keywordAngle);
+                            }
+                            return centerY;
+                        }
+                    }).strength(0.3))
+                    .alpha(0.4).restart();
+            }
+
+            resetZoom() {
+                this.svg.transition().duration(750).call(
+                    this.zoom.transform,
+                    d3.zoomIdentity
+                );
+            }
+        }
+
+        // Initialize the visualization when the page loads
+        window.addEventListener('load', () => {
+            new ScientificPapersVisualization();
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            // Simple solution for demo - in production, implement proper resize handling
+            setTimeout(() => location.reload(), 100);
+        });
+    </script>
+</body>
+</html>
