@@ -27,6 +27,13 @@
       "preprintLink": null,
       "publishedLink": null
     },
+    "commitsLastWeek": 2,
+    "historical": {
+      "age": 2,
+      "totalCommits3Months": 2,
+      "createdAt": "2025-05-25T20:09:53Z",
+      "totalLifetimeCommits": 2
+    },
     "preprintLink": null,
     "publishedLink": null,
     "isSubpaper": true,
@@ -58,6 +65,13 @@
       ],
       "preprintLink": "https://doi.org/10.31219/osf.io/cg6tm_v1",
       "publishedLink": null
+    },
+    "commitsLastWeek": 5,
+    "historical": {
+      "age": 61,
+      "totalCommits3Months": 50,
+      "createdAt": "2025-03-27T16:08:54Z",
+      "totalLifetimeCommits": 50
     },
     "preprintLink": "https://doi.org/10.31219/osf.io/cg6tm_v1",
     "publishedLink": null,
@@ -94,6 +108,13 @@
       "preprintLink": "https://doi.org/10.31219/osf.io/4pkhy_v1",
       "publishedLink": null
     },
+    "commitsLastWeek": 5,
+    "historical": {
+      "age": 61,
+      "totalCommits3Months": 50,
+      "createdAt": "2025-03-27T16:08:54Z",
+      "totalLifetimeCommits": 50
+    },
     "preprintLink": "https://doi.org/10.31219/osf.io/4pkhy_v1",
     "publishedLink": null,
     "isSubpaper": true,
@@ -124,6 +145,13 @@
       ],
       "preprintLink": "https://doi.org/10.31219/osf.io/93wtx_v1",
       "publishedLink": null
+    },
+    "commitsLastWeek": 5,
+    "historical": {
+      "age": 61,
+      "totalCommits3Months": 50,
+      "createdAt": "2025-03-27T16:08:54Z",
+      "totalLifetimeCommits": 50
     },
     "preprintLink": "https://doi.org/10.31219/osf.io/93wtx_v1",
     "publishedLink": null,
