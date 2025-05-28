@@ -383,21 +383,38 @@ class ScientificVisionsTracker {
   generateStats() {
     console.log("DEBUG: Generating stats based on processed papers...");
     this.stats.total = this.papers.length;
-    this.stats.byStatus = {}; 
+    this.stats.byStatus = {};
     this.stats.byPriority = {};
-    
-    this.papers.forEach(p => { 
-        const statusKey = p.status || 'Unknown'; 
-        this.stats.byStatus[statusKey] = (this.stats.byStatus[statusKey] || 0) + 1; 
-        const priorityKey = p.priority || 'Medium'; 
-        this.stats.byPriority[priorityKey] = (this.stats.byPriority[priorityKey] || 0) + 1; 
+    // Initialize the new stat
+    this.stats.totalLifetimeCommits = 0; 
+
+    const processedReposForLifetimeCommits = new Set(); // To ensure each repo's lifetime commits are added only once
+
+    this.papers.forEach(p => {
+        const statusKey = p.status || 'Unknown';
+        this.stats.byStatus[statusKey] = (this.stats.byStatus[statusKey] || 0) + 1;
+        const priorityKey = p.priority || 'Medium';
+        this.stats.byPriority[priorityKey] = (this.stats.byPriority[priorityKey] || 0) + 1;
+
+        // Sum total lifetime commits, ensuring each repo is counted once
+        // p.repoName refers to the repository's short name. 
+        // If you have multiple repos with the same name under different owners (not your case here), 
+        // you might use p.repoUrl or a combination of owner/repo for uniqueness.
+        // For your setup, p.repoName is likely sufficient if all your repos are under your GITHUB_OWNER.
+        // Alternatively, use p.fullName (which is owner/repo for main papers, owner/repo/subpaper for subpapers)
+        // but we want to sum per *repository*, so p.repoUrl or p.historical.parentRepoFullName (if you add such a field) would be best.
+        // Given that historical data is now attached at the repo level to each paper item, p.repoName is fine here.
+        if (p.historical && typeof p.historical.totalLifetimeCommits === 'number' && !processedReposForLifetimeCommits.has(p.repoName)) {
+            this.stats.totalLifetimeCommits += p.historical.totalLifetimeCommits;
+            processedReposForLifetimeCommits.add(p.repoName);
+        }
     });
 
     // Sum weekly commits from the data collected per repository
     this.stats.weeklyCommits = Array.from(this.repoWeeklyCommitsData.values()).reduce((sum, count) => sum + count, 0);
-    
+
     // recentActivity is already sorted and sliced in discoverPapers
-    console.log(`DEBUG: Final Stats: Total=${this.stats.total}, WeeklyCommits=${this.stats.weeklyCommits}, Statuses=${JSON.stringify(this.stats.byStatus)}, Priorities=${JSON.stringify(this.stats.byPriority)}`);
+    console.log(`DEBUG: Final Stats: Total=${this.stats.total}, WeeklyCommits=${this.stats.weeklyCommits}, LifetimeCommits=${this.stats.totalLifetimeCommits}, Statuses=${JSON.stringify(this.stats.byStatus)}, Priorities=${JSON.stringify(this.stats.byPriority)}`);
   }
 
   async updateReadme() {
@@ -419,6 +436,7 @@ A comprehensive research initiative encompassing 100+ scientific papers across m
 - ⚪ **Recent Activity (but not 'Active')**: ${this.stats.byStatus['Recent']||0}
 - 🔴 **Stale (Needs Attention)**: ${this.stats.byStatus['Stale']||0}
 - 📈 **This Week's Commits (Tracked Repos)**: ${this.stats.weeklyCommits} 
+- 📜 **Total Lifetime Commits (Tracked Repos)**: ${this.stats.totalLifetimeCommits || 0}
 
 ### Recent Activity (Top 10 Tracked Repos by Weekly Commits)
 `;
