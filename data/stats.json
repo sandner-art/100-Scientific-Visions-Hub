@@ -6,21 +6,21 @@
     "Complete": 1
   },
   "byPriority": {
-    "Low": 3,
-    "Medium": 1
+    "Medium": 2,
+    "Low": 2
   },
   "recentActivity": [
+    {
+      "repo": "sandner-art/SC-Biomimetics",
+      "commits": 21,
+      "lastCommit": "Update README.md"
+    },
     {
       "repo": "sandner-art/SCIENCE-AF25-Absolute-Theories",
       "commits": 7,
       "lastCommit": "Update 100SV.md"
-    },
-    {
-      "repo": "sandner-art/SC-Biomimetics",
-      "commits": 3,
-      "lastCommit": "Update 100SV.md"
     }
   ],
-  "weeklyCommits": 10,
-  "totalLifetimeCommits": 55
+  "weeklyCommits": 28,
+  "totalLifetimeCommits": 73
 }

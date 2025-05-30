@@ -3,38 +3,51 @@
     "repoName": "SC-Biomimetics",
     "paperName": "A Biomimetic Model for Schlieren Vision",
     "fullName": "sandner-art/SC-Biomimetics/SCH",
-    "description": "This repository research focus is categorized as (A) Conceptual/Exploratory; This category encompasses early-stage idea generation, theoretical exploration (biomimetics and sensory evolution) in the broader 100 Scientific Visions initiative",
+    "description": "This paper focuses on the theoretical exploration of biomimetic Schlieren vision – a novel sensory modality enabling organisms to perceive subtle density gradients in transparent media like air and water. It is belonging under category (A) Conceptual/Exploratory in the broader 100 Scientific Visions initiative",
     "url": "https://github.com/sandner-art/SC-Biomimetics/tree/main/papers/SCH",
     "repoUrl": "https://github.com/sandner-art/SC-Biomimetics",
     "private": false,
-    "topics": [],
-    "lastUpdated": "2025-05-28T13:18:30Z",
+    "topics": [
+      "biology",
+      "biomimetics",
+      "comparative-morphology",
+      "evolutionary-biology",
+      "mechanoreception",
+      "schlieren-imaging",
+      "sensory-evolution",
+      "theoretical-biology"
+    ],
+    "lastUpdated": "2025-05-30T05:04:05Z",
     "title": "A Biomimetic Model for Schlieren Vision",
     "status": "Active",
-    "priority": "Low",
+    "priority": "Medium",
     "progress": {
       "title": "A Biomimetic Model for Schlieren Vision",
       "status": "Active",
-      "priority": "Low",
+      "priority": "Medium",
       "phase": [
         "Literature review",
         "Hypothesis development",
         "Methodology design",
+        "Data collection/Experiments",
         "Data analysis",
+        "Results interpretation",
         "Paper writing",
-        "Internal review"
+        "Internal review",
+        "Submission preparation",
+        "Revisions"
       ],
-      "preprintLink": null,
+      "preprintLink": "https://doi.org/10.5281/zenodo.15549809",
       "publishedLink": null
     },
-    "commitsLastWeek": 3,
+    "commitsLastWeek": 21,
     "historical": {
-      "age": 3,
-      "totalCommits3Months": 3,
+      "age": 4,
+      "totalCommits3Months": 21,
       "createdAt": "2025-05-25T20:09:53Z",
-      "totalLifetimeCommits": 3
+      "totalLifetimeCommits": 21
     },
-    "preprintLink": null,
+    "preprintLink": "https://doi.org/10.5281/zenodo.15549809",
     "publishedLink": null,
     "isSubpaper": true,
     "projectId": null,
@@ -48,8 +61,12 @@
     "url": "https://github.com/sandner-art/SCIENCE-AF25-Absolute-Theories/tree/main/papers/ANI",
     "repoUrl": "https://github.com/sandner-art/SCIENCE-AF25-Absolute-Theories",
     "private": false,
-    "topics": [],
-    "lastUpdated": "2025-05-28T13:12:39Z",
+    "topics": [
+      "academic-satire",
+      "exploratory-research-ideas",
+      "scientific-writing"
+    ],
+    "lastUpdated": "2025-05-30T05:06:24Z",
     "title": "The Axiomatic Nature of Is-ness",
     "status": "Review",
     "priority": "Low",
@@ -68,7 +85,7 @@
     },
     "commitsLastWeek": 7,
     "historical": {
-      "age": 62,
+      "age": 63,
       "totalCommits3Months": 52,
       "createdAt": "2025-03-27T16:08:54Z",
       "totalLifetimeCommits": 52
@@ -87,8 +104,12 @@
     "url": "https://github.com/sandner-art/SCIENCE-AF25-Absolute-Theories/tree/main/papers/CIP",
     "repoUrl": "https://github.com/sandner-art/SCIENCE-AF25-Absolute-Theories",
     "private": false,
-    "topics": [],
-    "lastUpdated": "2025-05-28T13:12:39Z",
+    "topics": [
+      "academic-satire",
+      "exploratory-research-ideas",
+      "scientific-writing"
+    ],
+    "lastUpdated": "2025-05-30T05:06:24Z",
     "title": "Cosmic Indifference Principle",
     "status": "Complete",
     "priority": "Medium",
@@ -110,7 +131,7 @@
     },
     "commitsLastWeek": 7,
     "historical": {
-      "age": 62,
+      "age": 63,
       "totalCommits3Months": 52,
       "createdAt": "2025-03-27T16:08:54Z",
       "totalLifetimeCommits": 52
@@ -129,8 +150,12 @@
     "url": "https://github.com/sandner-art/SCIENCE-AF25-Absolute-Theories/tree/main/papers/PUS",
     "repoUrl": "https://github.com/sandner-art/SCIENCE-AF25-Absolute-Theories",
     "private": false,
-    "topics": [],
-    "lastUpdated": "2025-05-28T13:12:39Z",
+    "topics": [
+      "academic-satire",
+      "exploratory-research-ideas",
+      "scientific-writing"
+    ],
+    "lastUpdated": "2025-05-30T05:06:24Z",
     "title": "On The Universal Self-Consistency",
     "status": "Review",
     "priority": "Low",
@@ -148,7 +173,7 @@
     },
     "commitsLastWeek": 7,
     "historical": {
-      "age": 62,
+      "age": 63,
       "totalCommits3Months": 52,
       "createdAt": "2025-03-27T16:08:54Z",
       "totalLifetimeCommits": 52
