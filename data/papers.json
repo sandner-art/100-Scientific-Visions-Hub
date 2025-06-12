@@ -1,5 +1,45 @@
 [
   {
+    "repoName": "SC-Ancient-Cultures",
+    "paperName": "P1-Egyptian-Geometry",
+    "fullName": "sandner-art/SC-Ancient-Cultures/P1-Egyptian-Geometry",
+    "description": "These papers focus on the theoretical exploration of ancient cultures, their mathematics, physics, and history and philosophy of ancient science in general. It is belonging under category (A) Conceptual/Exploratory in the broader 100 Scientific Visions initiative",
+    "url": "https://github.com/sandner-art/SC-Ancient-Cultures/tree/main/papers/P1-Egyptian-Geometry",
+    "repoUrl": "https://github.com/sandner-art/SC-Ancient-Cultures",
+    "private": false,
+    "topics": [
+      "ancient-egypt",
+      "archeology",
+      "egyptology",
+      "geodesy",
+      "geometry",
+      "mathematics",
+      "metrology",
+      "non-euclidean-geometry",
+      "royal-cubit",
+      "spherical-geometry"
+    ],
+    "lastUpdated": "2025-06-11T19:12:26Z",
+    "title": null,
+    "status": "Active",
+    "priority": "Medium",
+    "progress": {
+      "phase": []
+    },
+    "commitsLastWeek": 31,
+    "historical": {
+      "age": 5,
+      "totalCommits3Months": 31,
+      "createdAt": "2025-06-06T20:54:27Z",
+      "totalLifetimeCommits": 31
+    },
+    "preprintLink": null,
+    "publishedLink": null,
+    "isSubpaper": true,
+    "projectId": null,
+    "researchArea": null
+  },
+  {
     "repoName": "SC-Biomimetics",
     "paperName": "A Biomimetic Model for Schlieren Vision",
     "fullName": "sandner-art/SC-Biomimetics/SCH",
@@ -42,7 +82,7 @@
     },
     "commitsLastWeek": 0,
     "historical": {
-      "age": 16,
+      "age": 17,
       "totalCommits3Months": 21,
       "createdAt": "2025-05-25T20:09:53Z",
       "totalLifetimeCommits": 21
@@ -85,7 +125,7 @@
     },
     "commitsLastWeek": 0,
     "historical": {
-      "age": 75,
+      "age": 76,
       "totalCommits3Months": 52,
       "createdAt": "2025-03-27T16:08:54Z",
       "totalLifetimeCommits": 52
@@ -131,7 +171,7 @@
     },
     "commitsLastWeek": 0,
     "historical": {
-      "age": 75,
+      "age": 76,
       "totalCommits3Months": 52,
       "createdAt": "2025-03-27T16:08:54Z",
       "totalLifetimeCommits": 52
@@ -173,7 +213,7 @@
     },
     "commitsLastWeek": 0,
     "historical": {
-      "age": 75,
+      "age": 76,
       "totalCommits3Months": 52,
       "createdAt": "2025-03-27T16:08:54Z",
       "totalLifetimeCommits": 52

@@ -1,15 +1,21 @@
 {
-  "total": 4,
+  "total": 5,
   "byStatus": {
-    "Active": 1,
+    "Active": 2,
     "Review": 2,
     "Complete": 1
   },
   "byPriority": {
-    "Medium": 2,
+    "Medium": 3,
     "Low": 2
   },
-  "recentActivity": [],
-  "weeklyCommits": 0,
-  "totalLifetimeCommits": 73
+  "recentActivity": [
+    {
+      "repo": "sandner-art/SC-Ancient-Cultures",
+      "commits": 31,
+      "lastCommit": "Update version v1.1.0"
+    }
+  ],
+  "weeklyCommits": 31,
+  "totalLifetimeCommits": 104
 }
