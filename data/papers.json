@@ -1,7 +1,7 @@
 [
   {
     "repoName": "SC-Ancient-Cultures",
-    "paperName": "P1-Egyptian-Geometry",
+    "paperName": "Proto-non-Euclidean Geometry in Ancient Egypt",
     "fullName": "sandner-art/SC-Ancient-Cultures/P1-Egyptian-Geometry",
     "description": "These papers focus on the theoretical exploration of ancient cultures, their mathematics, physics, and history and philosophy of ancient science in general. It is belonging under category (A) Conceptual/Exploratory in the broader 100 Scientific Visions initiative",
     "url": "https://github.com/sandner-art/SC-Ancient-Cultures/tree/main/papers/P1-Egyptian-Geometry",
@@ -19,19 +19,89 @@
       "royal-cubit",
       "spherical-geometry"
     ],
-    "lastUpdated": "2025-06-11T19:12:26Z",
-    "title": null,
+    "lastUpdated": "2025-06-12T11:13:44Z",
+    "title": "Proto-non-Euclidean Geometry in Ancient Egypt",
     "status": "Active",
     "priority": "Medium",
     "progress": {
-      "phase": []
+      "title": "Proto-non-Euclidean Geometry in Ancient Egypt",
+      "status": "Active",
+      "priority": "Medium",
+      "phase": [
+        "Literature review",
+        "Hypothesis development",
+        "Methodology design",
+        "Data collection/Experiments",
+        "Data analysis",
+        "Results interpretation",
+        "Paper writing",
+        "Submission preparation",
+        "Revisions",
+        "Publication"
+      ],
+      "preprintLink": "https://doi.org/10.5281/zenodo.15639502",
+      "publishedLink": null
     },
-    "commitsLastWeek": 31,
+    "commitsLastWeek": 35,
     "historical": {
-      "age": 5,
-      "totalCommits3Months": 31,
+      "age": 6,
+      "totalCommits3Months": 35,
       "createdAt": "2025-06-06T20:54:27Z",
-      "totalLifetimeCommits": 31
+      "totalLifetimeCommits": 35
+    },
+    "preprintLink": "https://doi.org/10.5281/zenodo.15639502",
+    "publishedLink": null,
+    "isSubpaper": true,
+    "projectId": null,
+    "researchArea": null
+  },
+  {
+    "repoName": "SC-Ancient-Cultures",
+    "paperName": "Eratosthenes’ Experiment: Ancient and Modern Methodology",
+    "fullName": "sandner-art/SC-Ancient-Cultures/P2-Eratosthenes-Measurement",
+    "description": "These papers focus on the theoretical exploration of ancient cultures, their mathematics, physics, and history and philosophy of ancient science in general. It is belonging under category (A) Conceptual/Exploratory in the broader 100 Scientific Visions initiative",
+    "url": "https://github.com/sandner-art/SC-Ancient-Cultures/tree/main/papers/P2-Eratosthenes-Measurement",
+    "repoUrl": "https://github.com/sandner-art/SC-Ancient-Cultures",
+    "private": false,
+    "topics": [
+      "ancient-egypt",
+      "archeology",
+      "egyptology",
+      "geodesy",
+      "geometry",
+      "mathematics",
+      "metrology",
+      "non-euclidean-geometry",
+      "royal-cubit",
+      "spherical-geometry"
+    ],
+    "lastUpdated": "2025-06-12T11:13:44Z",
+    "title": "Eratosthenes’ Experiment: Ancient and Modern Methodology",
+    "status": "Active",
+    "priority": "Low",
+    "progress": {
+      "title": "Eratosthenes’ Experiment: Ancient and Modern Methodology",
+      "status": "Active",
+      "priority": "Low",
+      "phase": [
+        "Literature review",
+        "Hypothesis development",
+        "Methodology design",
+        "Data analysis",
+        "Results interpretation",
+        "Paper writing",
+        "Submission preparation",
+        "Revisions"
+      ],
+      "preprintLink": null,
+      "publishedLink": null
+    },
+    "commitsLastWeek": 35,
+    "historical": {
+      "age": 6,
+      "totalCommits3Months": 35,
+      "createdAt": "2025-06-06T20:54:27Z",
+      "totalLifetimeCommits": 35
     },
     "preprintLink": null,
     "publishedLink": null,
@@ -82,7 +152,7 @@
     },
     "commitsLastWeek": 0,
     "historical": {
-      "age": 17,
+      "age": 18,
       "totalCommits3Months": 21,
       "createdAt": "2025-05-25T20:09:53Z",
       "totalLifetimeCommits": 21
@@ -125,7 +195,7 @@
     },
     "commitsLastWeek": 0,
     "historical": {
-      "age": 76,
+      "age": 77,
       "totalCommits3Months": 52,
       "createdAt": "2025-03-27T16:08:54Z",
       "totalLifetimeCommits": 52
@@ -171,7 +241,7 @@
     },
     "commitsLastWeek": 0,
     "historical": {
-      "age": 76,
+      "age": 77,
       "totalCommits3Months": 52,
       "createdAt": "2025-03-27T16:08:54Z",
       "totalLifetimeCommits": 52
@@ -213,7 +283,7 @@
     },
     "commitsLastWeek": 0,
     "historical": {
-      "age": 76,
+      "age": 77,
       "totalCommits3Months": 52,
       "createdAt": "2025-03-27T16:08:54Z",
       "totalLifetimeCommits": 52
