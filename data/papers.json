@@ -13,13 +13,15 @@
       "egyptology",
       "geodesy",
       "geometry",
+      "history-of-science",
       "mathematics",
       "metrology",
       "non-euclidean-geometry",
       "royal-cubit",
+      "scientific-archeology",
       "spherical-geometry"
     ],
-    "lastUpdated": "2025-06-12T11:13:44Z",
+    "lastUpdated": "2025-06-13T07:53:03Z",
     "title": "Proto-non-Euclidean Geometry in Ancient Egypt",
     "status": "Active",
     "priority": "Medium",
@@ -42,12 +44,12 @@
       "preprintLink": "https://doi.org/10.5281/zenodo.15639502",
       "publishedLink": null
     },
-    "commitsLastWeek": 35,
+    "commitsLastWeek": 30,
     "historical": {
-      "age": 6,
-      "totalCommits3Months": 35,
+      "age": 7,
+      "totalCommits3Months": 38,
       "createdAt": "2025-06-06T20:54:27Z",
-      "totalLifetimeCommits": 35
+      "totalLifetimeCommits": 38
     },
     "preprintLink": "https://doi.org/10.5281/zenodo.15639502",
     "publishedLink": null,
@@ -69,13 +71,15 @@
       "egyptology",
       "geodesy",
       "geometry",
+      "history-of-science",
       "mathematics",
       "metrology",
       "non-euclidean-geometry",
       "royal-cubit",
+      "scientific-archeology",
       "spherical-geometry"
     ],
-    "lastUpdated": "2025-06-12T11:13:44Z",
+    "lastUpdated": "2025-06-13T07:53:03Z",
     "title": "Eratosthenes’ Experiment: Ancient and Modern Methodology",
     "status": "Active",
     "priority": "Low",
@@ -93,17 +97,17 @@
         "Submission preparation",
         "Revisions"
       ],
-      "preprintLink": null,
+      "preprintLink": "https://doi.org/10.5281/zenodo.15655126",
       "publishedLink": null
     },
-    "commitsLastWeek": 35,
+    "commitsLastWeek": 30,
     "historical": {
-      "age": 6,
-      "totalCommits3Months": 35,
+      "age": 7,
+      "totalCommits3Months": 38,
       "createdAt": "2025-06-06T20:54:27Z",
-      "totalLifetimeCommits": 35
+      "totalLifetimeCommits": 38
     },
-    "preprintLink": null,
+    "preprintLink": "https://doi.org/10.5281/zenodo.15655126",
     "publishedLink": null,
     "isSubpaper": true,
     "projectId": null,
@@ -152,7 +156,7 @@
     },
     "commitsLastWeek": 0,
     "historical": {
-      "age": 18,
+      "age": 19,
       "totalCommits3Months": 21,
       "createdAt": "2025-05-25T20:09:53Z",
       "totalLifetimeCommits": 21
@@ -195,7 +199,7 @@
     },
     "commitsLastWeek": 0,
     "historical": {
-      "age": 77,
+      "age": 78,
       "totalCommits3Months": 52,
       "createdAt": "2025-03-27T16:08:54Z",
       "totalLifetimeCommits": 52
@@ -241,7 +245,7 @@
     },
     "commitsLastWeek": 0,
     "historical": {
-      "age": 77,
+      "age": 78,
       "totalCommits3Months": 52,
       "createdAt": "2025-03-27T16:08:54Z",
       "totalLifetimeCommits": 52
@@ -283,7 +287,7 @@
     },
     "commitsLastWeek": 0,
     "historical": {
-      "age": 77,
+      "age": 78,
       "totalCommits3Months": 52,
       "createdAt": "2025-03-27T16:08:54Z",
       "totalLifetimeCommits": 52
