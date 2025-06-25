@@ -1,15 +1,8 @@
 {
-  "total": 6,
-  "byStatus": {
-    "Active": 3,
-    "Review": 2,
-    "Complete": 1
-  },
-  "byPriority": {
-    "Medium": 3,
-    "Low": 3
-  },
+  "total": 0,
+  "byStatus": {},
+  "byPriority": {},
   "recentActivity": [],
   "weeklyCommits": 0,
-  "totalLifetimeCommits": 111
+  "totalLifetimeCommits": 0
 }
