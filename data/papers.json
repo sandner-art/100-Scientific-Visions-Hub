@@ -34,7 +34,7 @@
     },
     "commitsLastWeek": 6,
     "historical": {
-      "age": 3,
+      "age": 4,
       "totalCommits3Months": 6,
       "createdAt": "2025-06-29T16:57:51Z",
       "totalLifetimeCommits": 6
@@ -92,7 +92,7 @@
     },
     "commitsLastWeek": 0,
     "historical": {
-      "age": 26,
+      "age": 27,
       "totalCommits3Months": 38,
       "createdAt": "2025-06-06T20:54:27Z",
       "totalLifetimeCommits": 38
@@ -148,7 +148,7 @@
     },
     "commitsLastWeek": 0,
     "historical": {
-      "age": 26,
+      "age": 27,
       "totalCommits3Months": 38,
       "createdAt": "2025-06-06T20:54:27Z",
       "totalLifetimeCommits": 38
@@ -202,7 +202,7 @@
     },
     "commitsLastWeek": 0,
     "historical": {
-      "age": 38,
+      "age": 39,
       "totalCommits3Months": 21,
       "createdAt": "2025-05-25T20:09:53Z",
       "totalLifetimeCommits": 21
@@ -245,8 +245,8 @@
     },
     "commitsLastWeek": 0,
     "historical": {
-      "age": 97,
-      "totalCommits3Months": 13,
+      "age": 98,
+      "totalCommits3Months": 7,
       "createdAt": "2025-03-27T16:08:54Z",
       "totalLifetimeCommits": 52
     },
@@ -291,8 +291,8 @@
     },
     "commitsLastWeek": 0,
     "historical": {
-      "age": 97,
-      "totalCommits3Months": 13,
+      "age": 98,
+      "totalCommits3Months": 7,
       "createdAt": "2025-03-27T16:08:54Z",
       "totalLifetimeCommits": 52
     },
@@ -333,8 +333,8 @@
     },
     "commitsLastWeek": 0,
     "historical": {
-      "age": 97,
-      "totalCommits3Months": 13,
+      "age": 98,
+      "totalCommits3Months": 7,
       "createdAt": "2025-03-27T16:08:54Z",
       "totalLifetimeCommits": 52
     },
@@ -373,7 +373,7 @@
     },
     "commitsLastWeek": 11,
     "historical": {
-      "age": 5,
+      "age": 6,
       "totalCommits3Months": 11,
       "createdAt": "2025-06-27T16:44:23Z",
       "totalLifetimeCommits": 11
