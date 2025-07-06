@@ -1,27 +1,27 @@
 {
-  "total": 8,
+  "total": 10,
   "byStatus": {
-    "Active": 5,
+    "Active": 7,
     "Review": 2,
     "Complete": 1
   },
   "byPriority": {
-    "High": 2,
-    "Medium": 3,
+    "High": 3,
+    "Medium": 4,
     "Low": 3
   },
   "recentActivity": [
     {
+      "repo": "sandner-art/VST-Eigensound-Lite",
+      "commits": 13,
+      "lastCommit": "Create formalism.md"
+    },
+    {
       "repo": "gamedesigns/Evolving-Game",
       "commits": 6,
       "lastCommit": "Update README.md"
-    },
-    {
-      "repo": "sandner-art/VST-Eigensound-Lite",
-      "commits": 2,
-      "lastCommit": "Update README.md"
     }
   ],
-  "weeklyCommits": 8,
-  "totalLifetimeCommits": 128
+  "weeklyCommits": 19,
+  "totalLifetimeCommits": 140
 }
