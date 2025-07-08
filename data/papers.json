@@ -34,7 +34,7 @@
     },
     "commitsLastWeek": 0,
     "historical": {
-      "age": 7,
+      "age": 8,
       "totalCommits3Months": 6,
       "createdAt": "2025-06-29T16:57:51Z",
       "totalLifetimeCommits": 6
@@ -92,7 +92,7 @@
     },
     "commitsLastWeek": 0,
     "historical": {
-      "age": 30,
+      "age": 31,
       "totalCommits3Months": 38,
       "createdAt": "2025-06-06T20:54:27Z",
       "totalLifetimeCommits": 38
@@ -148,7 +148,7 @@
     },
     "commitsLastWeek": 0,
     "historical": {
-      "age": 30,
+      "age": 31,
       "totalCommits3Months": 38,
       "createdAt": "2025-06-06T20:54:27Z",
       "totalLifetimeCommits": 38
@@ -202,7 +202,7 @@
     },
     "commitsLastWeek": 0,
     "historical": {
-      "age": 42,
+      "age": 43,
       "totalCommits3Months": 21,
       "createdAt": "2025-05-25T20:09:53Z",
       "totalLifetimeCommits": 21
@@ -245,7 +245,7 @@
     },
     "commitsLastWeek": 0,
     "historical": {
-      "age": 101,
+      "age": 102,
       "totalCommits3Months": 7,
       "createdAt": "2025-03-27T16:08:54Z",
       "totalLifetimeCommits": 52
@@ -291,7 +291,7 @@
     },
     "commitsLastWeek": 0,
     "historical": {
-      "age": 101,
+      "age": 102,
       "totalCommits3Months": 7,
       "createdAt": "2025-03-27T16:08:54Z",
       "totalLifetimeCommits": 52
@@ -333,7 +333,7 @@
     },
     "commitsLastWeek": 0,
     "historical": {
-      "age": 101,
+      "age": 102,
       "totalCommits3Months": 7,
       "createdAt": "2025-03-27T16:08:54Z",
       "totalLifetimeCommits": 52
@@ -352,8 +352,21 @@
     "url": "https://github.com/sandner-art/VST-Eigensound-Lite/tree/main/papers/P1",
     "repoUrl": "https://github.com/sandner-art/VST-Eigensound-Lite",
     "private": false,
-    "topics": [],
-    "lastUpdated": "2025-07-06T17:19:33Z",
+    "topics": [
+      "eigensound",
+      "eigenvalues",
+      "eigenvectors",
+      "general-relativity",
+      "music-generation",
+      "quantum-physics",
+      "sonification",
+      "sound-design",
+      "sound-design-tools",
+      "sound-generation",
+      "sound-processing",
+      "synthesis"
+    ],
+    "lastUpdated": "2025-07-07T07:08:04Z",
     "title": "Sonification of Quantum Mechanics for Scientific Exploration and Artistic Expression",
     "status": "Active",
     "priority": "High",
@@ -371,12 +384,12 @@
       "preprintLink": null,
       "publishedLink": null
     },
-    "commitsLastWeek": 19,
+    "commitsLastWeek": 26,
     "historical": {
-      "age": 9,
-      "totalCommits3Months": 29,
+      "age": 10,
+      "totalCommits3Months": 37,
       "createdAt": "2025-06-27T16:44:23Z",
-      "totalLifetimeCommits": 29
+      "totalLifetimeCommits": 37
     },
     "preprintLink": null,
     "publishedLink": null,
@@ -392,8 +405,21 @@
     "url": "https://github.com/sandner-art/VST-Eigensound-Lite/tree/main/papers/P2-GR-QM",
     "repoUrl": "https://github.com/sandner-art/VST-Eigensound-Lite",
     "private": false,
-    "topics": [],
-    "lastUpdated": "2025-07-06T17:19:33Z",
+    "topics": [
+      "eigensound",
+      "eigenvalues",
+      "eigenvectors",
+      "general-relativity",
+      "music-generation",
+      "quantum-physics",
+      "sonification",
+      "sound-design",
+      "sound-design-tools",
+      "sound-generation",
+      "sound-processing",
+      "synthesis"
+    ],
+    "lastUpdated": "2025-07-07T07:08:04Z",
     "title": "Sonification of General Relativity and Quantum Mechanics Phenomena",
     "status": "Active",
     "priority": "High",
@@ -411,12 +437,12 @@
       "preprintLink": null,
       "publishedLink": null
     },
-    "commitsLastWeek": 19,
+    "commitsLastWeek": 26,
     "historical": {
-      "age": 9,
-      "totalCommits3Months": 29,
+      "age": 10,
+      "totalCommits3Months": 37,
       "createdAt": "2025-06-27T16:44:23Z",
-      "totalLifetimeCommits": 29
+      "totalLifetimeCommits": 37
     },
     "preprintLink": null,
     "publishedLink": null,
@@ -426,26 +452,51 @@
   },
   {
     "repoName": "VST-Eigensound-Lite",
-    "paperName": "P3-Eigenvectors",
+    "paperName": "Eigenvectors and Eigenvalues in Scientific Sonification: Complex Physical Systems as Musical Instruments",
     "fullName": "sandner-art/VST-Eigensound-Lite/P3-Eigenvectors",
     "description": "This paper focuses on the exploration of quantum physics phenomena and their possible use for sonification and sound design. It also test alternative ways to represent quantum effects. It is belonging under category (A) Conceptual/Exploratory in the broader 100 Scientific Visions initiative",
     "url": "https://github.com/sandner-art/VST-Eigensound-Lite/tree/main/papers/P3-Eigenvectors",
     "repoUrl": "https://github.com/sandner-art/VST-Eigensound-Lite",
     "private": false,
-    "topics": [],
-    "lastUpdated": "2025-07-06T17:19:33Z",
-    "title": null,
+    "topics": [
+      "eigensound",
+      "eigenvalues",
+      "eigenvectors",
+      "general-relativity",
+      "music-generation",
+      "quantum-physics",
+      "sonification",
+      "sound-design",
+      "sound-design-tools",
+      "sound-generation",
+      "sound-processing",
+      "synthesis"
+    ],
+    "lastUpdated": "2025-07-07T07:08:04Z",
+    "title": "Eigenvectors and Eigenvalues in Scientific Sonification: Complex Physical Systems as Musical Instruments",
     "status": "Active",
-    "priority": "Medium",
+    "priority": "High",
     "progress": {
-      "phase": []
+      "title": "Eigenvectors and Eigenvalues in Scientific Sonification: Complex Physical Systems as Musical Instruments",
+      "status": "Active",
+      "priority": "High",
+      "phase": [
+        "Literature review",
+        "Hypothesis development",
+        "Methodology design",
+        "Data collection/Experiments",
+        "Data analysis",
+        "Paper writing"
+      ],
+      "preprintLink": null,
+      "publishedLink": null
     },
-    "commitsLastWeek": 19,
+    "commitsLastWeek": 26,
     "historical": {
-      "age": 9,
-      "totalCommits3Months": 29,
+      "age": 10,
+      "totalCommits3Months": 37,
       "createdAt": "2025-06-27T16:44:23Z",
-      "totalLifetimeCommits": 29
+      "totalLifetimeCommits": 37
     },
     "preprintLink": null,
     "publishedLink": null,

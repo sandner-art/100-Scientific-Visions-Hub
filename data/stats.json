@@ -6,17 +6,17 @@
     "Complete": 1
   },
   "byPriority": {
-    "High": 3,
-    "Medium": 4,
+    "High": 4,
+    "Medium": 3,
     "Low": 3
   },
   "recentActivity": [
     {
       "repo": "sandner-art/VST-Eigensound-Lite",
-      "commits": 19,
-      "lastCommit": "Create CNAME"
+      "commits": 26,
+      "lastCommit": "docs update"
     }
   ],
-  "weeklyCommits": 19,
-  "totalLifetimeCommits": 146
+  "weeklyCommits": 26,
+  "totalLifetimeCommits": 154
 }
