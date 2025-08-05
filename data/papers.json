@@ -34,7 +34,7 @@
     },
     "commitsLastWeek": 0,
     "historical": {
-      "age": 35,
+      "age": 36,
       "totalCommits3Months": 6,
       "createdAt": "2025-06-29T16:57:51Z",
       "totalLifetimeCommits": 6
@@ -92,7 +92,7 @@
     },
     "commitsLastWeek": 0,
     "historical": {
-      "age": 58,
+      "age": 59,
       "totalCommits3Months": 38,
       "createdAt": "2025-06-06T20:54:27Z",
       "totalLifetimeCommits": 38
@@ -148,7 +148,7 @@
     },
     "commitsLastWeek": 0,
     "historical": {
-      "age": 58,
+      "age": 59,
       "totalCommits3Months": 38,
       "createdAt": "2025-06-06T20:54:27Z",
       "totalLifetimeCommits": 38
@@ -202,7 +202,7 @@
     },
     "commitsLastWeek": 0,
     "historical": {
-      "age": 70,
+      "age": 71,
       "totalCommits3Months": 21,
       "createdAt": "2025-05-25T20:09:53Z",
       "totalLifetimeCommits": 21
@@ -245,7 +245,7 @@
     },
     "commitsLastWeek": 0,
     "historical": {
-      "age": 129,
+      "age": 130,
       "totalCommits3Months": 7,
       "createdAt": "2025-03-27T16:08:54Z",
       "totalLifetimeCommits": 52
@@ -291,7 +291,7 @@
     },
     "commitsLastWeek": 0,
     "historical": {
-      "age": 129,
+      "age": 130,
       "totalCommits3Months": 7,
       "createdAt": "2025-03-27T16:08:54Z",
       "totalLifetimeCommits": 52
@@ -333,7 +333,7 @@
     },
     "commitsLastWeek": 0,
     "historical": {
-      "age": 129,
+      "age": 130,
       "totalCommits3Months": 7,
       "createdAt": "2025-03-27T16:08:54Z",
       "totalLifetimeCommits": 52
@@ -366,7 +366,7 @@
       "sound-processing",
       "synthesis"
     ],
-    "lastUpdated": "2025-07-26T11:26:40Z",
+    "lastUpdated": "2025-08-04T09:48:28Z",
     "title": "Sonification of Quantum Mechanics for Scientific Exploration and Artistic Expression",
     "status": "Active",
     "priority": "High",
@@ -384,12 +384,12 @@
       "preprintLink": null,
       "publishedLink": null
     },
-    "commitsLastWeek": 0,
+    "commitsLastWeek": 4,
     "historical": {
-      "age": 37,
-      "totalCommits3Months": 80,
+      "age": 38,
+      "totalCommits3Months": 84,
       "createdAt": "2025-06-27T16:44:23Z",
-      "totalLifetimeCommits": 80
+      "totalLifetimeCommits": 84
     },
     "preprintLink": null,
     "publishedLink": null,
@@ -419,7 +419,7 @@
       "sound-processing",
       "synthesis"
     ],
-    "lastUpdated": "2025-07-26T11:26:40Z",
+    "lastUpdated": "2025-08-04T09:48:28Z",
     "title": "Sonification of General Relativity and Quantum Mechanics Phenomena",
     "status": "Active",
     "priority": "High",
@@ -437,12 +437,12 @@
       "preprintLink": null,
       "publishedLink": null
     },
-    "commitsLastWeek": 0,
+    "commitsLastWeek": 4,
     "historical": {
-      "age": 37,
-      "totalCommits3Months": 80,
+      "age": 38,
+      "totalCommits3Months": 84,
       "createdAt": "2025-06-27T16:44:23Z",
-      "totalLifetimeCommits": 80
+      "totalLifetimeCommits": 84
     },
     "preprintLink": null,
     "publishedLink": null,
@@ -472,7 +472,7 @@
       "sound-processing",
       "synthesis"
     ],
-    "lastUpdated": "2025-07-26T11:26:40Z",
+    "lastUpdated": "2025-08-04T09:48:28Z",
     "title": "Eigenvectors and Eigenvalues in Scientific Sonification: Complex Physical Systems as Musical Instruments",
     "status": "Active",
     "priority": "High",
@@ -491,12 +491,12 @@
       "preprintLink": null,
       "publishedLink": null
     },
-    "commitsLastWeek": 0,
+    "commitsLastWeek": 4,
     "historical": {
-      "age": 37,
-      "totalCommits3Months": 80,
+      "age": 38,
+      "totalCommits3Months": 84,
       "createdAt": "2025-06-27T16:44:23Z",
-      "totalLifetimeCommits": 80
+      "totalLifetimeCommits": 84
     },
     "preprintLink": null,
     "publishedLink": null,
@@ -526,7 +526,7 @@
       "sound-processing",
       "synthesis"
     ],
-    "lastUpdated": "2025-07-26T11:26:40Z",
+    "lastUpdated": "2025-08-04T09:48:28Z",
     "title": "Sonification of Inversive Geometry for Complex Sound Synthesis",
     "status": "Active",
     "priority": "Low",
@@ -545,12 +545,12 @@
       "preprintLink": null,
       "publishedLink": null
     },
-    "commitsLastWeek": 0,
+    "commitsLastWeek": 4,
     "historical": {
-      "age": 37,
-      "totalCommits3Months": 80,
+      "age": 38,
+      "totalCommits3Months": 84,
       "createdAt": "2025-06-27T16:44:23Z",
-      "totalLifetimeCommits": 80
+      "totalLifetimeCommits": 84
     },
     "preprintLink": null,
     "publishedLink": null,
