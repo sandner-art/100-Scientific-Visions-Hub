@@ -15,8 +15,13 @@
       "repo": "sandner-art/VST-Eigensound-Lite",
       "commits": 4,
       "lastCommit": "Update README.md"
+    },
+    {
+      "repo": "gamedesigns/Evolving-Game",
+      "commits": 2,
+      "lastCommit": "Update README.md"
     }
   ],
-  "weeklyCommits": 4,
-  "totalLifetimeCommits": 201
+  "weeklyCommits": 6,
+  "totalLifetimeCommits": 203
 }
