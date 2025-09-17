@@ -1,5 +1,5 @@
 # Detailed Progress Report
-*Generated: 2025-09-16 06:29:55 UTC*
+*Generated: 2025-09-17 06:29:42 UTC*
 
 ## All Tracked Paper Items (11 total)
 
@@ -12,10 +12,10 @@
 | **The Axiomatic Nature of Is-ness**<br><small>(sandner-art/SCIENCE-AF25-Absolute-Theories/ANI)</small> | 🔵 Review | 🟢 Low | `███░░░░░░░ 33%` | <a href="https://doi.org/10.31219/osf.io/cg6tm_v1" target="_blank" title="Preprint">Preprint</a> • <a href="https://github.com/sandner-art/SCIENCE-AF25-Absolute-Theories/tree/main/papers/ANI" target="_blank" title="View Paper Location">View</a> | 5/30/2025 |
 | **Cosmic Indifference Principle**<br><small>(sandner-art/SCIENCE-AF25-Absolute-Theories/CIP)</small> | ✅ Complete | 🟡 Medium | `██████░░░░ 58%` | <a href="https://doi.org/10.31219/osf.io/4pkhy_v1" target="_blank" title="Preprint">Preprint</a> • <a href="https://github.com/sandner-art/SCIENCE-AF25-Absolute-Theories/tree/main/papers/CIP" target="_blank" title="View Paper Location">View</a> | 5/30/2025 |
 | **On The Universal Self-Consistency**<br><small>(sandner-art/SCIENCE-AF25-Absolute-Theories/PUS)</small> | 🔵 Review | 🟢 Low | `███░░░░░░░ 25%` | <a href="https://doi.org/10.31219/osf.io/93wtx_v1" target="_blank" title="Preprint">Preprint</a> • <a href="https://github.com/sandner-art/SCIENCE-AF25-Absolute-Theories/tree/main/papers/PUS" target="_blank" title="View Paper Location">View</a> | 5/30/2025 |
-| **Sonification of Quantum Mechanics for Scientific Exploration and Artistic Expression**<br><small>(sandner-art/VST-Eigensound-Lite/P1)</small> | 🟢 Active | 🔴 High | `████░░░░░░ 42%` | <a href="https://github.com/sandner-art/VST-Eigensound-Lite/tree/main/papers/P1" target="_blank" title="View Paper Location">View</a> | 9/5/2025 |
-| **Sonification of General Relativity and Quantum Mechanics Phenomena**<br><small>(sandner-art/VST-Eigensound-Lite/P2-GR-QM)</small> | 🟢 Active | 🔴 High | `████░░░░░░ 42%` | <a href="https://github.com/sandner-art/VST-Eigensound-Lite/tree/main/papers/P2-GR-QM" target="_blank" title="View Paper Location">View</a> | 9/5/2025 |
-| **Eigenvectors and Eigenvalues in Scientific Sonification: Complex Physical Systems as Musical Instruments**<br><small>(sandner-art/VST-Eigensound-Lite/P3-Eigenvectors)</small> | 🟢 Active | 🔴 High | `█████░░░░░ 50%` | <a href="https://github.com/sandner-art/VST-Eigensound-Lite/tree/main/papers/P3-Eigenvectors" target="_blank" title="View Paper Location">View</a> | 9/5/2025 |
-| **Sonification of Inversive Geometry for Complex Sound Synthesis**<br><small>(sandner-art/VST-Eigensound-Lite/P4-Inversive)</small> | 🟢 Active | 🟢 Low | `█████░░░░░ 50%` | <a href="https://github.com/sandner-art/VST-Eigensound-Lite/tree/main/papers/P4-Inversive" target="_blank" title="View Paper Location">View</a> | 9/5/2025 |
+| **Sonification of Quantum Mechanics for Scientific Exploration and Artistic Expression**<br><small>(sandner-art/VST-Eigensound-Lite/P1)</small> | 🟢 Active | 🔴 High | `████░░░░░░ 42%` | <a href="https://github.com/sandner-art/VST-Eigensound-Lite/tree/main/papers/P1" target="_blank" title="View Paper Location">View</a> | 9/16/2025 |
+| **Sonification of General Relativity and Quantum Mechanics Phenomena**<br><small>(sandner-art/VST-Eigensound-Lite/P2-GR-QM)</small> | 🟢 Active | 🔴 High | `████░░░░░░ 42%` | <a href="https://github.com/sandner-art/VST-Eigensound-Lite/tree/main/papers/P2-GR-QM" target="_blank" title="View Paper Location">View</a> | 9/16/2025 |
+| **Eigenvectors and Eigenvalues in Scientific Sonification: Complex Physical Systems as Musical Instruments**<br><small>(sandner-art/VST-Eigensound-Lite/P3-Eigenvectors)</small> | 🟢 Active | 🔴 High | `█████░░░░░ 50%` | <a href="https://github.com/sandner-art/VST-Eigensound-Lite/tree/main/papers/P3-Eigenvectors" target="_blank" title="View Paper Location">View</a> | 9/16/2025 |
+| **Sonification of Inversive Geometry for Complex Sound Synthesis**<br><small>(sandner-art/VST-Eigensound-Lite/P4-Inversive)</small> | 🟢 Active | 🟢 Low | `█████░░░░░ 50%` | <a href="https://github.com/sandner-art/VST-Eigensound-Lite/tree/main/papers/P4-Inversive" target="_blank" title="View Paper Location">View</a> | 9/16/2025 |
 
 ## Detailed Information by Repository
 
@@ -23,7 +23,7 @@
 - **Repo/Project Description**: This paper explores how games can dynamically generate new mechanics, visual representations, and auditory feedback based on player behavior, creating emergent complexity. It is belonging under category (A) Conceptual/Exploratory in the broader 100 Scientific Visions initiative
 - **Topics**: game-design, game-development, game-mechanics, game-theory, gamedev
 - **Visibility**: Public
-- **Created**: 6/29/2025 (78 days ago)
+- **Created**: 6/29/2025 (79 days ago)
 - **Commits (3 months)**: 8
 - **Total Lifetime Commits**: 8
 - **Weekly Commits (this repo)**: 0
@@ -41,7 +41,7 @@
 - **Repo/Project Description**: These papers focus on the theoretical exploration of ancient cultures, their mathematics, physics, and history and philosophy of ancient science in general. It is belonging under category (A) Conceptual/Exploratory in the broader 100 Scientific Visions initiative
 - **Topics**: ancient-egypt, archeology, egyptology, geodesy, geometry, history-of-science, mathematics, metrology, non-euclidean-geometry, royal-cubit, scientific-archeology, spherical-geometry
 - **Visibility**: Public
-- **Created**: 6/6/2025 (101 days ago)
+- **Created**: 6/6/2025 (102 days ago)
 - **Commits (3 months)**: 0
 - **Total Lifetime Commits**: 38
 - **Weekly Commits (this repo)**: 0
@@ -66,7 +66,7 @@
 - **Repo/Project Description**: This paper focuses on the theoretical exploration of biomimetic Schlieren vision – a novel sensory modality enabling organisms to perceive subtle density gradients in transparent media like air and water. It is belonging under category (A) Conceptual/Exploratory in the broader 100 Scientific Visions initiative
 - **Topics**: biology, biomimetics, comparative-morphology, evolutionary-biology, mechanoreception, schlieren-imaging, sensory-evolution, theoretical-biology
 - **Visibility**: Public
-- **Created**: 5/25/2025 (113 days ago)
+- **Created**: 5/25/2025 (114 days ago)
 - **Commits (3 months)**: 0
 - **Total Lifetime Commits**: 21
 - **Weekly Commits (this repo)**: 0
@@ -85,7 +85,7 @@
 - **Repo/Project Description**: This research is focused on scientific writing aspects of heuristic theoretical science. These academic satire papers are categorized as 'X' in the broader 100 Scientific Visions initiative*
 - **Topics**: academic-satire, exploratory-research-ideas, scientific-writing
 - **Visibility**: Public
-- **Created**: 3/27/2025 (172 days ago)
+- **Created**: 3/27/2025 (173 days ago)
 - **Commits (3 months)**: 0
 - **Total Lifetime Commits**: 52
 - **Weekly Commits (this repo)**: 0
@@ -116,10 +116,10 @@
 - **Repo/Project Description**: This paper focuses on the exploration of quantum physics phenomena and their possible use for sonification and sound design. It also test alternative ways to represent quantum effects. It is belonging under category (A) Conceptual/Exploratory in the broader 100 Scientific Visions initiative
 - **Topics**: eigensound, eigenvalues, eigenvectors, general-relativity, music-generation, quantum-physics, sonification, sound-design, sound-design-tools, sound-generation, sound-processing, synthesis
 - **Visibility**: Public
-- **Created**: 6/27/2025 (80 days ago)
-- **Commits (3 months)**: 85
-- **Total Lifetime Commits**: 85
-- **Weekly Commits (this repo)**: 0
+- **Created**: 6/27/2025 (81 days ago)
+- **Commits (3 months)**: 87
+- **Total Lifetime Commits**: 87
+- **Weekly Commits (this repo)**: 2
 
   *Contains 4 paper items:*
   - #### 🟢 Sonification of Quantum Mechanics for Scientific Exploration and Artistic Expression

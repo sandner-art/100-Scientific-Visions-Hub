@@ -10,7 +10,13 @@
     "Medium": 3,
     "Low": 4
   },
-  "recentActivity": [],
-  "weeklyCommits": 0,
-  "totalLifetimeCommits": 204
+  "recentActivity": [
+    {
+      "repo": "sandner-art/VST-Eigensound-Lite",
+      "commits": 2,
+      "lastCommit": "Update index.html"
+    }
+  ],
+  "weeklyCommits": 2,
+  "totalLifetimeCommits": 206
 }
