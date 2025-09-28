@@ -1,22 +1,8 @@
 {
-  "total": 11,
-  "byStatus": {
-    "Active": 8,
-    "Review": 2,
-    "Complete": 1
-  },
-  "byPriority": {
-    "High": 4,
-    "Medium": 3,
-    "Low": 4
-  },
-  "recentActivity": [
-    {
-      "repo": "sandner-art/VST-Eigensound-Lite",
-      "commits": 2,
-      "lastCommit": "Create favicon.svg"
-    }
-  ],
-  "weeklyCommits": 2,
-  "totalLifetimeCommits": 208
+  "total": 0,
+  "byStatus": {},
+  "byPriority": {},
+  "recentActivity": [],
+  "weeklyCommits": 0,
+  "totalLifetimeCommits": 0
 }
