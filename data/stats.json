@@ -1,8 +1,22 @@
 {
-  "total": 0,
-  "byStatus": {},
-  "byPriority": {},
-  "recentActivity": [],
-  "weeklyCommits": 0,
-  "totalLifetimeCommits": 0
+  "total": 11,
+  "byStatus": {
+    "Active": 8,
+    "Review": 2,
+    "Complete": 1
+  },
+  "byPriority": {
+    "High": 4,
+    "Medium": 3,
+    "Low": 4
+  },
+  "recentActivity": [
+    {
+      "repo": "sandner-art/VST-Eigensound-Lite",
+      "commits": 1,
+      "lastCommit": "cymatix and polysonic added"
+    }
+  ],
+  "weeklyCommits": 1,
+  "totalLifetimeCommits": 209
 }
