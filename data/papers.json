@@ -34,7 +34,7 @@
     },
     "commitsLastWeek": 0,
     "historical": {
-      "age": 113,
+      "age": 114,
       "totalCommits3Months": 2,
       "createdAt": "2025-06-29T16:57:51Z",
       "totalLifetimeCommits": 8
@@ -92,7 +92,7 @@
     },
     "commitsLastWeek": 0,
     "historical": {
-      "age": 136,
+      "age": 137,
       "totalCommits3Months": 0,
       "createdAt": "2025-06-06T20:54:27Z",
       "totalLifetimeCommits": 38
@@ -148,7 +148,7 @@
     },
     "commitsLastWeek": 0,
     "historical": {
-      "age": 136,
+      "age": 137,
       "totalCommits3Months": 0,
       "createdAt": "2025-06-06T20:54:27Z",
       "totalLifetimeCommits": 38
@@ -202,7 +202,7 @@
     },
     "commitsLastWeek": 0,
     "historical": {
-      "age": 148,
+      "age": 149,
       "totalCommits3Months": 0,
       "createdAt": "2025-05-25T20:09:53Z",
       "totalLifetimeCommits": 21
@@ -245,7 +245,7 @@
     },
     "commitsLastWeek": 0,
     "historical": {
-      "age": 207,
+      "age": 208,
       "totalCommits3Months": 0,
       "createdAt": "2025-03-27T16:08:54Z",
       "totalLifetimeCommits": 52
@@ -291,7 +291,7 @@
     },
     "commitsLastWeek": 0,
     "historical": {
-      "age": 207,
+      "age": 208,
       "totalCommits3Months": 0,
       "createdAt": "2025-03-27T16:08:54Z",
       "totalLifetimeCommits": 52
@@ -333,7 +333,7 @@
     },
     "commitsLastWeek": 0,
     "historical": {
-      "age": 207,
+      "age": 208,
       "totalCommits3Months": 0,
       "createdAt": "2025-03-27T16:08:54Z",
       "totalLifetimeCommits": 52
@@ -366,7 +366,7 @@
       "sound-processing",
       "synthesis"
     ],
-    "lastUpdated": "2025-10-04T09:02:12Z",
+    "lastUpdated": "2025-10-21T19:08:59Z",
     "title": "Sonification of Quantum Mechanics for Scientific Exploration and Artistic Expression",
     "status": "Active",
     "priority": "High",
@@ -386,8 +386,8 @@
     },
     "commitsLastWeek": 0,
     "historical": {
-      "age": 115,
-      "totalCommits3Months": 38,
+      "age": 116,
+      "totalCommits3Months": 37,
       "createdAt": "2025-06-27T16:44:23Z",
       "totalLifetimeCommits": 90
     },
@@ -419,7 +419,7 @@
       "sound-processing",
       "synthesis"
     ],
-    "lastUpdated": "2025-10-04T09:02:12Z",
+    "lastUpdated": "2025-10-21T19:08:59Z",
     "title": "Sonification of General Relativity and Quantum Mechanics Phenomena",
     "status": "Active",
     "priority": "High",
@@ -439,8 +439,8 @@
     },
     "commitsLastWeek": 0,
     "historical": {
-      "age": 115,
-      "totalCommits3Months": 38,
+      "age": 116,
+      "totalCommits3Months": 37,
       "createdAt": "2025-06-27T16:44:23Z",
       "totalLifetimeCommits": 90
     },
@@ -472,7 +472,7 @@
       "sound-processing",
       "synthesis"
     ],
-    "lastUpdated": "2025-10-04T09:02:12Z",
+    "lastUpdated": "2025-10-21T19:08:59Z",
     "title": "Eigenvectors and Eigenvalues in Scientific Sonification: Complex Physical Systems as Musical Instruments",
     "status": "Active",
     "priority": "High",
@@ -493,8 +493,8 @@
     },
     "commitsLastWeek": 0,
     "historical": {
-      "age": 115,
-      "totalCommits3Months": 38,
+      "age": 116,
+      "totalCommits3Months": 37,
       "createdAt": "2025-06-27T16:44:23Z",
       "totalLifetimeCommits": 90
     },
@@ -526,7 +526,7 @@
       "sound-processing",
       "synthesis"
     ],
-    "lastUpdated": "2025-10-04T09:02:12Z",
+    "lastUpdated": "2025-10-21T19:08:59Z",
     "title": "Sonification of Inversive Geometry for Complex Sound Synthesis",
     "status": "Active",
     "priority": "Low",
@@ -547,8 +547,8 @@
     },
     "commitsLastWeek": 0,
     "historical": {
-      "age": 115,
-      "totalCommits3Months": 38,
+      "age": 116,
+      "totalCommits3Months": 37,
       "createdAt": "2025-06-27T16:44:23Z",
       "totalLifetimeCommits": 90
     },
