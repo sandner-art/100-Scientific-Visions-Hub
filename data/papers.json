@@ -35,8 +35,15 @@
     "preprintLink": null,
     "publishedLink": null,
     "isSubpaper": true,
-    "projectId": null,
-    "researchArea": null,
+    "projectId": "SV-099",
+    "researchArea": "Philosophy of Science, Methodology, AI/ML, Scientific Method, Exploratory Science",
+    "researchAreas": [
+      "Philosophy of Science",
+      "Methodology",
+      "AI/ML",
+      "Scientific Method",
+      "Exploratory Science"
+    ],
     "masked": true
   },
   {
@@ -75,8 +82,15 @@
     "preprintLink": null,
     "publishedLink": null,
     "isSubpaper": true,
-    "projectId": null,
-    "researchArea": null,
+    "projectId": "SV-099",
+    "researchArea": "Philosophy of Science, Methodology, AI/ML, Scientific Method, Exploratory Science",
+    "researchAreas": [
+      "Philosophy of Science",
+      "Methodology",
+      "AI/ML",
+      "Scientific Method",
+      "Exploratory Science"
+    ],
     "masked": true
   },
   {
@@ -115,8 +129,15 @@
     "preprintLink": null,
     "publishedLink": null,
     "isSubpaper": true,
-    "projectId": null,
-    "researchArea": null,
+    "projectId": "SV-099",
+    "researchArea": "Philosophy of Science, Methodology, AI/ML, Scientific Method, Exploratory Science",
+    "researchAreas": [
+      "Philosophy of Science",
+      "Methodology",
+      "AI/ML",
+      "Scientific Method",
+      "Exploratory Science"
+    ],
     "masked": true
   },
   {
@@ -152,8 +173,14 @@
     "preprintLink": null,
     "publishedLink": null,
     "isSubpaper": true,
-    "projectId": null,
-    "researchArea": null,
+    "projectId": "SV-001",
+    "researchArea": "Automata, Quantum Physics, Information Theory, Physics",
+    "researchAreas": [
+      "Automata",
+      "Quantum Physics",
+      "Information Theory",
+      "Physics"
+    ],
     "masked": true
   },
   {
@@ -191,8 +218,14 @@
     "preprintLink": null,
     "publishedLink": null,
     "isSubpaper": true,
-    "projectId": null,
-    "researchArea": null,
+    "projectId": "SV-001",
+    "researchArea": "Automata, Quantum Physics, Information Theory, Physics",
+    "researchAreas": [
+      "Automata",
+      "Quantum Physics",
+      "Information Theory",
+      "Physics"
+    ],
     "masked": true
   },
   {
@@ -229,8 +262,14 @@
     "preprintLink": null,
     "publishedLink": null,
     "isSubpaper": true,
-    "projectId": null,
-    "researchArea": null,
+    "projectId": "SV-001",
+    "researchArea": "Automata, Quantum Physics, Information Theory, Physics",
+    "researchAreas": [
+      "Automata",
+      "Quantum Physics",
+      "Information Theory",
+      "Physics"
+    ],
     "masked": true
   },
   {
@@ -257,7 +296,7 @@
     },
     "commitsLastWeek": 0,
     "historical": {
-      "age": 550,
+      "age": 551,
       "totalCommits3Months": 0,
       "createdAt": "2025-05-25T21:33:59Z",
       "totalLifetimeCommits": 7
@@ -265,8 +304,13 @@
     "preprintLink": null,
     "publishedLink": null,
     "isSubpaper": true,
-    "projectId": null,
-    "researchArea": null,
+    "projectId": "SV-031",
+    "researchArea": "Astrophysics, Quantum Physics, General Relativity",
+    "researchAreas": [
+      "Astrophysics",
+      "Quantum Physics",
+      "General Relativity"
+    ],
     "masked": true
   },
   {
@@ -326,8 +370,15 @@
     "preprintLink": "https://doi.org/10.5281/zenodo.15639502",
     "publishedLink": null,
     "isSubpaper": true,
-    "projectId": null,
-    "researchArea": null
+    "projectId": "SV-100",
+    "researchArea": "Geometry, Geodesy, History of Science, Philosophy of Science, Ancient Cultures",
+    "researchAreas": [
+      "Geometry",
+      "Geodesy",
+      "History of Science",
+      "Philosophy of Science",
+      "Ancient Cultures"
+    ]
   },
   {
     "repoId": 997618979,
@@ -384,8 +435,15 @@
     "preprintLink": "https://doi.org/10.5281/zenodo.15655126",
     "publishedLink": null,
     "isSubpaper": true,
-    "projectId": null,
-    "researchArea": null
+    "projectId": "SV-100",
+    "researchArea": "Geometry, Geodesy, History of Science, Philosophy of Science, Ancient Cultures",
+    "researchAreas": [
+      "Geometry",
+      "Geodesy",
+      "History of Science",
+      "Philosophy of Science",
+      "Ancient Cultures"
+    ]
   },
   {
     "repoId": 990255177,
@@ -440,8 +498,15 @@
     "preprintLink": "https://doi.org/10.5281/zenodo.15549809",
     "publishedLink": null,
     "isSubpaper": true,
-    "projectId": null,
-    "researchArea": null
+    "projectId": "SV-021",
+    "researchArea": "Biomimetics, Bioinformatics, Evolution, Biology, Exobiology",
+    "researchAreas": [
+      "Biomimetics",
+      "Bioinformatics",
+      "Evolution",
+      "Biology",
+      "Exobiology"
+    ]
   },
   {
     "repoId": 956051635,
@@ -485,8 +550,16 @@
     "preprintLink": "https://doi.org/10.31219/osf.io/cg6tm_v1",
     "publishedLink": null,
     "isSubpaper": true,
-    "projectId": null,
-    "researchArea": null
+    "projectId": "SV-001",
+    "researchArea": "Scientific Writing, Astrophysics, Quantum Physics, Bioinformatics, Ontology, Sociology",
+    "researchAreas": [
+      "Scientific Writing",
+      "Astrophysics",
+      "Quantum Physics",
+      "Bioinformatics",
+      "Ontology",
+      "Sociology"
+    ]
   },
   {
     "repoId": 956051635,
@@ -533,8 +606,16 @@
     "preprintLink": "https://doi.org/10.31219/osf.io/4pkhy_v1",
     "publishedLink": null,
     "isSubpaper": true,
-    "projectId": null,
-    "researchArea": null
+    "projectId": "SV-001",
+    "researchArea": "Scientific Writing, Astrophysics, Quantum Physics, Bioinformatics, Ontology, Sociology",
+    "researchAreas": [
+      "Scientific Writing",
+      "Astrophysics",
+      "Quantum Physics",
+      "Bioinformatics",
+      "Ontology",
+      "Sociology"
+    ]
   },
   {
     "repoId": 956051635,
@@ -577,8 +658,16 @@
     "preprintLink": "https://doi.org/10.31219/osf.io/93wtx_v1",
     "publishedLink": null,
     "isSubpaper": true,
-    "projectId": null,
-    "researchArea": null
+    "projectId": "SV-001",
+    "researchArea": "Scientific Writing, Astrophysics, Quantum Physics, Bioinformatics, Ontology, Sociology",
+    "researchAreas": [
+      "Scientific Writing",
+      "Astrophysics",
+      "Quantum Physics",
+      "Bioinformatics",
+      "Ontology",
+      "Sociology"
+    ]
   },
   {
     "repoId": 1009751551,
@@ -632,8 +721,16 @@
     "preprintLink": null,
     "publishedLink": null,
     "isSubpaper": true,
-    "projectId": null,
-    "researchArea": null
+    "projectId": "SV-081",
+    "researchArea": "Quantum Mechanics, Sound Design, Physics, Quantum Physics, Art, Education",
+    "researchAreas": [
+      "Quantum Mechanics",
+      "Sound Design",
+      "Physics",
+      "Quantum Physics",
+      "Art",
+      "Education"
+    ]
   },
   {
     "repoId": 1009751551,
@@ -687,8 +784,16 @@
     "preprintLink": null,
     "publishedLink": null,
     "isSubpaper": true,
-    "projectId": null,
-    "researchArea": null
+    "projectId": "SV-081",
+    "researchArea": "Quantum Mechanics, Sound Design, Physics, Quantum Physics, Art, Education",
+    "researchAreas": [
+      "Quantum Mechanics",
+      "Sound Design",
+      "Physics",
+      "Quantum Physics",
+      "Art",
+      "Education"
+    ]
   },
   {
     "repoId": 1009751551,
@@ -743,8 +848,16 @@
     "preprintLink": null,
     "publishedLink": null,
     "isSubpaper": true,
-    "projectId": null,
-    "researchArea": null
+    "projectId": "SV-081",
+    "researchArea": "Quantum Mechanics, Sound Design, Physics, Quantum Physics, Art, Education",
+    "researchAreas": [
+      "Quantum Mechanics",
+      "Sound Design",
+      "Physics",
+      "Quantum Physics",
+      "Art",
+      "Education"
+    ]
   },
   {
     "repoId": 1009751551,
@@ -799,7 +912,15 @@
     "preprintLink": null,
     "publishedLink": null,
     "isSubpaper": true,
-    "projectId": null,
-    "researchArea": null
+    "projectId": "SV-081",
+    "researchArea": "Quantum Mechanics, Sound Design, Physics, Quantum Physics, Art, Education",
+    "researchAreas": [
+      "Quantum Mechanics",
+      "Sound Design",
+      "Physics",
+      "Quantum Physics",
+      "Art",
+      "Education"
+    ]
   }
 ]

@@ -1,5 +1,5 @@
 # Detailed Progress Report
-*Generated: 2026-11-27 21:23:42 UTC*
+*Generated: 2026-11-27 21:57:27 UTC*
 
 ## All Tracked Paper Items (17 total)
 
@@ -36,14 +36,20 @@
   - #### 🟢 Private project
     - **Status**: Active | **Priority**: Medium
     - **Progress**: `██████░░░░ 58%`
+    - **Project ID**: SV-099
+    - **Research Area**: Philosophy of Science, Methodology, AI/ML, Scientific Method, Exploratory Science
 
   - #### 🟢 Private project
     - **Status**: Active | **Priority**: High
     - **Progress**: `██████░░░░ 58%`
+    - **Project ID**: SV-099
+    - **Research Area**: Philosophy of Science, Methodology, AI/ML, Scientific Method, Exploratory Science
 
   - #### 🟢 Private project
     - **Status**: Active | **Priority**: High
     - **Progress**: `██████░░░░ 58%`
+    - **Project ID**: SV-099
+    - **Research Area**: Philosophy of Science, Methodology, AI/ML, Scientific Method, Exploratory Science
 
 
 ---
@@ -59,14 +65,20 @@
   - #### 🟢 Private project
     - **Status**: Active | **Priority**: High
     - **Progress**: `███░░░░░░░ 33%`
+    - **Project ID**: SV-001
+    - **Research Area**: Automata, Quantum Physics, Information Theory, Physics
 
   - #### 🟣 Private project
     - **Status**: Analysis | **Priority**: Medium
     - **Progress**: `█████░░░░░ 50%`
+    - **Project ID**: SV-001
+    - **Research Area**: Automata, Quantum Physics, Information Theory, Physics
 
   - #### 🟢 Private project
     - **Status**: Active | **Priority**: Medium
     - **Progress**: `████░░░░░░ 42%`
+    - **Project ID**: SV-001
+    - **Research Area**: Automata, Quantum Physics, Information Theory, Physics
 
 
 ---
@@ -75,13 +87,15 @@
 - **Repo/Project Description**: N/A
 - **Topics**: None
 - **Visibility**: Private
-- **Created**: 5/25/2025 (550 days ago)
+- **Created**: 5/25/2025 (551 days ago)
 - **Total Lifetime Commits**: 7
 
   *Contains 1 paper items:*
   - #### 🔵 Private project
     - **Status**: Review | **Priority**: Low
     - **Progress**: `███░░░░░░░ 25%`
+    - **Project ID**: SV-031
+    - **Research Area**: Astrophysics, Quantum Physics, General Relativity
 
 
 ---
@@ -99,12 +113,16 @@
   - #### 🟢 Proto-non-Euclidean Geometry in Ancient Egypt
     - **Status**: Active | **Priority**: Medium
     - **Progress**: `████████░░ 83%`
+    - **Project ID**: SV-100
+    - **Research Area**: Geometry, Geodesy, History of Science, Philosophy of Science, Ancient Cultures
     - **Preprint**: [Link](https://doi.org/10.5281/zenodo.15639502)
     - **Link**: [View Paper Directory](https://github.com/sandner-art/SC-Ancient-Cultures/tree/main/papers/P1-Egyptian-Geometry)
 
   - #### 🟢 Eratosthenes’ Experiment: Ancient and Modern Methodology
     - **Status**: Active | **Priority**: Low
     - **Progress**: `███████░░░ 67%`
+    - **Project ID**: SV-100
+    - **Research Area**: Geometry, Geodesy, History of Science, Philosophy of Science, Ancient Cultures
     - **Preprint**: [Link](https://doi.org/10.5281/zenodo.15655126)
     - **Link**: [View Paper Directory](https://github.com/sandner-art/SC-Ancient-Cultures/tree/main/papers/P2-Eratosthenes-Measurement)
 
@@ -124,6 +142,8 @@
   - #### 🟢 A Biomimetic Model for Schlieren Vision
     - **Status**: Active | **Priority**: Medium
     - **Progress**: `████████░░ 83%`
+    - **Project ID**: SV-021
+    - **Research Area**: Biomimetics, Bioinformatics, Evolution, Biology, Exobiology
     - **Preprint**: [Link](https://doi.org/10.5281/zenodo.15549809)
     - **Link**: [View Paper Directory](https://github.com/sandner-art/SC-Biomimetics/tree/main/papers/SCH)
 
@@ -143,18 +163,24 @@
   - #### 🔵 The Axiomatic Nature of Is-ness
     - **Status**: Review | **Priority**: Low
     - **Progress**: `███░░░░░░░ 33%`
+    - **Project ID**: SV-001
+    - **Research Area**: Scientific Writing, Astrophysics, Quantum Physics, Bioinformatics, Ontology, Sociology
     - **Preprint**: [Link](https://doi.org/10.31219/osf.io/cg6tm_v1)
     - **Link**: [View Paper Directory](https://github.com/sandner-art/SCIENCE-AF25-Absolute-Theories/tree/main/papers/ANI)
 
   - #### ✅ Cosmic Indifference Principle
     - **Status**: Complete | **Priority**: Medium
     - **Progress**: `██████░░░░ 58%`
+    - **Project ID**: SV-001
+    - **Research Area**: Scientific Writing, Astrophysics, Quantum Physics, Bioinformatics, Ontology, Sociology
     - **Preprint**: [Link](https://doi.org/10.31219/osf.io/4pkhy_v1)
     - **Link**: [View Paper Directory](https://github.com/sandner-art/SCIENCE-AF25-Absolute-Theories/tree/main/papers/CIP)
 
   - #### 🔵 On The Universal Self-Consistency
     - **Status**: Review | **Priority**: Low
     - **Progress**: `███░░░░░░░ 25%`
+    - **Project ID**: SV-001
+    - **Research Area**: Scientific Writing, Astrophysics, Quantum Physics, Bioinformatics, Ontology, Sociology
     - **Preprint**: [Link](https://doi.org/10.31219/osf.io/93wtx_v1)
     - **Link**: [View Paper Directory](https://github.com/sandner-art/SCIENCE-AF25-Absolute-Theories/tree/main/papers/PUS)
 
@@ -174,21 +200,29 @@
   - #### 🟢 Sonification of Quantum Mechanics for Scientific Exploration and Artistic Expression
     - **Status**: Active | **Priority**: High
     - **Progress**: `████░░░░░░ 42%`
+    - **Project ID**: SV-081
+    - **Research Area**: Quantum Mechanics, Sound Design, Physics, Quantum Physics, Art, Education
     - **Link**: [View Paper Directory](https://github.com/sandner-art/VST-Eigensound-Lite/tree/main/papers/P1)
 
   - #### 🟢 Sonification of General Relativity and Quantum Mechanics Phenomena
     - **Status**: Active | **Priority**: High
     - **Progress**: `████░░░░░░ 42%`
+    - **Project ID**: SV-081
+    - **Research Area**: Quantum Mechanics, Sound Design, Physics, Quantum Physics, Art, Education
     - **Link**: [View Paper Directory](https://github.com/sandner-art/VST-Eigensound-Lite/tree/main/papers/P2-GR-QM)
 
   - #### 🟢 Eigenvectors and Eigenvalues in Scientific Sonification: Complex Physical Systems as Musical Instruments
     - **Status**: Active | **Priority**: High
     - **Progress**: `█████░░░░░ 50%`
+    - **Project ID**: SV-081
+    - **Research Area**: Quantum Mechanics, Sound Design, Physics, Quantum Physics, Art, Education
     - **Link**: [View Paper Directory](https://github.com/sandner-art/VST-Eigensound-Lite/tree/main/papers/P3-Eigenvectors)
 
   - #### 🟢 Sonification of Inversive Geometry for Complex Sound Synthesis
     - **Status**: Active | **Priority**: Low
     - **Progress**: `█████░░░░░ 50%`
+    - **Project ID**: SV-081
+    - **Research Area**: Quantum Mechanics, Sound Design, Physics, Quantum Physics, Art, Education
     - **Link**: [View Paper Directory](https://github.com/sandner-art/VST-Eigensound-Lite/tree/main/papers/P4-Inversive)
 
 
