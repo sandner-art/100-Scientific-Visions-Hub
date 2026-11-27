@@ -80,6 +80,37 @@ a.cell:hover, a.cell:focus-visible { outline: 2px solid var(--ink); outline-offs
 .figures dt { color: var(--muted); font-size: 0.88rem; }
 .figures dd { margin: 0; font: 600 1.7rem/1.15 var(--display); }
 
+.masthead .meta { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.open-areas, .dlg-head button { font: inherit; font-size: 0.9rem; font-weight: 500; color: var(--ink); background: var(--surface); border: 1px solid var(--rule); border-radius: 8px; padding: 7px 12px; min-height: 38px; cursor: pointer; }
+.open-areas:hover, .dlg-head button:hover { border-color: var(--muted); }
+.open-areas[hidden] { display: none; }
+dialog { width: min(880px, calc(100vw - 24px)); max-height: calc(100vh - 32px); border: 0; border-radius: 14px; padding: 24px 26px 28px; background: var(--surface); color: var(--ink); }
+dialog::backdrop { background: rgba(10, 16, 24, 0.55); }
+.dlg-head { display: flex; justify-content: space-between; align-items: start; gap: 16px; margin-bottom: 6px; }
+.dlg-head h2 { font: 600 1.5rem/1.15 var(--display); margin: 0; }
+dialog .lede { color: var(--muted); margin: 0 0 18px; max-width: 70ch; }
+dialog h3 { font: 600 1.05rem/1.3 var(--display); margin: 26px 0 10px; }
+.area-map { display: grid; grid-template-columns: minmax(120px, 30%) 1fr auto; gap: 0 18px; }
+.area-row { display: grid; grid-template-columns: subgrid; grid-column: 1 / -1; align-items: center; padding: 9px 0; border-top: 1px solid var(--rule); }
+.area-row:first-child { border-top: 0; }
+.area-row > button { all: unset; cursor: pointer; font-weight: 600; text-decoration: underline; text-decoration-color: var(--rule); text-underline-offset: 3px; overflow-wrap: anywhere; }
+.area-row > button:hover { text-decoration-color: var(--ink); }
+.area-row > button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.units { display: flex; flex-wrap: wrap; gap: 3px; }
+.units .cell { width: 18px; aspect-ratio: 1; border-radius: 3px; }
+.area-num { text-align: right; font-size: 0.9rem; white-space: nowrap; }
+.area-num .sub { font-size: 0.82rem; }
+.topics { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.topics button { font: inherit; font-size: 0.86rem; color: var(--ink); background: var(--ground); border: 0; border-radius: 999px; padding: 5px 11px; cursor: pointer; }
+.topics button:hover { outline: 1px solid var(--muted); }
+.topics b { font-weight: 600; margin-left: 5px; }
+.c-area { max-width: 22ch; }
+@media (max-width: 600px) {
+  dialog { padding: 18px 16px 22px; }
+  .area-map { grid-template-columns: 1fr auto; }
+  .area-row .units { grid-column: 1 / -1; grid-row: 2; margin-top: 6px; }
+}
+
 /* panels */
 .panels { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 20px; }
 .panel { background: var(--surface); border-radius: 14px; padding: 22px 24px; min-width: 0; }
@@ -167,7 +198,8 @@ footer { color: var(--muted); font-size: 0.85rem; margin-top: 24px; }
 <div class="page">
   <header class="masthead">
     <h1>100 Scientific Visions</h1>
-    <p id="asOf" aria-live="polite">Loading research data…</p>
+    <p class="meta"><span id="asOf" aria-live="polite">Loading research data…</span>
+      <button type="button" class="open-areas" id="openAreas" hidden>Areas and topics</button></p>
     <p class="byline">Research by Daniel Sandner. Every square below is one paper.</p>
   </header>
 
@@ -199,6 +231,7 @@ footer { color: var(--muted); font-size: 0.85rem; margin-top: 24px; }
       <div class="panel">
         <h3>Papers by research area</h3>
         <ul class="bars" id="areaBars"></ul>
+        <p class="hint" id="areaHint"></p>
       </div>
       <div class="panel">
         <h3 id="thirdTitle">Commits in the last 7 days</h3>
@@ -210,7 +243,7 @@ footer { color: var(--muted); font-size: 0.85rem; margin-top: 24px; }
       <h3 id="workTitle">All papers</h3>
       <div class="filters">
         <label class="visually-hidden" for="q">Search papers</label>
-        <input id="q" type="search" placeholder="Search title, ID, repository or area">
+        <input id="q" type="search" placeholder="Search title, ID, repository, area or topic">
         <label class="visually-hidden" for="fStatus">Stage</label>
         <select id="fStatus"></select>
         <label class="visually-hidden" for="fPriority">Priority</label>
@@ -240,6 +273,20 @@ footer { color: var(--muted); font-size: 0.85rem; margin-top: 24px; }
 
   <footer>Data is collected once a day from the project repositories by a GitHub Actions workflow.</footer>
 </div>
+<dialog id="areasDialog" aria-labelledby="areasTitle">
+  <div class="dlg-head">
+    <h2 id="areasTitle">Research areas and topics</h2>
+    <button type="button" id="closeAreas">Close</button>
+  </div>
+  <p class="lede" id="areasLede"></p>
+  <div class="area-map" id="areaMap"></div>
+  <p class="hint">One square is one paper, darker is further along. A paper with several areas appears in each, so the shares add up to more than 100%.</p>
+  <div id="topicsBlock">
+    <h3>Topics tagged on GitHub</h3>
+    <ul class="topics" id="topicList"></ul>
+    <p class="hint" id="topicHint"></p>
+  </div>
+</dialog>
 <div class="tip" id="tip" hidden></div>
 
 <script>
@@ -258,7 +305,12 @@ footer { color: var(--muted); font-size: 0.85rem; margin-top: 24px; }
     return Math.min(100, Math.round((done / total) * 100));
   };
   const statusOf = (p) => String(p.status || 'Unknown').replace(/[\[\]]/g, '').trim() || 'Unknown';
-  const areaOf = (p) => p.researchArea || 'Unassigned';
+  const areasOf = (p) => {
+    const list = Array.isArray(p.researchAreas) && p.researchAreas.length ? p.researchAreas
+      : String(p.researchArea || '').split(/[,;]/).map((a) => a.trim()).filter(Boolean);
+    return list.length ? list : ['Unassigned'];
+  };
+  const areaCounts = () => { const m = {}; state.papers.forEach((p) => areasOf(p).forEach((a) => { m[a] = (m[a] || 0) + 1; })); return m; };
   const titleOf = (p) => p.title || p.paperName || 'Untitled paper';
   const statusKind = (s) => (s === 'Active' || s === 'Complete') ? 'good' : s === 'Stale' ? 'warn' : s === 'On-Hold' ? 'hold' : s === 'Planning' ? 'open' : '';
   const fmtDate = (iso, withTime) => {
@@ -306,7 +358,7 @@ footer { color: var(--muted); font-size: 0.85rem; margin-top: 24px; }
       return;
     }
     $('main').hidden = false;
-    renderHero(); renderBars(); renderThird(); renderFilters(); renderRows(); bind();
+    renderHero(); renderBars(); renderAreas(); renderThird(); renderFilters(); renderRows(); bind();
   }
 
   function renderHero() {
@@ -348,7 +400,7 @@ footer { color: var(--muted); font-size: 0.85rem; margin-top: 24px; }
     const st = count((p) => p._status);
     const order = (s) => { const i = STAGES.indexOf(s); return i < 0 ? STAGES.length : i; };
     barList($('stageBars'), Object.entries(st).sort((a, b) => order(a[0]) - order(b[0])), 'status');
-    const areas = Object.entries(count(areaOf)).sort((a, b) => b[1] - a[1]);
+    const areas = Object.entries(areaCounts()).sort((a, b) => (a[0] === 'Unassigned') - (b[0] === 'Unassigned') || b[1] - a[1]);
     barList($('areaBars'), areas.slice(0, 8), 'area');
   }
 
@@ -385,6 +437,40 @@ footer { color: var(--muted); font-size: 0.85rem; margin-top: 24px; }
     svg.addEventListener('pointerleave', () => { cross.setAttribute('hidden', ''); hideTip(); });
   }
 
+  function renderAreas() {
+    const n = state.papers.length, groups = {};
+    state.papers.forEach((p) => areasOf(p).forEach((a) => (groups[a] = groups[a] || []).push(p)));
+    const rows = Object.entries(groups).map(([name, list]) => ({ name, list: list.slice().sort((a, b) => b._pct - a._pct), avg: Math.round(list.reduce((t, p) => t + p._pct, 0) / list.length) }))
+      .sort((a, b) => (a.name === 'Unassigned') - (b.name === 'Unassigned') || b.list.length - a.list.length || b.avg - a.avg);
+    const named = rows.filter((r) => r.name !== 'Unassigned');
+    const share = (k) => Math.round((k / n) * 100);
+    $('areaMap').innerHTML = rows.map((r) => `<div class="area-row">
+        <button type="button" data-area="${esc(r.name)}">${esc(r.name)}</button>
+        <span class="units">${r.list.map((p) => `<a class="cell p${Math.min(5, Math.floor(p._pct / 20) + 1)}" href="#${p._id}" data-id="${p._id}" aria-label="${esc(titleOf(p))}, ${p._pct}% complete"></a>`).join('')}</span>
+        <span class="area-num">${r.list.length} ${r.list.length === 1 ? 'paper' : 'papers'}, ${share(r.list.length)}%<span class="sub">${r.avg}% average progress</span></span></div>`).join('');
+    let lede;
+    if (!named.length) lede = 'No paper has a research area yet. Add a “Research Area” line to each 100SV.md file and the areas will appear here after the next update.';
+    else {
+      const top = named[0], multi = named.filter((r) => r.list.length > 1);
+      const far = (multi.length ? multi : named).slice().sort((a, b) => b.avg - a.avg)[0];
+      const single = named.filter((r) => r.list.length === 1).length;
+      lede = `${n} papers span ${named.length} ${named.length === 1 ? 'area' : 'areas'}. ${top.name} is the largest with ${top.list.length} ${top.list.length === 1 ? 'paper' : 'papers'} (${share(top.list.length)}%). ` +
+        (far.name !== top.name ? `${far.name} is furthest along at ${far.avg}% on average. ` : `It is also furthest along at ${top.avg}% on average. `) +
+        (single ? `${single} ${single === 1 ? 'area has' : 'areas have'} a single paper so far.` : '');
+    }
+    $('areasLede').textContent = lede;
+    $('areaHint').textContent = named.length > 8 ? `Showing the 8 largest of ${named.length} areas. Open “Areas and topics” for all of them.` : '';
+
+    const topics = {};
+    state.papers.forEach((p) => (p.topics || []).forEach((t) => { topics[t] = (topics[t] || 0) + 1; }));
+    const tl = Object.entries(topics).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+    $('topicsBlock').hidden = tl.length === 0;
+    $('topicList').innerHTML = tl.map(([t, k]) => `<li><button type="button" data-topic="${esc(t)}" title="${k} of ${n} papers">${esc(t)}<b>${k}</b></button></li>`).join('');
+    const masked = state.papers.filter((p) => p.masked).length;
+    $('topicHint').textContent = `The number is how many papers carry the topic. Select one to search the list for it.${masked ? ` Topics of the ${masked} private ${masked === 1 ? 'project' : 'projects'} are not shown.` : ''}`;
+    $('openAreas').hidden = false;
+  }
+
   function showTip(html, x, y) {
     const t = $('tip'); t.innerHTML = html; t.hidden = false;
     const half = t.offsetWidth / 2;
@@ -399,17 +485,17 @@ footer { color: var(--muted); font-size: 0.85rem; margin-top: 24px; }
     const order = (s) => { const i = STAGES.indexOf(s); return i < 0 ? STAGES.length : i; };
     opts($('fStatus'), 'All stages', uniq((p) => p._status).sort((a, b) => order(a) - order(b)));
     opts($('fPriority'), 'All priorities', PRIORITIES.filter((x) => state.papers.some((p) => p.priority === x)));
-    opts($('fArea'), 'All areas', uniq(areaOf).sort());
+    opts($('fArea'), 'All areas', Object.keys(areaCounts()).sort());
   }
 
   function visible() {
     const q = state.q.trim().toLowerCase();
     const list = state.papers.filter((p) =>
-      (!state.status || p._status === state.status) && (!state.priority || p.priority === state.priority) && (!state.area || areaOf(p) === state.area) &&
-      (!q || [titleOf(p), p.projectId, p.repoName, p.researchArea, p.description].some((v) => String(v || '').toLowerCase().includes(q))));
+      (!state.status || p._status === state.status) && (!state.priority || p.priority === state.priority) && (!state.area || areasOf(p).includes(state.area)) &&
+      (!q || [titleOf(p), p.projectId, p.repoName, areasOf(p).join(' '), (p.topics || []).join(' '), p.description].some((v) => String(v || '').toLowerCase().includes(q))));
     const pr = (p) => { const i = PRIORITIES.indexOf(p.priority); return i < 0 ? 9 : i; };
     const st = (p) => { const i = STAGES.indexOf(p._status); return i < 0 ? 99 : i; };
-    const keys = { title: (p) => titleOf(p).toLowerCase(), area: (p) => areaOf(p).toLowerCase(), status: st, priority: pr, progress: (p) => p._pct, updated: (p) => Date.parse(p.lastUpdated) || 0 };
+    const keys = { title: (p) => titleOf(p).toLowerCase(), area: (p) => areasOf(p)[0].toLowerCase(), status: st, priority: pr, progress: (p) => p._pct, updated: (p) => Date.parse(p.lastUpdated) || 0 };
     const k = keys[state.sort];
     return list.sort((a, b) => { const x = k(a), y = k(b); return (x < y ? -1 : x > y ? 1 : 0) * state.dir; });
   }
@@ -423,7 +509,7 @@ footer { color: var(--muted); font-size: 0.85rem; margin-top: 24px; }
       const sub = [p.projectId, p.masked ? null : (p.isSubpaper ? p.fullName : (p.repoName !== titleOf(p) ? p.repoName : null))].filter(Boolean).join(', ');
       return `<tr id="${p._id}">
         <td class="c-paper"><span class="title">${esc(titleOf(p))}</span>${sub ? `<span class="sub">${esc(sub)}</span>` : ''}${p.stale ? '<span class="sub">Shown from an earlier run</span>' : ''}</td>
-        <td data-label="Area">${esc(areaOf(p))}</td>
+        <td data-label="Area" class="c-area" title="${esc(areasOf(p).join(', '))}">${esc(areasOf(p).slice(0, 2).join(', '))}${areasOf(p).length > 2 ? `<span class="sub">and ${areasOf(p).length - 2} more</span>` : ''}</td>
         <td data-label="Stage"><span class="status ${statusKind(p._status)}"><i aria-hidden="true"></i>${esc(p._status)}</span></td>
         <td data-label="Priority">${esc(p.priority || 'Not set')}</td>
         <td class="c-progress"><span class="meter" title="${Array.isArray(p.progress?.phase) ? p.progress.phase.length : 0} of ${p.progress?.total > 0 ? p.progress.total : 12} steps done"><span class="track"><span class="fill" style="width:${p._pct}%"></span></span><span>${p._pct}%</span></span></td>
@@ -454,6 +540,20 @@ footer { color: var(--muted); font-size: 0.85rem; margin-top: 24px; }
       const b = e.target.closest('button'); if (!b) return;
       state[b.dataset.key] = state[b.dataset.key] === b.dataset.value ? '' : b.dataset.value; renderRows();
     }));
+    const dlg = $('areasDialog');
+    const resetFilters = () => { Object.assign(state, { q: '', status: '', priority: '', area: '' }); $('q').value = ''; };
+    $('openAreas').addEventListener('click', () => dlg.showModal());
+    $('closeAreas').addEventListener('click', () => dlg.close());
+    dlg.addEventListener('click', (e) => {
+      if (e.target === dlg) { dlg.close(); return; }            // click on the backdrop
+      const area = e.target.closest('button[data-area]'), topic = e.target.closest('button[data-topic]'), cell = e.target.closest('a.cell');
+      if (!area && !topic && !cell) return;
+      resetFilters();
+      if (area) state.area = area.dataset.area;
+      if (topic) { state.q = topic.dataset.topic; $('q').value = state.q; }
+      renderRows(); dlg.close();
+      if (!cell) $('workTitle').scrollIntoView({ block: 'start' });
+    });
     const grid = $('hundred');
     const tipFor = (a) => {
       const p = state.papers.find((x) => x._id === a.dataset.id); if (!p) return;

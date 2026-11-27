@@ -56,6 +56,8 @@ jobs:
         GITHUB_REPOSITORY: ${{ github.repository }} # e.g., "your-username/hub-repo-name"
         # How private repos appear on the PUBLIC dashboard: mask (default), show or hide
         PRIVATE_REPO_MODE: ${{ vars.PRIVATE_REPO_MODE || 'mask' }}
+        # Other accounts/organisations to scan for 100SV repos the token's user can access
+        EXTRA_OWNERS: ${{ vars.EXTRA_OWNERS || 'eigensoundlab,eigensound' }}
       run: node scripts/update-status.js
 
     - name: Commit and push changes

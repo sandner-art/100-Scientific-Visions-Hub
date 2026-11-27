@@ -26,6 +26,10 @@ class ScientificVisionsTracker {
     this.privateMode = (process.env.PRIVATE_REPO_MODE || 'mask').toLowerCase();
     if (!['mask', 'show', 'hide'].includes(this.privateMode)) this.privateMode = 'mask';
 
+    // Other accounts/organisations whose repos are scanned when the token's user can access them
+    // (as collaborator or member). Comma-separated, e.g. "eigensoundlab,eigensound".
+    this.extraOwners = (process.env.EXTRA_OWNERS || '').split(',').map(o => o.trim().toLowerCase()).filter(Boolean);
+
     this.previousPapers = [];  // last committed data/papers.json, used as a fallback
     this.failedRepos = [];     // repos whose fetch failed in this run
     this.authLogin = null;
@@ -103,7 +107,7 @@ class ScientificVisionsTracker {
       title: null, status: null, priority: null, phase: [], preprintLink: null, publishedLink: null
     };
     const extractValue = (label, fieldName) => {
-        const regex = new RegExp(`^\\*\\*${label}\\*\\*:\\s*(?:\\[([^\\]\\r\\n]*?)\\]|([^\\r\\n]*?))\\s*(?:\\r?\\n|$)`, "im");
+        const regex = new RegExp(`^[ \\t]*(?:[-*+][ \\t]+)?\\*\\*${label}\\*\\*:\\s*(?:\\[([^\\]\\r\\n]*?)\\]|([^\\r\\n]*?))\\s*(?:\\r?\\n|$)`, "im");
         const match = content.match(regex);
         if (match) {
             const value = (match[1] !== undefined ? match[1] : match[2] || "").trim();
@@ -134,14 +138,18 @@ class ScientificVisionsTracker {
   }
   
   parse100SV(content) {
-    const svData = { projectId: null, researchArea: null, researchFocus: null };
+    const svData = { projectId: null, researchArea: null, researchAreas: [], researchFocus: null };
     const extract = (lbl) => {
-        const r = new RegExp(`^\\*\\*${lbl}\\*\\*:\\s*(?:\\[([^\\]\\r\\n]*?)\\]|([^\\r\\n]*?))(?:\r?\n|$)`, "im");
+        const r = new RegExp(`^[ \\t]*(?:[-*+][ \\t]+)?\\*\\*${lbl}\\*\\*:\\s*(?:\\[([^\\]\\r\\n]*?)\\]|([^\\r\\n]*?))(?:\r?\n|$)`, "im");
         const m = content.match(r);
         if(m) return (m[1]!==undefined?m[1]:m[2]||"").trim(); return null;
     };
-    svData.projectId = extract("Project ID");
-    svData.researchArea = extract("Research Area");
+    // Untouched template placeholders ("[Unique identifier, e.g., SV-001]") are not values
+    const real = (v) => (v && !/e\.g\./i.test(v) ? v : null);
+    svData.projectId = real(extract("Project ID"));
+    svData.researchArea = real(extract("Research Area"));
+    // "Physics, Sound Design, Art" -> one paper belongs to several areas
+    if (svData.researchArea) svData.researchAreas = [...new Set(svData.researchArea.split(/[,;]/).map(a => a.trim()).filter(Boolean))];
     const focusMatch = content.match(/^## Research Focus\s*\n+([\s\S]*?)(?=\n##|\n---|\n\*{3,}|$)/im);
     if (focusMatch && focusMatch[1]) svData.researchFocus = focusMatch[1].trim(); 
     return svData;
@@ -259,7 +267,7 @@ class ScientificVisionsTracker {
     if (svContent) {
         const sv = this.parse100SV(svContent);
         if (sv.researchFocus) paper.description = sv.researchFocus;
-        paper.projectId = sv.projectId; paper.researchArea = sv.researchArea;
+        paper.projectId = sv.projectId; paper.researchArea = sv.researchArea; paper.researchAreas = sv.researchAreas;
     }
 
     let t = null, s = null, pVal = null;
@@ -302,13 +310,13 @@ class ScientificVisionsTracker {
     if (svSub) {
         const sv = this.parse100SV(svSub);
         if (sv.researchFocus) paper.description = sv.researchFocus;
-        paper.projectId = sv.projectId; paper.researchArea = sv.researchArea;
+        paper.projectId = sv.projectId; paper.researchArea = sv.researchArea; paper.researchAreas = sv.researchAreas;
     } else { 
         const svRoot = await this.parseFileContent(repo.owner.login, repo.name, '100SV.md');
         if (svRoot) {
             const svR = this.parse100SV(svRoot);
             if (!paper.projectId) paper.projectId = svR.projectId;
-            if (!paper.researchArea) paper.researchArea = svR.researchArea;
+            if (!paper.researchArea) { paper.researchArea = svR.researchArea; paper.researchAreas = svR.researchAreas; }
             // If subpaper has no 100SV.md and no specific description, and root 100SV.md has focus, use it.
             if (!svSub && svR.researchFocus && paper.description === repo.description) paper.description = svR.researchFocus;
         }
@@ -365,10 +373,13 @@ class ScientificVisionsTracker {
         this.authLogin.toLowerCase() === target.name.toLowerCase();
       let method, params;
       if (target.type === 'org') { method = this.octokit.rest.repos.listForOrg; params = { org: target.name, type: 'all', per_page: 100 }; }
-      else if (ownToken) { method = this.octokit.rest.repos.listForAuthenticatedUser; params = { affiliation: 'owner', per_page: 100 }; }
+      else if (ownToken) {
+        method = this.octokit.rest.repos.listForAuthenticatedUser;
+        params = { affiliation: this.extraOwners.length ? 'owner,collaborator,organization_member' : 'owner', per_page: 100 };
+      }
       else {
         method = this.octokit.rest.repos.listForUser; params = { username: target.name, type: 'all', per_page: 100 };
-        console.warn(`WARNING: token belongs to '${this.authLogin}', not '${target.name}': only public repositories can be listed.`);
+        console.warn(`WARNING: token belongs to '${this.authLogin}', not '${target.name}': only public repositories can be listed, and EXTRA_OWNERS is ignored.`);
       }
 
       for await (const { data: page } of this.octokit.paginate.iterator(method, params)) {
@@ -378,6 +389,9 @@ class ScientificVisionsTracker {
               console.log(`DEBUG: Skipping self (hub repository): ${repo.full_name}`);
               continue;
           }
+          // Only the hub owner's repos and those of the named extra owners are considered
+          const repoOwner = repo.owner.login.toLowerCase();
+          if (repoOwner !== target.name.toLowerCase() && !this.extraOwners.includes(repoOwner)) continue;
           if (repo.private && this.privateMode === 'hide') continue;
           const masked = repo.private && this.privateMode === 'mask';
 
@@ -492,8 +506,9 @@ class ScientificVisionsTracker {
             this.stats.totalLifetimeCommits += p.historical.totalLifetimeCommits;
             processedReposForLifetimeCommits.add(repoKey);
         }
-        const areaKey = p.researchArea || 'Unassigned';
-        this.stats.byArea[areaKey] = (this.stats.byArea[areaKey] || 0) + 1;
+        // A paper counts once in every area it lists, so these counts can add up to more than the total
+        const areaKeys = p.researchAreas?.length ? p.researchAreas : [p.researchArea || 'Unassigned'];
+        areaKeys.forEach(areaKey => { this.stats.byArea[areaKey] = (this.stats.byArea[areaKey] || 0) + 1; });
         if (p.publishedLink || statusKey === 'Complete') this.stats.published += 1;
         progressSum += this.progressPercent(p.progress);
     });

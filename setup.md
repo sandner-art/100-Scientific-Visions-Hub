@@ -168,3 +168,5 @@ The system is designed to grow with your project - start simple and add features
 - `hide`: skipped entirely
 
 `data/history.json` receives one snapshot per day and feeds the trend chart on the dashboard.
+
+**Repositories in other accounts or organisations** are scanned when their owner is named in the repository variable `EXTRA_OWNERS` (default `eigensoundlab,eigensound`) and the token's user can access them as collaborator or member. This needs a classic token with the `repo` scope; a fine-grained token only reaches one owner.
