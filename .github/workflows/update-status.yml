@@ -96,7 +96,11 @@ jobs:
     steps:
     - name: Checkout repository (for Pages deployment)
       uses: actions/checkout@v4
-      # This checkout fetches the latest commit, which should include changes from the 'update-status' job.
+      with:
+        # Without an explicit ref, checkout uses the commit that TRIGGERED the workflow,
+        # which is older than the data commit the 'update-status' job has just pushed.
+        # Naming the branch fetches its current tip, so the fresh data is deployed.
+        ref: ${{ github.ref_name }}
 
     - name: Setup Pages
       uses: actions/configure-pages@v5 # Use latest version
