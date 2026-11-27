@@ -155,3 +155,16 @@ Once the basic system is working:
 5. **Consider adding visual charts** using GitHub Pages for richer reporting
 
 The system is designed to grow with your project - start simple and add features as needed!
+## Failure Handling and Private Repositories
+
+**When the token expires or a fetch fails**, the update script now stops before writing anything:
+- A missing, expired or revoked token fails the workflow run. `README.md`, `data/` and `reports/` keep their last good content, and GitHub emails you about the failed run. Renew the `GH_PAT_PRIVATE_REPOS` secret and re-run the workflow.
+- If a single repository cannot be read, its entries are kept from the previous run and marked `stale` in `data/papers.json`.
+- A scan that finds 0 papers when the previous run had some is refused. Set `ALLOW_EMPTY=1` in the workflow step if an empty result is really intended.
+
+**Private repositories** are listed only when the token belongs to the account that owns them. How they appear on the public dashboard is set by the repository variable `PRIVATE_REPO_MODE` (Settings → Secrets and variables → Actions → Variables):
+- `mask` (default): counted in the statistics, shown as "Private project" without title, description, links or commit messages
+- `show`: published like public repositories
+- `hide`: skipped entirely
+
+`data/history.json` receives one snapshot per day and feeds the trend chart on the dashboard.

@@ -54,6 +54,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GH_PAT_PRIVATE_REPOS }}
         GITHUB_OWNER: ${{ github.repository_owner }}
         GITHUB_REPOSITORY: ${{ github.repository }} # e.g., "your-username/hub-repo-name"
+        # How private repos appear on the PUBLIC dashboard: mask (default), show or hide
+        PRIVATE_REPO_MODE: ${{ vars.PRIVATE_REPO_MODE || 'mask' }}
       run: node scripts/update-status.js
 
     - name: Commit and push changes
