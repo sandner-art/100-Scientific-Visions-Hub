@@ -1,8 +1,26 @@
 {
-  "total": 0,
-  "byStatus": {},
-  "byPriority": {},
+  "total": 17,
+  "byStatus": {
+    "Active": 12,
+    "Analysis": 1,
+    "Review": 3,
+    "Complete": 1
+  },
+  "byPriority": {
+    "Medium": 6,
+    "High": 6,
+    "Low": 5
+  },
   "recentActivity": [],
   "weeklyCommits": 0,
-  "totalLifetimeCommits": 0
+  "totalLifetimeCommits": 223,
+  "byArea": {
+    "Unassigned": 17
+  },
+  "published": 1,
+  "averageProgress": 50,
+  "generatedAt": "2026-11-27T21:17:04.714Z",
+  "failedRepos": 0,
+  "staleItems": 0,
+  "privateMode": "mask"
 }
