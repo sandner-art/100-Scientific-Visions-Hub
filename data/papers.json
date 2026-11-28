@@ -141,6 +141,38 @@
     "masked": true
   },
   {
+    "repoId": 1448142794,
+    "repoName": "Private project",
+    "paperName": "Private project",
+    "fullName": "private-1448142794",
+    "description": null,
+    "url": null,
+    "repoUrl": null,
+    "private": true,
+    "topics": [],
+    "lastUpdated": "2026-11-27T22:21:49Z",
+    "title": null,
+    "status": "Active",
+    "priority": "Medium",
+    "progress": {
+      "phase": [],
+      "total": 0
+    },
+    "commitsLastWeek": 0,
+    "historical": {
+      "age": 22,
+      "totalCommits3Months": 1,
+      "createdAt": "2026-11-06T10:47:23Z",
+      "totalLifetimeCommits": 1
+    },
+    "preprintLink": null,
+    "publishedLink": null,
+    "isSubpaper": false,
+    "projectId": null,
+    "researchArea": null,
+    "masked": true
+  },
+  {
     "repoId": 976232573,
     "repoName": "Private project",
     "paperName": "Private project",

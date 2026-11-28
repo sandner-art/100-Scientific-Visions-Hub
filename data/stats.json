@@ -1,25 +1,26 @@
 {
-  "total": 17,
+  "total": 18,
   "byStatus": {
-    "Active": 12,
+    "Active": 13,
     "Analysis": 1,
     "Review": 3,
     "Complete": 1
   },
   "byPriority": {
-    "Medium": 6,
+    "Medium": 7,
     "High": 6,
     "Low": 5
   },
   "recentActivity": [],
   "weeklyCommits": 0,
-  "totalLifetimeCommits": 223,
+  "totalLifetimeCommits": 224,
   "byArea": {
     "Philosophy of Science": 5,
     "Methodology": 3,
     "AI/ML": 3,
     "Scientific Method": 3,
     "Exploratory Science": 3,
+    "Unassigned": 1,
     "Automata": 3,
     "Quantum Physics": 11,
     "Information Theory": 3,
@@ -44,8 +45,8 @@
     "Education": 4
   },
   "published": 1,
-  "averageProgress": 50,
-  "generatedAt": "2026-11-27T21:57:27.551Z",
+  "averageProgress": 48,
+  "generatedAt": "2026-11-28T15:10:48.219Z",
   "failedRepos": 0,
   "staleItems": 0,
   "privateMode": "mask"
